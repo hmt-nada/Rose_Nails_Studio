@@ -1,26 +1,102 @@
 @import "tailwindcss";
 
+/* ─────────────────────────────────────────────────────────────
+   Rosé Nails Studio — Design Tokens (CSS-first Tailwind v4)
+───────────────────────────────────────────────────────────── */
+
+@theme {
+  /* ── Colors ── */
+  --color-pearl:      #FFF8FA;
+  --color-blush:      #F9C6D4;
+  --color-rose:       #E88AA6;
+  --color-deep-rose:  #B84A6E;
+  --color-plum:       #3A1F2B;
+
+  /* ── Fonts ── */
+  --font-heading: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --font-body:    var(--font-poppins), "Poppins", system-ui, sans-serif;
+
+  /* ── Border radius ── */
+  --radius-soft: 1rem;    /* rounded-2xl equivalent */
+  --radius-pill: 9999px;  /* rounded-full */
+}
+
+/* ─── Global base ─────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #FFF8FA;
+  --foreground: #3A1F2B;
+  color-scheme: light;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+html {
+  scroll-behavior: smooth;
+  background-color: var(--background);
+  color: var(--foreground);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
 body {
-  background: var(--background);
+  font-family: var(--font-body);
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Reusable glass effect ───────────────────────────────── */
+.glass {
+  background: rgba(255, 248, 250, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 4px 32px 0 rgba(184, 74, 110, 0.07);
+}
+
+/* ─── Typography helpers ──────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ─── Custom Luxury Scrollbar ────────────────────────────── */
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #E88AA6 #FFF0F4;
+}
+
+/* WebKit / Chromium / Edge / Safari */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FFF0F4;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #E88AA6;
+  border-radius: 9999px;
+  border: 2px solid #FFF0F4; /* Provides an elegant inset margin */
+  transition: background-color 0.25s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #B84A6E; /* Deep rose / burgundy hover */
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #3A1F2B; /* Plum */
 }
