@@ -195,3 +195,9 @@ export const BOOKING_TIME_SLOTS = [
 
 export type BookingTimeSlot = (typeof BOOKING_TIME_SLOTS)[number];
 
+/**
+ * Default international country code without '+' or '00'.
+ * TODO: Change this to your local country code if operating outside Algeria (e.g. '1' for US/Canada, '33' for France).
+ */
+export const DEFAULT_COUNTRY_CODE = "213";
+
