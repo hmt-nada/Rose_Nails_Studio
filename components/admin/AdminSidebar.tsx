@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { LayoutDashboard, Calendar, Sparkles } from "lucide-react";
+import { LayoutDashboard, Clock, Calendar, Sparkles } from "lucide-react";
 import BrandLogo from "@/components/ui/BrandLogo";
+import { useTodayRemainingCount } from "@/lib/hooks/useTodayRemainingCount";
 
 const NAV_ITEMS = [
   {
@@ -12,6 +13,12 @@ const NAV_ITEMS = [
     href: "/admin",
     icon: LayoutDashboard,
     exact: true,
+  },
+  {
+    name: "Today",
+    href: "/admin/today",
+    icon: Clock,
+    exact: false,
   },
   {
     name: "Reservations",
@@ -29,6 +36,7 @@ const NAV_ITEMS = [
 
 export default function AdminSidebar() {
   const pathname = usePathname();
+  const remainingTodayCount = useTodayRemainingCount();
 
   return (
     <aside className="hidden md:flex flex-col w-64 min-h-screen bg-white/70 dark:bg-surface/80 backdrop-blur-xl border-r border-rose/15 dark:border-rose/20 p-6 shrink-0 sticky top-0 h-screen justify-between z-30">
@@ -83,6 +91,13 @@ export default function AdminSidebar() {
                   }`}
                 />
                 <span>{item.name}</span>
+
+                {/* Live Remaining Appointments Badge for Today */}
+                {item.href === "/admin/today" && remainingTodayCount > 0 && (
+                  <span className="ml-auto inline-flex items-center justify-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-deep-rose text-pearl tabular-nums shadow-xs">
+                    {remainingTodayCount}
+                  </span>
+                )}
               </Link>
             );
           })}

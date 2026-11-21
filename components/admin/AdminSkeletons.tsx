@@ -71,6 +71,44 @@ export function OverviewSkeleton() {
   );
 }
 
+export function TodaySkeleton() {
+  return (
+    <div className="space-y-8 animate-pulse">
+      {/* Header Skeleton */}
+      <div className="rounded-3xl bg-white/60 dark:bg-surface-elevated/60 border border-rose/15 p-6 sm:p-8 flex flex-col md:flex-row justify-between gap-4">
+        <div>
+          <div className="w-48 h-8 rounded-lg bg-plum/10 dark:bg-white/10 mb-2" />
+          <div className="w-64 h-4 rounded-md bg-plum/5 dark:bg-white/5" />
+        </div>
+        <div className="w-44 h-10 rounded-full bg-rose/15" />
+      </div>
+
+      {/* Summary KPI Row Skeleton */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
+        {[1, 2, 3, 4, 5].map((i) => (
+          <div
+            key={i}
+            className="rounded-2xl bg-white/60 dark:bg-surface-elevated/60 border border-rose/15 p-4 h-24"
+          />
+        ))}
+      </div>
+
+      {/* Now/Next Highlight Card Skeleton */}
+      <div className="rounded-3xl bg-white/60 dark:bg-surface-elevated/60 border border-rose/15 p-6 h-48" />
+
+      {/* Timeline Skeleton */}
+      <div className="space-y-4 pl-6">
+        {[1, 2, 3].map((i) => (
+          <div
+            key={i}
+            className="rounded-2xl bg-white/60 dark:bg-surface-elevated/60 border border-rose/15 p-5 h-28"
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function ReservationsSkeleton() {
   return (
     <div className="space-y-6 animate-pulse">

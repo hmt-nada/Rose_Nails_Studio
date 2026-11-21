@@ -35,7 +35,7 @@ import {
 import { formatPrice } from "@/lib/currency";
 import type { DashboardStats, MonthClientsData, MonthRevenueData } from "@/lib/admin/stats";
 import ReservationContactActions from "./ReservationContactActions";
-import TodayAppointmentsPanel from "./TodayAppointmentsPanel";
+import UpNextCard from "./UpNextCard";
 
 interface OverviewDashboardClientProps {
   stats: DashboardStats;
@@ -190,10 +190,9 @@ export default function OverviewDashboardClient({
         </div>
       </div>
 
-      {/* ── 2. Prominent Today Appointments Panel ── */}
-      <TodayAppointmentsPanel
+      {/* ── 2. Compact Up-Next Card ── */}
+      <UpNextCard
         initialReservations={stats.todayReservations || []}
-        todayDateFormatted={stats.todayDateFormatted}
         todayStr={stats.todayStr}
       />
 
