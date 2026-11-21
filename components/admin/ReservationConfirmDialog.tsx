@@ -58,7 +58,7 @@ export default function ReservationConfirmDialog({
               <AlertTriangle className="w-6 h-6" />
             </div>
 
-            <h3 className="font-heading text-2xl font-light text-plum">
+            <h3 className="text-xl sm:text-2xl font-semibold text-plum tracking-tight">
               Cancel Reservation?
             </h3>
             <p className="text-xs sm:text-sm text-plum/70 font-light mt-1.5 leading-relaxed">

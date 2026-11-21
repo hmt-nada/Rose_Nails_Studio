@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { LayoutDashboard, Calendar, Sparkles } from "lucide-react";
+import { LayoutDashboard, Calendar } from "lucide-react";
+import BrandLogo from "@/components/ui/BrandLogo";
 
 const NAV_ITEMS = [
   {
@@ -28,9 +29,7 @@ export default function AdminSidebar() {
       <div>
         {/* Brand Emblem */}
         <div className="flex items-center gap-3 px-2 py-3 mb-8">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-deep-rose to-rose flex items-center justify-center text-pearl shadow-md shadow-deep-rose/20">
-            <Sparkles className="w-5 h-5" />
-          </div>
+          <BrandLogo size={38} priority />
           <div>
             <h2 className="font-heading text-xl font-medium tracking-wide text-plum leading-tight">
               Rosé Nails

@@ -37,10 +37,10 @@ export default function AdminReservationsPage() {
       {/* ── Page Header with Manage Services Button ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="font-heading text-3xl sm:text-4xl font-light text-plum">
+          <h1 className="text-2xl sm:text-3xl font-semibold text-plum tracking-tight">
             Reservations Management
           </h1>
-          <p className="text-sm text-plum/70 font-light mt-1">
+          <p className="text-sm text-plum/60 font-normal mt-1 leading-relaxed">
             Review live bookings, update appointment statuses, and connect with clients via phone, WhatsApp, or Telegram.
           </p>
         </div>

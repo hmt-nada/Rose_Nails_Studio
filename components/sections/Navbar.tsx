@@ -9,6 +9,7 @@ import { GOOGLE_MAPS_URL, SITE_NAME } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { scrollToSection } from "@/lib/scroll";
 import ThemeToggle from "@/components/ui/ThemeToggle";
+import BrandLogo from "@/components/ui/BrandLogo";
 
 const NAV_LINKS = [
   { href: "#hero", label: "Home" },
@@ -137,16 +138,7 @@ export default function Navbar() {
             className="flex items-center gap-2.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-deep-rose/60 rounded-full min-h-[44px] cursor-pointer"
             aria-label="Scroll to top"
           >
-            <div className="relative h-8 sm:h-9 w-8 sm:w-9 flex-shrink-0">
-              <Image
-                src="/imag/logo/logo.png"
-                alt="Rosé Nails Studio logo"
-                width={36}
-                height={36}
-                priority
-                className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
-              />
-            </div>
+            <BrandLogo size={38} priority />
             <span className="font-heading text-lg sm:text-xl font-semibold tracking-wide text-plum group-hover:text-deep-rose transition-colors duration-300 whitespace-nowrap">
               {SITE_NAME}
             </span>

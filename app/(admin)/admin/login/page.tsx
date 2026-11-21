@@ -9,12 +9,12 @@ import {
   Eye,
   EyeOff,
   Loader2,
-  Sparkles,
   AlertCircle,
   CheckCircle2,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import ThemeToggle from "@/components/ui/ThemeToggle";
+import BrandLogo from "@/components/ui/BrandLogo";
 
 // Floating glass decorative bubbles
 const BUBBLES = [
@@ -162,9 +162,7 @@ export default function AdminLoginPage() {
       >
         {/* Brand Emblem */}
         <div className="flex flex-col items-center text-center mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-deep-rose to-rose flex items-center justify-center text-pearl shadow-lg shadow-deep-rose/20 mb-4">
-            <Sparkles className="w-7 h-7" />
-          </div>
+          <BrandLogo size={46} className="mb-4" priority />
           <p className="text-xs tracking-[0.25em] uppercase font-medium text-deep-rose mb-1">
             Rosé Nails Studio
           </p>

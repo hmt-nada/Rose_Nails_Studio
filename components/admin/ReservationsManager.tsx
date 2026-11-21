@@ -451,7 +451,7 @@ export default function ReservationsManager({
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-rose to-blush flex items-center justify-center text-pearl shadow-md shadow-rose/20 mb-4">
                   <Sparkles className="w-7 h-7" />
                 </div>
-                <h3 className="font-heading text-2xl sm:text-3xl font-light text-plum">
+                <h3 className="text-xl sm:text-2xl font-semibold text-plum tracking-tight">
                   No reservations found
                 </h3>
                 <p className="text-xs sm:text-sm text-plum/70 font-light mt-2 leading-relaxed">

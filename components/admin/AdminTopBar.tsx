@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { LogOut, User, Loader2, Sparkles, SlidersHorizontal } from "lucide-react";
+import { LogOut, User, Loader2, SlidersHorizontal } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useManageServicesModal } from "./ManageServicesContext";
 import ThemeToggle from "@/components/ui/ThemeToggle";
+import BrandLogo from "@/components/ui/BrandLogo";
 
 interface AdminTopBarProps {
   initialEmail?: string | null;
@@ -48,9 +49,7 @@ export default function AdminTopBar({ initialEmail }: AdminTopBarProps) {
     <header className="sticky top-0 z-20 w-full border-b border-rose/15 dark:border-rose/20 bg-white/70 dark:bg-surface/75 backdrop-blur-xl px-4 sm:px-8 py-3.5 flex items-center justify-between">
       {/* Mobile Brand / Page Indicator */}
       <div className="flex items-center gap-2.5 md:hidden">
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-deep-rose to-rose flex items-center justify-center text-pearl shadow-sm">
-          <Sparkles className="w-4 h-4" />
-        </div>
+        <BrandLogo size={32} />
         <div>
           <span className="font-heading text-lg font-medium text-plum leading-none">
             Rosé Nails

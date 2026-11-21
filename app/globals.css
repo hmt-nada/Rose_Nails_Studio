@@ -185,6 +185,33 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-body) !important;
 }
 
+/* ─── Admin Portal Typography Normalization ───────────────── */
+/* In the admin portal, default ALL elements to Poppins with clean weights and line heights */
+.admin-portal,
+.admin-portal h1,
+.admin-portal h2,
+.admin-portal h3,
+.admin-portal h4,
+.admin-portal h5,
+.admin-portal h6,
+.admin-portal p,
+.admin-portal span,
+.admin-portal button,
+.admin-portal input,
+.admin-portal select,
+.admin-portal textarea,
+.admin-portal label,
+.admin-portal table,
+.admin-portal th,
+.admin-portal td {
+  font-family: var(--font-body);
+}
+
+/* Strictly reserve Cormorant Garamond for brand logotypes and login heading */
+.admin-portal .font-heading {
+  font-family: var(--font-heading) !important;
+}
+
 /* ─── Custom Luxury Scrollbar (Desktop only) ──────────────── */
 @media (hover: hover) and (pointer: fine) {
   /* Firefox */

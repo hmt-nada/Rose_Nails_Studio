@@ -33,6 +33,10 @@ export const metadata: Metadata = {
   description:
     "Rosé Nails Studio — The art of luxury nail care. Book your session online and experience bespoke nail art and manicures crafted just for you.",
   keywords: ["nail studio", "manicure", "nail art", "booking", "beauty", "luxury"],
+  icons: {
+    icon: "/icon.png",
+    apple: "/icon.png",
+  },
   openGraph: {
     title: "Rosé Nails Studio",
     description: "The art of luxury nail care. Book your session online.",

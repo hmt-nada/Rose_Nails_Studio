@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { STUDIO_CONTACT, SITE_NAME } from "@/lib/constants";
 import { scrollToSection } from "@/lib/scroll";
+import BrandLogo from "@/components/ui/BrandLogo";
 
 export default function Footer() {
   const shouldReduce = useReducedMotion();
@@ -133,13 +134,7 @@ export default function Footer() {
           {/* Column 1: Brand & Identity (span 4) */}
           <div className="sm:col-span-2 lg:col-span-4 flex flex-col items-center lg:items-start text-center lg:text-left gap-5">
             <div className="flex flex-col sm:flex-row items-center lg:items-start text-center sm:text-left gap-3">
-              <div className="w-12 h-12 rounded-full bg-white/90 dark:bg-surface/90 border border-blush/50 dark:border-rose/25 shadow-sm flex items-center justify-center p-2 shrink-0">
-                <img
-                  src="/imag/logo/logo.png"
-                  alt={`${SITE_NAME} Emblem`}
-                  className="w-full h-full object-contain"
-                />
-              </div>
+              <BrandLogo size={42} />
               <div>
                 <span className="font-heading text-2xl sm:text-3xl font-medium tracking-tight text-plum block leading-none">
                   {SITE_NAME}

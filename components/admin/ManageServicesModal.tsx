@@ -400,7 +400,7 @@ export default function ManageServicesModal() {
                   <Sparkles className="w-3.5 h-3.5" />
                   Studio Configuration
                 </div>
-                <h2 className="font-heading text-2xl sm:text-3xl font-light text-plum">
+                <h2 className="text-xl sm:text-2xl font-semibold text-plum tracking-tight">
                   Manage Services &amp; Prices
                 </h2>
                 <p className="text-xs sm:text-sm text-plum/65 font-light mt-1 max-w-xl">
@@ -700,7 +700,7 @@ export default function ManageServicesModal() {
                     </div>
                   ) : deleteDialog.mode === "deactivate_explanation" ? (
                     <>
-                      <h3 className="font-heading text-2xl font-light text-plum">
+                      <h3 className="text-lg sm:text-xl font-semibold text-plum tracking-tight">
                         Service is in active use
                       </h3>
                       <p className="text-xs sm:text-sm text-plum/75 font-light mt-2 leading-relaxed">
@@ -737,7 +737,7 @@ export default function ManageServicesModal() {
                     </>
                   ) : (
                     <>
-                      <h3 className="font-heading text-2xl font-light text-plum">
+                      <h3 className="text-lg sm:text-xl font-semibold text-plum tracking-tight">
                         Delete Service Permanently?
                       </h3>
                       <p className="text-xs sm:text-sm text-plum/75 font-light mt-2 leading-relaxed">

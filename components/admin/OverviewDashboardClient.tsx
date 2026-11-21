@@ -169,10 +169,10 @@ export default function OverviewDashboardClient({
             <Sparkles className="w-3.5 h-3.5" />
             Studio Analytics &bull; Live
           </div>
-          <h1 className="font-heading text-3xl sm:text-4xl font-light text-plum">
+          <h1 className="text-2xl sm:text-3xl font-semibold text-plum tracking-tight">
             {stats.greeting}
           </h1>
-          <p className="text-xs sm:text-sm text-plum/70 font-light mt-1 flex items-center gap-1.5">
+          <p className="text-xs sm:text-sm text-plum/60 font-normal mt-1 flex items-center gap-1.5">
             <Calendar className="w-3.5 h-3.5 text-deep-rose shrink-0" />
             <span>{stats.todayDateFormatted}</span>
           </p>
@@ -222,11 +222,11 @@ export default function OverviewDashboardClient({
               </span>
             )}
           </div>
-          <h3 className="font-heading text-3xl sm:text-4xl font-normal text-plum tracking-tight tabular-nums">
+          <div className="text-3xl sm:text-4xl font-semibold text-plum tracking-tight tabular-nums">
             <CountUpNumber value={kpis.clientsThisMonth} />
-          </h3>
-          <p className="text-xs text-plum/80 font-medium mt-1">Clients This Month</p>
-          <p className="text-[11px] text-plum/50 font-light mt-0.5">
+          </div>
+          <p className="text-xs text-plum/70 font-medium tracking-wide mt-1">Clients This Month</p>
+          <p className="text-[11px] text-plum/50 font-normal mt-0.5">
             Non-cancelled booking requests
           </p>
         </motion.div>
@@ -262,11 +262,11 @@ export default function OverviewDashboardClient({
               </span>
             )}
           </div>
-          <h3 className="font-heading text-3xl sm:text-4xl font-normal text-plum tracking-tight tabular-nums">
+          <div className="text-3xl sm:text-4xl font-semibold text-plum tracking-tight tabular-nums">
             <CountUpNumber value={kpis.revenueThisMonth} suffix=" DA" />
-          </h3>
-          <p className="text-xs text-plum/80 font-medium mt-1">Revenue This Month</p>
-          <p className="text-[11px] text-plum/50 font-light mt-0.5">
+          </div>
+          <p className="text-xs text-plum/70 font-medium tracking-wide mt-1">Revenue This Month</p>
+          <p className="text-[11px] text-plum/50 font-normal mt-0.5">
             Completed reservations sum
           </p>
         </motion.div>
@@ -286,11 +286,11 @@ export default function OverviewDashboardClient({
               Today
             </span>
           </div>
-          <h3 className="font-heading text-3xl sm:text-4xl font-normal text-plum tracking-tight tabular-nums">
+          <div className="text-3xl sm:text-4xl font-semibold text-plum tracking-tight tabular-nums">
             <CountUpNumber value={kpis.todayAppointments} />
-          </h3>
-          <p className="text-xs text-plum/80 font-medium mt-1">Today&apos;s Appointments</p>
-          <p className="text-[11px] text-plum/50 font-light mt-0.5">
+          </div>
+          <p className="text-xs text-plum/70 font-medium tracking-wide mt-1">Today&apos;s Appointments</p>
+          <p className="text-[11px] text-plum/50 font-normal mt-0.5">
             Scheduled sessions today
           </p>
         </motion.div>
@@ -310,9 +310,13 @@ export default function OverviewDashboardClient({
               Pending
             </span>
           </div>
-          <h3 className="font-heading text-3xl sm:text-4xl font-normal text-plum tracking-tight tabular-nums">
+          <div className="text-3xl sm:text-4xl font-semibold text-plum tracking-tight tabular-nums">
             <CountUpNumber value={kpis.pendingRequests} />
-          </h3>
+          </div>
+          <p className="text-xs text-plum/70 font-medium tracking-wide mt-1">New Requests Waiting</p>
+          <p className="text-[11px] text-deep-rose font-medium mt-0.5">
+            Awaiting admin confirmation
+          </p>
           <p className="text-xs text-plum/80 font-medium mt-1">New Requests Waiting</p>
           <p className="text-[11px] text-deep-rose font-medium mt-0.5">
             Awaiting admin confirmation
@@ -335,7 +339,7 @@ export default function OverviewDashboardClient({
               <div>
                 <div className="flex items-center gap-2">
                   <BarChart3 className="w-4 h-4 text-deep-rose" />
-                  <h2 className="font-heading text-2xl font-light text-plum">
+                  <h2 className="text-lg font-semibold text-plum tracking-tight">
                     Clients Per Month
                   </h2>
                 </div>
@@ -452,7 +456,7 @@ export default function OverviewDashboardClient({
               <div>
                 <div className="flex items-center gap-2">
                   <TrendingUp className="w-4 h-4 text-deep-rose" />
-                  <h2 className="font-heading text-2xl font-light text-plum">
+                  <h2 className="text-lg font-semibold text-plum tracking-tight">
                     Revenue Per Month
                   </h2>
                 </div>
@@ -557,7 +561,7 @@ export default function OverviewDashboardClient({
             <div className="flex items-center gap-2 pb-4 border-b border-rose/10 mb-4">
               <PieIcon className="w-4 h-4 text-deep-rose" />
               <div>
-                <h2 className="font-heading text-2xl font-light text-plum">
+                <h2 className="text-lg font-semibold text-plum tracking-tight">
                   Most Booked Services
                 </h2>
                 <p className="text-xs text-plum/60 font-light mt-0.5">
@@ -662,7 +666,7 @@ export default function OverviewDashboardClient({
               <div>
                 <div className="flex items-center gap-2">
                   <Calendar className="w-4 h-4 text-deep-rose" />
-                  <h2 className="font-heading text-2xl font-light text-plum">
+                  <h2 className="text-lg font-semibold text-plum tracking-tight">
                     Upcoming Appointments
                   </h2>
                 </div>
