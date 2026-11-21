@@ -2,27 +2,22 @@
 
 import { useState, useRef, useEffect, FormEvent } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { Check, CheckCircle2, ChevronDown, X, Sparkles, Clock } from "lucide-react";
+import { Check, CheckCircle2, ChevronDown, X, Sparkles, Clock, AlertCircle, RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { BOOKING_TIME_SLOTS } from "@/lib/constants";
+import { formatPrice, formatDuration } from "@/lib/currency";
 import SplitText from "@/components/ui/animations/SplitText";
 
-const SERVICES_OPTIONS = [
-  "Gel Extensions",
-  "Bespoke Nail Art",
-  "Refill & Rebalance",
-  "Deluxe Manicure",
-  "Classic Gel Nails",
-  "Chrome Glaze Finish",
-];
+export interface ServiceItem {
+  id: string;
+  name: string;
+  price: number;
+  duration_min: number;
+  active: boolean;
+  position: number;
+}
 
-const TIME_SLOTS = [
-  "10:00 AM",
-  "11:30 AM",
-  "1:00 PM",
-  "2:30 PM",
-  "4:00 PM",
-  "5:30 PM",
-];
+const TIME_SLOTS = BOOKING_TIME_SLOTS;
 
 // Sparkle Particle definition for button burst
 interface SparkleParticle {
@@ -36,12 +31,25 @@ interface SparkleParticle {
 export default function BookingForm() {
   const shouldReduce = useReducedMotion();
 
+  // Services State (Loaded dynamically from /api/services)
+  const [services, setServices] = useState<ServiceItem[]>([]);
+  const [isLoadingServices, setIsLoadingServices] = useState(true);
+  const [servicesError, setServicesError] = useState(false);
+
   // Form State
   const [firstName, setFirstName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [selectedService, setSelectedService] = useState("");
+  const [selectedServiceId, setSelectedServiceId] = useState("");
   const [preferredDate, setPreferredDate] = useState("");
   const [selectedTimeSlot, setSelectedTimeSlot] = useState("");
+  const [note, setNote] = useState("");
+  const [honeypot, setHoneypot] = useState("");
+
+  const selectedServiceObj = services.find((s) => s.id === selectedServiceId);
+
+  // Submission & Error State
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Input Focus States for Floating Labels & Animated Underlines
   const [focusedField, setFocusedField] = useState<string | null>(null);
@@ -69,6 +77,27 @@ export default function BookingForm() {
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // Fetch active services on mount
+  const loadServices = async () => {
+    try {
+      setIsLoadingServices(true);
+      setServicesError(false);
+      const res = await fetch("/api/services");
+      if (!res.ok) throw new Error("Failed to load services");
+      const data: ServiceItem[] = await res.json();
+      setServices(data);
+    } catch (err) {
+      console.error("Failed to load services:", err);
+      setServicesError(true);
+    } finally {
+      setIsLoadingServices(false);
+    }
+  };
+
+  useEffect(() => {
+    loadServices();
+  }, []);
+
   // Close custom dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -93,52 +122,113 @@ export default function BookingForm() {
   }, [showToast]);
 
   // Handle Form Submission
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    setErrorMessage(null);
 
-    if (!selectedService) {
+    // ── Client-side Validation ──
+    const trimmedName = firstName.trim();
+    if (trimmedName.length < 2) {
+      setErrorMessage("Please enter your name (at least 2 characters).");
+      return;
+    }
+
+    const digitsOnly = phoneNumber.replace(/\D/g, "");
+    if (digitsOnly.length < 8 || digitsOnly.length > 15) {
+      setErrorMessage("Please enter a valid phone number with 8 to 15 digits.");
+      return;
+    }
+
+    if (!selectedServiceId || !selectedServiceObj) {
       setServiceError(true);
+      setErrorMessage("Please choose a service from our menu.");
       return;
     }
     setServiceError(false);
 
-    // 1. Generate Sparkle Particles Burst around button
-    const burstCount = 16;
-    const colors = ["#B84A6E", "#E88AA6", "#F9C6D4", "#FFF8FA", "#FFD1DC"];
-    const newParticles: SparkleParticle[] = [];
-
-    for (let i = 0; i < burstCount; i++) {
-      const angle = (i / burstCount) * 2 * Math.PI;
-      const distance = 45 + Math.random() * 55;
-      newParticles.push({
-        id: i,
-        x: Math.cos(angle) * distance,
-        y: Math.sin(angle) * distance,
-        scale: 0.5 + Math.random() * 0.8,
-        color: colors[i % colors.length],
-      });
+    if (!preferredDate) {
+      setErrorMessage("Please select your preferred appointment date.");
+      return;
     }
-    setParticles(newParticles);
 
-    // 2. Button morphs to checkmark
-    setIsSuccessMorphed(true);
-    setSubmittedName(firstName);
+    if (!selectedTimeSlot) {
+      setErrorMessage("Please select an available studio time slot.");
+      return;
+    }
 
-    // 3. Show friendly confirmation toast
-    setShowToast(true);
+    setIsSubmitting(true);
 
-    // Reset morph state after 3.5s
-    setTimeout(() => {
-      setIsSuccessMorphed(false);
-      setParticles([]);
-    }, 3500);
+    try {
+      const res = await fetch("/api/reservations", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: trimmedName,
+          phone: phoneNumber.trim(),
+          service_id: selectedServiceId,
+          date: preferredDate,
+          time: selectedTimeSlot,
+          note: note.trim() || undefined,
+          honeypot: honeypot || undefined,
+        }),
+      });
 
-    // Reset Form fields
-    setFirstName("");
-    setPhoneNumber("");
-    setSelectedService("");
-    setPreferredDate("");
-    setSelectedTimeSlot("");
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        setErrorMessage(data.error || "An unexpected error occurred. Please try again.");
+        setIsSubmitting(false);
+        return;
+      }
+
+      // 1. Generate Sparkle Particles Burst around button
+      const burstCount = 16;
+      const colors = ["#B84A6E", "#E88AA6", "#F9C6D4", "#FFF8FA", "#FFD1DC"];
+      const newParticles: SparkleParticle[] = [];
+
+      for (let i = 0; i < burstCount; i++) {
+        const angle = (i / burstCount) * 2 * Math.PI;
+        const distance = 45 + Math.random() * 55;
+        newParticles.push({
+          id: i,
+          x: Math.cos(angle) * distance,
+          y: Math.sin(angle) * distance,
+          scale: 0.5 + Math.random() * 0.8,
+          color: colors[i % colors.length],
+        });
+      }
+      setParticles(newParticles);
+
+      // 2. Button morphs to checkmark
+      setIsSuccessMorphed(true);
+      setSubmittedName(trimmedName);
+
+      // 3. Show friendly confirmation toast
+      setShowToast(true);
+
+      // 4. Reset Form fields
+      setFirstName("");
+      setPhoneNumber("");
+      setSelectedServiceId("");
+      setPreferredDate("");
+      setSelectedTimeSlot("");
+      setNote("");
+      setHoneypot("");
+      setErrorMessage(null);
+
+      // Reset morph state after 3.5s
+      setTimeout(() => {
+        setIsSuccessMorphed(false);
+        setParticles([]);
+      }, 3500);
+    } catch (err) {
+      console.error("Booking error:", err);
+      setErrorMessage("Network error. Please check your internet connection and try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   const [minDate, setMinDate] = useState<string>("");
@@ -367,7 +457,11 @@ export default function BookingForm() {
               <button
                 type="button"
                 onClick={() => {
-                  setIsDropdownOpen((prev) => !prev);
+                  if (servicesError) {
+                    loadServices();
+                  } else {
+                    setIsDropdownOpen((prev) => !prev);
+                  }
                   setServiceError(false);
                 }}
                 className={cn(
@@ -381,13 +475,26 @@ export default function BookingForm() {
                     : "border-blush/60 hover:border-deep-rose/40"
                 )}
               >
-                <span className={selectedService ? "text-plum font-normal" : "text-plum/40 font-light"}>
-                  {selectedService || "Choose a service…"}
-                </span>
+                {isLoadingServices ? (
+                  <span className="text-plum/50 flex items-center gap-2 font-light text-sm">
+                    <RefreshCw size={14} className="animate-spin text-deep-rose" />
+                    <span>Loading services menu…</span>
+                  </span>
+                ) : servicesError ? (
+                  <span className="text-red-500 font-light text-xs sm:text-sm">
+                    Unable to load services. Click to retry.
+                  </span>
+                ) : selectedServiceObj ? (
+                  <span className="text-plum font-normal truncate">
+                    {selectedServiceObj.name} — {formatPrice(selectedServiceObj.price)}
+                  </span>
+                ) : (
+                  <span className="text-plum/40 font-light">Choose a service…</span>
+                )}
                 <ChevronDown
                   size={16}
                   className={cn(
-                    "text-deep-rose transition-transform duration-300",
+                    "text-deep-rose transition-transform duration-300 shrink-0 ml-2",
                     isDropdownOpen && "rotate-180"
                   )}
                 />
@@ -401,32 +508,101 @@ export default function BookingForm() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -6, scale: 0.98 }}
                     transition={{ duration: 0.18, ease: "easeOut" }}
-                    className="absolute z-50 inset-x-0 top-full mt-2 bg-white/95 backdrop-blur-md rounded-2xl border border-blush/60 shadow-xl shadow-deep-rose/12 p-2 space-y-1"
+                    className="absolute z-50 inset-x-0 top-full mt-2 bg-white/95 backdrop-blur-md rounded-2xl border border-blush/60 shadow-xl shadow-deep-rose/12 p-2 space-y-1 max-h-64 overflow-y-auto"
                   >
-                    {SERVICES_OPTIONS.map((service) => {
-                      const isSelected = selectedService === service;
-                      return (
+                    {isLoadingServices ? (
+                      <div className="p-4 text-center text-xs text-plum/60 flex items-center justify-center gap-2">
+                        <RefreshCw size={13} className="animate-spin text-deep-rose" />
+                        <span>Fetching services…</span>
+                      </div>
+                    ) : servicesError ? (
+                      <div className="p-4 text-center">
+                        <p className="text-xs text-plum/70 mb-2">Failed to load services.</p>
                         <button
-                          key={service}
                           type="button"
-                          onClick={() => {
-                            setSelectedService(service);
-                            setIsDropdownOpen(false);
-                            setServiceError(false);
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            loadServices();
                           }}
-                          className={cn(
-                            "w-full flex items-center justify-between px-3.5 py-3 rounded-xl min-h-[44px]",
-                            "font-body text-base text-left transition-all duration-150 cursor-pointer",
-                            isSelected
-                              ? "bg-blush/35 text-deep-rose font-medium"
-                              : "text-plum/85 hover:bg-blush/15 hover:text-plum"
-                          )}
+                          className="px-3 py-1 text-xs rounded-lg bg-deep-rose text-white cursor-pointer"
                         >
-                          <span>{service}</span>
-                          {isSelected && <Check size={15} className="text-deep-rose" />}
+                          Retry
                         </button>
-                      );
-                    })}
+                      </div>
+                    ) : services.length === 0 ? (
+                      <div className="p-4 text-center text-xs text-plum/50">
+                        No active services found.
+                      </div>
+                    ) : (
+                      services.map((service) => {
+                        const isSelected = selectedServiceId === service.id;
+                        return (
+                          <button
+                            key={service.id}
+                            type="button"
+                            onClick={() => {
+                              setSelectedServiceId(service.id);
+                              setIsDropdownOpen(false);
+                              setServiceError(false);
+                            }}
+                            className={cn(
+                              "w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl min-h-[46px]",
+                              "font-body text-base text-left transition-all duration-150 cursor-pointer",
+                              isSelected
+                                ? "bg-blush/35 text-deep-rose font-medium shadow-xs"
+                                : "text-plum/85 hover:bg-blush/15 hover:text-plum"
+                            )}
+                          >
+                            <div className="flex flex-col text-left pr-2">
+                              <span className="font-medium text-plum leading-snug">
+                                {service.name}
+                              </span>
+                              <span className="text-xs text-deep-rose font-medium mt-0.5">
+                                {formatPrice(service.price)} • {formatDuration(service.duration_min)}
+                              </span>
+                            </div>
+                            {isSelected && <Check size={16} className="text-deep-rose shrink-0" />}
+                          </button>
+                        );
+                      })
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Small Animated Summary Card with Selected Price & Duration */}
+              <AnimatePresence>
+                {selectedServiceObj && (
+                  <motion.div
+                    initial={shouldReduce ? {} : { opacity: 0, y: -6, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={shouldReduce ? {} : { opacity: 0, y: -6, scale: 0.98 }}
+                    transition={{ duration: 0.25, ease: "easeOut" }}
+                    className="mt-1 p-3 sm:p-3.5 rounded-2xl bg-white/90 border border-blush/60 shadow-sm flex items-center justify-between gap-3 text-plum will-change-transform"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-full bg-blush/35 flex items-center justify-center text-deep-rose shrink-0">
+                        <Sparkles size={14} className="text-deep-rose" />
+                      </div>
+                      <div className="flex flex-col text-left">
+                        <span className="font-body text-xs font-semibold text-plum">
+                          {selectedServiceObj.name}
+                        </span>
+                        <span className="font-body text-[11px] text-plum/60 flex items-center gap-1">
+                          <Clock size={11} className="text-deep-rose/80" />
+                          <span>Est. {formatDuration(selectedServiceObj.duration_min)}</span>
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="text-right">
+                      <span className="font-heading text-base sm:text-lg font-medium text-deep-rose block leading-tight">
+                        {formatPrice(selectedServiceObj.price)}
+                      </span>
+                      <span className="font-body text-[10px] uppercase tracking-wider text-plum/50">
+                        Studio rate
+                      </span>
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -459,6 +635,55 @@ export default function BookingForm() {
                 )}
               />
             </motion.div>
+
+            {/* 5. Special Notes / Preferences (Optional, spans 2 columns on tablet/desktop) */}
+            <motion.div
+              initial={shouldReduce ? {} : { opacity: 0, y: 20 }}
+              whileInView={shouldReduce ? {} : { opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.45 }}
+              className="sm:col-span-2 relative flex flex-col justify-end"
+            >
+              <div
+                className={cn(
+                  "relative rounded-2xl bg-pearl/80 hover:bg-white border transition-all duration-300 overflow-hidden",
+                  focusedField === "note"
+                    ? "border-deep-rose ring-2 ring-deep-rose/25 bg-white shadow-[0_0_20px_rgba(232,138,166,0.3)]"
+                    : "border-blush/60 hover:border-deep-rose/40"
+                )}
+              >
+                <label
+                  htmlFor="booking-note"
+                  className={cn(
+                    "absolute left-4 transition-all duration-200 pointer-events-none font-body select-none",
+                    note || focusedField === "note"
+                      ? "top-2 text-[10px] uppercase tracking-widest font-semibold text-deep-rose"
+                      : "top-4 text-sm text-plum/50 font-normal"
+                  )}
+                >
+                  Special Notes or Requests (Optional)
+                </label>
+
+                <input
+                  id="booking-note"
+                  type="text"
+                  maxLength={500}
+                  value={note}
+                  onFocus={(e) => handleFieldFocus("note", e)}
+                  onBlur={() => setFocusedField(null)}
+                  onChange={(e) => setNote(e.target.value)}
+                  className="w-full bg-transparent px-4 pt-6 pb-2.5 font-body text-base text-plum focus:outline-none"
+                />
+
+                <span
+                  aria-hidden
+                  className={cn(
+                    "absolute bottom-0 inset-x-0 h-[2px] bg-gradient-to-r from-blush via-rose to-deep-rose origin-center transition-transform duration-300",
+                    focusedField === "note" ? "scale-x-100" : "scale-x-0"
+                  )}
+                />
+              </div>
+            </motion.div>
           </div>
 
           {/* ── 5. Staggered Time Slot Options ── */}
@@ -471,7 +696,7 @@ export default function BookingForm() {
           >
             <div className="flex items-center gap-1.5 font-body text-[11px] font-semibold tracking-widest uppercase text-plum/75">
               <Clock size={12} className="text-deep-rose" />
-              <span>Select Time Slot</span>
+              <span>Select Time Slot <span className="text-deep-rose">*</span></span>
             </div>
             <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-2.5">
               {TIME_SLOTS.map((slot, index) => {
@@ -502,6 +727,50 @@ export default function BookingForm() {
             </div>
           </motion.div>
 
+          {/* Hidden Honeypot Anti-Bot Field */}
+          <div className="hidden" aria-hidden="true" style={{ display: "none" }}>
+            <label htmlFor="b_comment">Leave this empty</label>
+            <input
+              id="b_comment"
+              type="text"
+              name="b_comment"
+              value={honeypot}
+              onChange={(e) => setHoneypot(e.target.value)}
+              tabIndex={-1}
+              autoComplete="off"
+            />
+          </div>
+
+          {/* ── Friendly Inline Error Message ── */}
+          <AnimatePresence>
+            {errorMessage && (
+              <motion.div
+                initial={{ opacity: 0, y: -6, height: 0 }}
+                animate={{ opacity: 1, y: 0, height: "auto" }}
+                exit={{ opacity: 0, y: -6, height: 0 }}
+                transition={{ duration: 0.25, ease: "easeOut" }}
+                className="rounded-2xl p-4 bg-[#FFF0F3] border border-rose/40 text-plum flex items-start gap-3 shadow-sm shadow-rose/10"
+                role="alert"
+                aria-live="assertive"
+              >
+                <div className="w-5 h-5 rounded-full bg-deep-rose/15 flex items-center justify-center text-deep-rose shrink-0 mt-0.5">
+                  <AlertCircle size={14} className="stroke-[2.5]" />
+                </div>
+                <div className="flex-1 font-body text-xs sm:text-sm text-plum/90 leading-relaxed">
+                  {errorMessage}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setErrorMessage(null)}
+                  className="text-plum/40 hover:text-plum p-1 transition-colors cursor-pointer"
+                  aria-label="Dismiss error"
+                >
+                  <X size={15} />
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           {/* ── 6. Submit Button with Magnetic Hover, Morph & Sparkles Burst ── */}
           <div className="relative pt-2">
             {/* Sparkles Particle Burst */}
@@ -528,26 +797,37 @@ export default function BookingForm() {
 
             <motion.button
               type="submit"
-              whileTap={{ scale: 0.97 }}
+              disabled={isSubmitting || isSuccessMorphed}
+              whileTap={isSubmitting || isSuccessMorphed ? {} : { scale: 0.97 }}
               className={cn(
-                "w-full relative overflow-hidden",
+                "w-full relative overflow-hidden min-h-[52px]",
                 "bg-deep-rose hover:bg-[#A33D5E] text-pearl",
                 "font-body text-sm font-semibold tracking-widest uppercase",
                 "py-4 rounded-full",
                 "shadow-lg shadow-deep-rose/25 hover:shadow-xl hover:shadow-deep-rose/35",
-                "transition-all duration-300 cursor-pointer",
+                "transition-all duration-300",
+                isSubmitting || isSuccessMorphed
+                  ? "cursor-not-allowed opacity-95"
+                  : "cursor-pointer",
                 "flex items-center justify-center gap-2 group",
                 isSuccessMorphed && "bg-emerald-600 hover:bg-emerald-600 shadow-emerald-600/30"
               )}
             >
               {/* Shine sweep animation */}
-              <span
-                aria-hidden
-                className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent group-hover:translate-x-full transition-transform duration-700 ease-in-out"
-              />
+              {!isSubmitting && !isSuccessMorphed && (
+                <span
+                  aria-hidden
+                  className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent group-hover:translate-x-full transition-transform duration-700 ease-in-out"
+                />
+              )}
 
               <span className="relative z-10 flex items-center justify-center gap-2">
-                {isSuccessMorphed ? (
+                {isSubmitting ? (
+                  <div className="flex items-center gap-2.5 text-white">
+                    <span className="w-4 h-4 border-2 border-white/35 border-t-white rounded-full animate-spin" />
+                    <span>Confirming Reservation…</span>
+                  </div>
+                ) : isSuccessMorphed ? (
                   <motion.span
                     initial={{ scale: 0, rotate: -25 }}
                     animate={{ scale: 1, rotate: 0 }}

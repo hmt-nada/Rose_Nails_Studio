@@ -166,3 +166,32 @@ export const REVIEWS: ReviewItem[] = [
     gradient: "from-[#E88AA6] to-[#6A1B4D]",
   },
 ];
+
+/**
+ * Available atelier services for the booking system.
+ */
+export const BOOKING_SERVICES = [
+  "Gel Extensions",
+  "Bespoke Nail Art",
+  "Refill & Rebalance",
+  "Deluxe Manicure",
+  "Classic Gel Nails",
+  "Chrome Glaze Finish",
+] as const;
+
+export type BookingService = (typeof BOOKING_SERVICES)[number];
+
+/**
+ * Available appointment time slots for the booking system.
+ */
+export const BOOKING_TIME_SLOTS = [
+  "10:00 AM",
+  "11:30 AM",
+  "1:00 PM",
+  "2:30 PM",
+  "4:00 PM",
+  "5:30 PM",
+] as const;
+
+export type BookingTimeSlot = (typeof BOOKING_TIME_SLOTS)[number];
+

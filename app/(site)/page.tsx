@@ -6,12 +6,11 @@ import Services from "@/components/sections/Services";
 import HowItWorks from "@/components/sections/HowItWorks";
 import BookingForm from "@/components/sections/BookingForm";
 import Footer from "@/components/sections/Footer";
-import SmoothScrollProvider from "@/components/providers/SmoothScrollProvider";
 import LiquidDivider from "@/components/ui/LiquidDivider";
 
 export default function Home() {
   return (
-    <SmoothScrollProvider>
+    <>
       <Navbar />
       <main className="flex flex-col w-full overflow-x-clip max-w-full">
         <Hero />
@@ -28,6 +27,6 @@ export default function Home() {
         <LiquidDivider fromColor="fill-[#FDF0F5]" toColor="bg-[#FFF8FA]" flip />
         <Footer />
       </main>
-    </SmoothScrollProvider>
+    </>
   );
 }
