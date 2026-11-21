@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { LogOut, User, Loader2, Sparkles } from "lucide-react";
+import { LogOut, User, Loader2, Sparkles, SlidersHorizontal } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { useManageServicesModal } from "./ManageServicesContext";
 
 interface AdminTopBarProps {
   initialEmail?: string | null;
@@ -11,6 +12,7 @@ interface AdminTopBarProps {
 
 export default function AdminTopBar({ initialEmail }: AdminTopBarProps) {
   const router = useRouter();
+  const { openModal } = useManageServicesModal();
   const [userEmail, setUserEmail] = useState<string | null>(initialEmail || null);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
@@ -61,10 +63,22 @@ export default function AdminTopBar({ initialEmail }: AdminTopBarProps) {
         </p>
       </div>
 
-      {/* Right controls: Admin Email & Logout */}
-      <div className="flex items-center gap-3">
+      {/* Right controls: Manage Services Button, Admin Email & Logout */}
+      <div className="flex items-center gap-2.5 sm:gap-3">
+        {/* Manage Services Button */}
+        <button
+          type="button"
+          onClick={openModal}
+          title="Open services and pricing management modal"
+          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium text-deep-rose bg-rose/10 hover:bg-rose/20 border border-rose/25 transition-all cursor-pointer shadow-xs"
+        >
+          <SlidersHorizontal className="w-3.5 h-3.5" />
+          <span className="hidden sm:inline">Manage Services</span>
+          <span className="sm:hidden">Services</span>
+        </button>
+
         {/* Admin Email Pill */}
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-rose/10 border border-rose/20 text-xs sm:text-sm font-medium text-plum/85 max-w-[170px] sm:max-w-xs truncate">
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-rose/10 border border-rose/20 text-xs sm:text-sm font-medium text-plum/85 max-w-[150px] sm:max-w-xs truncate">
           <User className="w-3.5 h-3.5 text-deep-rose shrink-0" />
           <span className="truncate">{userEmail || "admin@rosenails.com"}</span>
         </div>
