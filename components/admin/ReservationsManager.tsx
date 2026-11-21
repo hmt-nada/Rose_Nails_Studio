@@ -106,7 +106,7 @@ export default function ReservationsManager({
   const [toasts, setToasts] = useState<ToastItem[]>([]);
 
   const addToast = useCallback((type: ToastItem["type"], message: string) => {
-    const id = Date.now().toString() + Math.random().toString(36).substring(2, 5);
+    const id = Math.random().toString(36).substring(2, 9) + Math.random().toString(36).substring(2, 6);
     setToasts((prev) => [...prev, { id, type, message }]);
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));

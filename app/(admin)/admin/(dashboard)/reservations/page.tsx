@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import ReservationsManager, {
   type Reservation,
@@ -6,6 +7,9 @@ import ReservationsManager, {
 import { ReservationsSkeleton } from "@/components/admin/AdminSkeletons";
 
 async function ReservationsDataLoader() {
+  // Signals to Next.js that this Suspense boundary requires request-time data
+  await connection();
+
   let reservations: Reservation[] = [];
 
   try {
@@ -19,14 +23,7 @@ async function ReservationsDataLoader() {
     if (!error && data) {
       reservations = data as Reservation[];
     }
-  } catch (err: unknown) {
-    const errorObj = err as { digest?: string };
-    if (
-      errorObj?.digest === "HANGING_PROMISE_REJECTION" ||
-      errorObj?.digest?.startsWith("DYNAMIC_SERVER_USAGE")
-    ) {
-      throw err;
-    }
+  } catch (err) {
     console.error("Error loading reservations in Server Component:", err);
   }
 
