@@ -41,9 +41,12 @@ export function OverviewSkeleton() {
   return (
     <div className="space-y-8 animate-pulse">
       {/* Top Banner Skeleton */}
-      <div className="rounded-3xl bg-white/60 border border-rose/15 p-6 sm:p-8">
-        <div className="w-48 h-8 rounded-lg bg-plum/10 mb-2" />
-        <div className="w-72 h-4 rounded-md bg-plum/5" />
+      <div className="rounded-3xl bg-white/60 border border-rose/15 p-6 sm:p-8 flex items-center justify-between">
+        <div>
+          <div className="w-48 h-8 rounded-lg bg-plum/10 mb-2" />
+          <div className="w-72 h-4 rounded-md bg-plum/5" />
+        </div>
+        <div className="w-40 h-10 rounded-full bg-rose/15 hidden sm:block" />
       </div>
 
       {/* 4 Stats Cards */}
@@ -53,10 +56,16 @@ export function OverviewSkeleton() {
         ))}
       </div>
 
-      {/* Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 rounded-3xl bg-white/60 border border-rose/15 p-6 h-80" />
+      {/* 2 Top Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="rounded-3xl bg-white/60 border border-rose/15 p-6 h-80" />
+        <div className="rounded-3xl bg-white/60 border border-rose/15 p-6 h-80" />
+      </div>
+
+      {/* Bottom Row: Donut + Upcoming List */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="rounded-3xl bg-white/60 border border-rose/15 p-6 h-80" />
+        <div className="lg:col-span-2 rounded-3xl bg-white/60 border border-rose/15 p-6 h-80" />
       </div>
     </div>
   );
