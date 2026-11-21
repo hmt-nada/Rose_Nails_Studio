@@ -140,7 +140,7 @@ export default function Gallery() {
   return (
     <section
       id="work"
-      className="relative py-28 w-full bg-[#FDF0F5] overflow-hidden select-none"
+      className="relative py-28 w-full bg-[var(--divider-wave-bg)] overflow-hidden select-none"
     >
       {/* ─── Ambient background blur blobs with Parallax ─── */}
       <div
@@ -192,8 +192,8 @@ export default function Gallery() {
                 "hidden sm:flex absolute left-2 sm:left-4 md:left-6 lg:left-8 z-30",
                 "w-11 h-11 md:w-14 md:h-14 rounded-full min-h-[44px] min-w-[44px]",
                 "glass items-center justify-center text-plum",
-                "border border-white/70 shadow-md shadow-deep-rose/10",
-                "hover:bg-white hover:border-deep-rose/40 hover:text-deep-rose hover:scale-110",
+                "border border-white/70 dark:border-rose/30 shadow-md shadow-deep-rose/10",
+                "hover:bg-white dark:hover:bg-surface-elevated hover:border-deep-rose/40 hover:text-deep-rose hover:scale-110",
                 "active:scale-95 transition-all duration-300",
                 "focus:outline-none focus-visible:ring-2 focus-visible:ring-deep-rose/60",
                 "disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
@@ -279,8 +279,8 @@ export default function Gallery() {
                 "hidden sm:flex absolute right-2 sm:right-4 md:right-6 lg:right-8 z-30",
                 "w-11 h-11 md:w-14 md:h-14 rounded-full min-h-[44px] min-w-[44px]",
                 "glass items-center justify-center text-plum",
-                "border border-white/70 shadow-md shadow-deep-rose/10",
-                "hover:bg-white hover:border-deep-rose/40 hover:text-deep-rose hover:scale-110",
+                "border border-white/70 dark:border-rose/30 shadow-md shadow-deep-rose/10",
+                "hover:bg-white dark:hover:bg-surface-elevated hover:border-deep-rose/40 hover:text-deep-rose hover:scale-110",
                 "active:scale-95 transition-all duration-300",
                 "focus:outline-none focus-visible:ring-2 focus-visible:ring-deep-rose/60",
                 "disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
@@ -296,7 +296,7 @@ export default function Gallery() {
               onClick={scrollPrev}
               disabled={!canScrollPrev}
               aria-label="Previous slide"
-              className="w-11 h-11 min-h-[44px] min-w-[44px] rounded-full glass border border-blush/60 flex items-center justify-center text-plum active:scale-95 disabled:opacity-30"
+              className="w-11 h-11 min-h-[44px] min-w-[44px] rounded-full glass border border-blush/60 dark:border-rose/30 flex items-center justify-center text-plum active:scale-95 disabled:opacity-30"
             >
               <ChevronLeft size={18} />
             </button>
@@ -307,7 +307,7 @@ export default function Gallery() {
               onClick={scrollNext}
               disabled={!canScrollNext}
               aria-label="Next slide"
-              className="w-11 h-11 min-h-[44px] min-w-[44px] rounded-full glass border border-blush/60 flex items-center justify-center text-plum active:scale-95 disabled:opacity-30"
+              className="w-11 h-11 min-h-[44px] min-w-[44px] rounded-full glass border border-blush/60 dark:border-rose/30 flex items-center justify-center text-plum active:scale-95 disabled:opacity-30"
             >
               <ChevronRight size={18} />
             </button>
@@ -338,15 +338,15 @@ function WorkCard({ item, isActive, onCardClick }: WorkCardProps) {
         // Fluid width scaling from mobile (240px) to desktop (305px)
         "w-[240px] xs:w-[260px] sm:w-[285px] md:w-[305px]",
         // Fully rounded capsule / pill shape top and bottom
-        "rounded-[9999px] bg-white",
-        "border border-blush/40",
+        "rounded-[9999px] bg-white dark:bg-surface-elevated",
+        "border border-blush/40 dark:border-rose/20",
         "cursor-pointer select-none",
         "pt-4 sm:pt-6 pb-6 sm:pb-8 px-3.5 sm:px-4",
         "transition-all duration-500",
         // Active (center) card gets a gentle breathing glow pulse
         isActive
-          ? "shadow-[0_16px_45px_rgba(232,138,166,0.38),0_4px_20px_rgba(184,74,110,0.16)] ring-2 ring-rose/35"
-          : "shadow-[0_12px_40px_rgba(184,74,110,0.12),0_4px_16px_rgba(249,198,212,0.3)] hover:-translate-y-2 hover:shadow-[0_20px_55px_rgba(184,74,110,0.22)]"
+          ? "shadow-[0_16px_45px_rgba(232,138,166,0.38),0_4px_20px_rgba(184,74,110,0.16)] dark:shadow-[0_0_35px_rgba(243,166,189,0.3)] ring-2 ring-rose/35"
+          : "shadow-[0_12px_40px_rgba(184,74,110,0.12),0_4px_16px_rgba(249,198,212,0.3)] dark:shadow-[0_0_24px_rgba(243,166,189,0.1)] hover:-translate-y-2 hover:shadow-[0_20px_55px_rgba(184,74,110,0.22)] dark:hover:shadow-[0_0_30px_rgba(243,166,189,0.25)]"
       )}
       style={{
         transition:
@@ -355,7 +355,7 @@ function WorkCard({ item, isActive, onCardClick }: WorkCardProps) {
       }}
     >
       {/* 1. Round photo: large relative to card (~84% width) */}
-      <div className="relative w-[84%] aspect-square rounded-full overflow-hidden p-1.5 bg-gradient-to-br from-blush/50 via-white to-rose/30 shadow-inner">
+      <div className="relative w-[84%] aspect-square rounded-full overflow-hidden p-1.5 bg-gradient-to-br from-blush/50 via-white to-rose/30 dark:from-rose/30 dark:via-surface dark:to-blush/40 shadow-inner">
         <div className="relative w-full h-full rounded-full overflow-hidden bg-pearl">
           {!imgError ? (
             <Image

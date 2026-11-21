@@ -14,6 +14,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 
 // Floating glass decorative bubbles
 const BUBBLES = [
@@ -75,6 +76,11 @@ export default function AdminLoginPage() {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center p-4 sm:p-6 overflow-hidden bg-pearl">
+      {/* ── Theme Toggle in Top Right ── */}
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20">
+        <ThemeToggle />
+      </div>
+
       {/* ── Ambient Blurred Blobs ── */}
       <motion.div
         animate={{
@@ -128,7 +134,7 @@ export default function AdminLoginPage() {
             right: bubble.right,
             bottom: bubble.bottom,
           }}
-          className="pointer-events-none absolute hidden sm:block rounded-full bg-white/40 backdrop-blur-md border border-white/70 shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
+          className="pointer-events-none absolute hidden sm:block rounded-full bg-white/40 dark:bg-rose/10 backdrop-blur-md border border-white/70 dark:border-rose/20 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_0_25px_rgba(243,166,189,0.1)]"
         />
       ))}
 
@@ -152,7 +158,7 @@ export default function AdminLoginPage() {
                 transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
               }
         }
-        className="relative z-10 w-full max-w-md rounded-3xl bg-white/75 backdrop-blur-2xl border border-rose/20 p-8 sm:p-10 shadow-[0_20px_60px_-15px_rgba(184,74,110,0.14)]"
+        className="relative z-10 w-full max-w-md rounded-3xl bg-white/75 dark:bg-surface-elevated/85 backdrop-blur-2xl border border-rose/20 dark:border-rose/25 p-8 sm:p-10 shadow-[0_20px_60px_-15px_rgba(184,74,110,0.14)] dark:shadow-[0_0_35px_rgba(243,166,189,0.08)]"
       >
         {/* Brand Emblem */}
         <div className="flex flex-col items-center text-center mb-8">
@@ -205,7 +211,7 @@ export default function AdminLoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="admin@rosenails.com"
                 disabled={isLoading || isSuccess}
-                className="w-full pl-10 pr-4 py-3 bg-pearl/60 border border-rose/25 rounded-xl text-plum text-sm placeholder:text-plum/35 focus:outline-none focus:ring-2 focus:ring-rose/30 focus:border-rose transition-all disabled:opacity-60"
+                className="w-full pl-10 pr-4 py-3 bg-pearl/60 dark:bg-surface/60 border border-rose/25 rounded-xl text-plum text-sm placeholder:text-plum/35 focus:outline-none focus:ring-2 focus:ring-rose/30 focus:border-rose transition-all disabled:opacity-60"
               />
             </div>
           </div>
@@ -231,7 +237,7 @@ export default function AdminLoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
                 disabled={isLoading || isSuccess}
-                className="w-full pl-10 pr-11 py-3 bg-pearl/60 border border-rose/25 rounded-xl text-plum text-sm placeholder:text-plum/35 focus:outline-none focus:ring-2 focus:ring-rose/30 focus:border-rose transition-all disabled:opacity-60"
+                className="w-full pl-10 pr-11 py-3 bg-pearl/60 dark:bg-surface/60 border border-rose/25 rounded-xl text-plum text-sm placeholder:text-plum/35 focus:outline-none focus:ring-2 focus:ring-rose/30 focus:border-rose transition-all disabled:opacity-60"
               />
               <button
                 type="button"

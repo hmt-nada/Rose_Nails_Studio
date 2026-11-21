@@ -310,7 +310,7 @@ export default function ReservationsManager({
   return (
     <div className="space-y-6">
       {/* ── Toolbar: Search, Filters & Controls ── */}
-      <div className="rounded-3xl bg-white/75 backdrop-blur-xl border border-rose/15 p-5 sm:p-6 shadow-[0_4px_24px_rgba(184,74,110,0.04)] space-y-4">
+      <div className="rounded-3xl bg-white/75 dark:bg-surface-elevated/75 backdrop-blur-xl border border-rose/15 dark:border-rose/20 p-5 sm:p-6 shadow-[0_4px_24px_rgba(184,74,110,0.04)] dark:shadow-[0_0_24px_rgba(243,166,189,0.04)] space-y-4">
         {/* Top row: Search input + Date Range + Sort */}
         <div className="flex flex-col lg:flex-row gap-3.5 items-stretch lg:items-center justify-between">
           {/* Search by Name or Phone */}
@@ -323,14 +323,14 @@ export default function ReservationsManager({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search by client name, phone number, service..."
-              className="w-full pl-10 pr-4 py-2.5 bg-pearl/60 border border-rose/25 rounded-2xl text-xs sm:text-sm text-plum placeholder:text-plum/35 focus:outline-none focus:ring-2 focus:ring-rose/30 focus:border-rose transition-all"
+              className="w-full pl-10 pr-4 py-2.5 bg-pearl/60 dark:bg-surface/60 border border-rose/25 rounded-2xl text-xs sm:text-sm text-plum placeholder:text-plum/35 focus:outline-none focus:ring-2 focus:ring-rose/30 focus:border-rose transition-all"
             />
           </div>
 
           {/* Date range picker & Sort dropdown */}
           <div className="flex flex-wrap items-center gap-2.5">
             {/* Date Range: From / To */}
-            <div className="flex items-center gap-1.5 bg-pearl/60 border border-rose/20 rounded-2xl px-2.5 py-1.5 text-xs text-plum">
+            <div className="flex items-center gap-1.5 bg-pearl/60 dark:bg-surface/60 border border-rose/20 rounded-2xl px-2.5 py-1.5 text-xs text-plum">
               <CalendarIcon className="w-3.5 h-3.5 text-deep-rose shrink-0" />
               <input
                 type="date"
@@ -359,7 +359,7 @@ export default function ReservationsManager({
             </div>
 
             {/* Sort Dropdown */}
-            <div className="flex items-center gap-1.5 bg-pearl/60 border border-rose/20 rounded-2xl px-3 py-2 text-xs text-plum">
+            <div className="flex items-center gap-1.5 bg-pearl/60 dark:bg-surface/60 border border-rose/20 rounded-2xl px-3 py-2 text-xs text-plum">
               <ArrowUpDown className="w-3.5 h-3.5 text-deep-rose shrink-0" />
               <select
                 value={sortBy}
@@ -392,7 +392,7 @@ export default function ReservationsManager({
                 className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer shrink-0 ${
                   isSelected
                     ? "bg-deep-rose text-pearl shadow-sm shadow-deep-rose/25"
-                    : "bg-white/60 text-plum/70 hover:text-plum hover:bg-rose/10 border border-rose/15"
+                    : "bg-white/60 dark:bg-surface/60 text-plum/70 hover:text-plum hover:bg-rose/10 border border-rose/15 dark:border-rose/20"
                 }`}
               >
                 <span>{chip.label}</span>
@@ -440,7 +440,7 @@ export default function ReservationsManager({
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.96 }}
-              className="relative overflow-hidden rounded-3xl bg-white/70 backdrop-blur-xl border border-rose/20 p-10 sm:p-14 text-center shadow-sm"
+              className="relative overflow-hidden rounded-3xl bg-white/70 dark:bg-surface-elevated/70 backdrop-blur-xl border border-rose/20 p-10 sm:p-14 text-center shadow-sm"
             >
               {/* Floating decorative bubbles in empty state */}
               <div className="pointer-events-none absolute -top-8 -left-8 w-32 h-32 rounded-full bg-rose/15 blur-xl" />
@@ -495,10 +495,10 @@ export default function ReservationsManager({
                     delay: Math.min(index * 0.03, 0.3),
                     layout: { duration: 0.25 },
                   }}
-                  className={`rounded-3xl bg-white/75 backdrop-blur-xl border transition-all duration-300 overflow-hidden ${
+                  className={`rounded-3xl bg-white/75 dark:bg-surface-elevated/75 backdrop-blur-xl border transition-all duration-300 overflow-hidden ${
                     isHighlighted
-                      ? "border-rose/60 bg-gradient-to-r from-rose/10 via-white/80 to-blush/10"
-                      : "border-rose/15 hover:border-rose/30"
+                      ? "border-rose/60 bg-gradient-to-r from-rose/10 via-white/80 dark:via-surface-elevated/90 to-blush/10"
+                      : "border-rose/15 dark:border-rose/20 hover:border-rose/30"
                   }`}
                 >
                   {/* Card Content: Table row on Desktop, Stacked on Mobile */}
@@ -581,7 +581,7 @@ export default function ReservationsManager({
 
                   {/* Expandable Note Section */}
                   {hasNote && (
-                    <div className="border-t border-rose/10 bg-pearl/40 px-4 sm:px-5 py-2.5">
+                    <div className="border-t border-rose/10 bg-pearl/40 dark:bg-surface/40 px-4 sm:px-5 py-2.5">
                       <button
                         type="button"
                         onClick={() => toggleNote(item.id)}
@@ -607,7 +607,7 @@ export default function ReservationsManager({
                             transition={{ duration: 0.2 }}
                             className="overflow-hidden"
                           >
-                            <p className="text-xs text-plum/80 italic bg-white/70 rounded-xl p-3 border border-rose/15 mt-2 leading-relaxed">
+                            <p className="text-xs text-plum/80 italic bg-white/70 dark:bg-surface-elevated/80 rounded-xl p-3 border border-rose/15 mt-2 leading-relaxed">
                               &ldquo;{item.note}&rdquo;
                             </p>
                           </motion.div>

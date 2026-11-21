@@ -131,8 +131,8 @@ export default function Reviews() {
               "hidden sm:flex absolute -left-6 md:-left-12 lg:-left-14 z-40",
               "w-11 h-11 md:w-12 md:h-12 rounded-full min-h-[44px] min-w-[44px]",
               "glass items-center justify-center text-plum",
-              "border border-white/70 shadow-md shadow-deep-rose/10",
-              "hover:bg-white hover:text-deep-rose hover:border-deep-rose/40 hover:scale-110",
+              "border border-white/70 dark:border-rose/30 shadow-md shadow-deep-rose/10",
+              "hover:bg-white dark:hover:bg-surface-elevated hover:text-deep-rose hover:border-deep-rose/40 hover:scale-110",
               "active:scale-95 transition-all duration-300",
               "focus:outline-none focus-visible:ring-2 focus-visible:ring-deep-rose/60 cursor-pointer"
             )}
@@ -300,8 +300,8 @@ export default function Reviews() {
               "hidden sm:flex absolute -right-6 md:-right-12 lg:-right-14 z-40",
               "w-11 h-11 md:w-12 md:h-12 rounded-full min-h-[44px] min-w-[44px]",
               "glass items-center justify-center text-plum",
-              "border border-white/70 shadow-md shadow-deep-rose/10",
-              "hover:bg-white hover:text-deep-rose hover:border-deep-rose/40 hover:scale-110",
+              "border border-white/70 dark:border-rose/30 shadow-md shadow-deep-rose/10",
+              "hover:bg-white dark:hover:bg-surface-elevated hover:text-deep-rose hover:border-deep-rose/40 hover:scale-110",
               "active:scale-95 transition-all duration-300",
               "focus:outline-none focus-visible:ring-2 focus-visible:ring-deep-rose/60 cursor-pointer"
             )}
@@ -316,7 +316,7 @@ export default function Reviews() {
           <button
             onClick={prevCard}
             aria-label="Previous review"
-            className="sm:hidden w-11 h-11 min-h-[44px] min-w-[44px] rounded-full glass border border-blush/60 flex items-center justify-center text-plum active:scale-95"
+            className="sm:hidden w-11 h-11 min-h-[44px] min-w-[44px] rounded-full glass border border-blush/60 dark:border-rose/30 flex items-center justify-center text-plum active:scale-95"
           >
             <ChevronLeft size={18} />
           </button>
@@ -335,7 +335,7 @@ export default function Reviews() {
                     "block rounded-full border-2 transition-all duration-300",
                     i === activeIndex
                       ? "w-3.5 h-3.5 border-deep-rose bg-deep-rose scale-110 shadow-sm shadow-deep-rose/40"
-                      : "w-2.5 h-2.5 border-blush bg-transparent hover:border-deep-rose/60 hover:bg-blush/30"
+                      : "w-2.5 h-2.5 border-blush dark:border-rose/40 bg-transparent hover:border-deep-rose/60 hover:bg-blush/30"
                   )}
                 />
               </button>
@@ -346,7 +346,7 @@ export default function Reviews() {
           <button
             onClick={nextCard}
             aria-label="Next review"
-            className="sm:hidden w-11 h-11 min-h-[44px] min-w-[44px] rounded-full glass border border-blush/60 flex items-center justify-center text-plum active:scale-95"
+            className="sm:hidden w-11 h-11 min-h-[44px] min-w-[44px] rounded-full glass border border-blush/60 dark:border-rose/30 flex items-center justify-center text-plum active:scale-95"
           >
             <ChevronRight size={18} />
           </button>
@@ -398,12 +398,12 @@ function ReviewCard({
           "relative w-full",
           "rounded-[28px] xs:rounded-[32px] sm:rounded-[40px] rounded-tr-[16px]",
           isFront
-            ? "bg-white"
+            ? "bg-white dark:bg-surface-elevated"
             : isFirstPeek
-            ? "bg-gradient-to-br from-white via-white to-[#FDE8EF]"
-            : "bg-gradient-to-br from-white via-white to-[#F9DCE5]",
-          "shadow-[0_16px_45px_rgba(184,74,110,0.13),0_4px_16px_rgba(249,198,212,0.25)]",
-          "border border-blush/35",
+            ? "bg-gradient-to-br from-white via-white to-[#FDE8EF] dark:from-surface-elevated dark:via-surface-elevated dark:to-[#2A1A25]"
+            : "bg-gradient-to-br from-white via-white to-[#F9DCE5] dark:from-surface-elevated dark:via-surface-elevated dark:to-[#2F1C29]",
+          "shadow-[0_16px_45px_rgba(184,74,110,0.13),0_4px_16px_rgba(249,198,212,0.25)] dark:shadow-[0_0_24px_rgba(243,166,189,0.08)]",
+          "border border-blush/35 dark:border-rose/20",
           "pt-5 xs:pt-6 sm:pt-8 pb-5 xs:pb-6 sm:pb-8 px-3.5 xs:px-5 sm:px-10"
         )}
       >
@@ -437,7 +437,7 @@ function ReviewCard({
           className={cn(
             "absolute -top-7 xs:-top-9 sm:-top-11 md:-top-13 left-2.5 xs:left-4 sm:left-9 z-20 will-change-transform",
             "w-16 h-16 xs:w-20 xs:h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full",
-            "ring-3 sm:ring-4 ring-white shadow-lg overflow-visible",
+            "ring-3 sm:ring-4 ring-white dark:ring-surface-elevated shadow-lg overflow-visible",
             "flex items-center justify-center bg-pearl"
           )}
         >
@@ -478,7 +478,7 @@ function ReviewCard({
             className={cn(
               "absolute bottom-0 right-0 z-30",
               "w-6 h-6 xs:w-7 xs:h-7 sm:w-8 sm:h-8 rounded-full",
-              "glass border border-white/90 shadow-sm",
+              "glass border border-white/90 dark:border-rose/30 shadow-sm",
               "flex items-center justify-center text-deep-rose"
             )}
           >

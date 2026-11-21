@@ -240,7 +240,7 @@ export default function BookingForm() {
   return (
     <section
       id="book"
-      className="relative py-16 sm:py-20 md:py-24 lg:py-28 w-full bg-[#FDF0F5] overflow-hidden select-none"
+      className="relative py-16 sm:py-20 md:py-24 lg:py-28 w-full bg-[var(--divider-wave-bg)] overflow-hidden select-none"
     >
       {/* Soft decorative background ambient blobs */}
       <div
@@ -260,7 +260,7 @@ export default function BookingForm() {
             animate={shouldReduce ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
             exit={shouldReduce ? { opacity: 0 } : { opacity: 0, y: -20, scale: 0.95 }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed top-[max(1.25rem,env(safe-area-inset-top))] inset-x-4 sm:inset-x-auto sm:right-6 z-50 max-w-sm w-auto glass bg-white/95 backdrop-blur-md rounded-2xl p-4 border border-blush/60 shadow-xl shadow-deep-rose/15 flex items-start gap-3.5"
+            className="fixed top-[max(1.25rem,env(safe-area-inset-top))] inset-x-4 sm:inset-x-auto sm:right-6 z-50 max-w-sm w-auto glass bg-white/95 dark:bg-surface-elevated/95 backdrop-blur-md rounded-2xl p-4 border border-blush/60 dark:border-rose/25 shadow-xl shadow-deep-rose/15 dark:shadow-[0_0_24px_rgba(243,166,189,0.12)] flex items-start gap-3.5"
             role="status"
             aria-live="polite"
           >
@@ -333,8 +333,8 @@ export default function BookingForm() {
             ease: [0.22, 1, 0.36, 1],
           }}
           className={cn(
-            "w-full glass bg-white/95 backdrop-blur-md rounded-[28px] sm:rounded-[32px]",
-            "border border-white/90 shadow-[0_16px_50px_rgba(184,74,110,0.1),0_4px_20px_rgba(249,198,212,0.2)]",
+            "w-full glass bg-white/95 dark:bg-surface-elevated/95 backdrop-blur-md rounded-[28px] sm:rounded-[32px]",
+            "border border-white/90 dark:border-rose/20 shadow-[0_16px_50px_rgba(184,74,110,0.1),0_4px_20px_rgba(249,198,212,0.2)] dark:shadow-[0_0_35px_rgba(243,166,189,0.08)]",
             "p-5 xs:p-6 sm:p-10 md:p-12 text-left space-y-6 sm:space-y-7 will-change-transform"
           )}
         >
@@ -350,10 +350,10 @@ export default function BookingForm() {
             >
               <div
                 className={cn(
-                  "relative rounded-2xl bg-pearl/80 hover:bg-white border transition-all duration-300 overflow-hidden",
+                  "relative rounded-2xl bg-pearl/80 hover:bg-white dark:bg-surface/80 dark:hover:bg-surface border transition-all duration-300 overflow-hidden",
                   focusedField === "firstName"
-                    ? "border-deep-rose ring-2 ring-deep-rose/25 bg-white shadow-[0_0_20px_rgba(232,138,166,0.3)]"
-                    : "border-blush/60 hover:border-deep-rose/40"
+                    ? "border-deep-rose ring-2 ring-deep-rose/25 bg-white dark:bg-surface shadow-[0_0_20px_rgba(232,138,166,0.3)]"
+                    : "border-blush/60 dark:border-rose/25 hover:border-deep-rose/40"
                 )}
               >
                 {/* Floating label */}
@@ -401,10 +401,10 @@ export default function BookingForm() {
             >
               <div
                 className={cn(
-                  "relative rounded-2xl bg-pearl/80 hover:bg-white border transition-all duration-300 overflow-hidden",
+                  "relative rounded-2xl bg-pearl/80 hover:bg-white dark:bg-surface/80 dark:hover:bg-surface border transition-all duration-300 overflow-hidden",
                   focusedField === "phoneNumber"
-                    ? "border-deep-rose ring-2 ring-deep-rose/25 bg-white shadow-[0_0_20px_rgba(232,138,166,0.3)]"
-                    : "border-blush/60 hover:border-deep-rose/40"
+                    ? "border-deep-rose ring-2 ring-deep-rose/25 bg-white dark:bg-surface shadow-[0_0_20px_rgba(232,138,166,0.3)]"
+                    : "border-blush/60 dark:border-rose/25 hover:border-deep-rose/40"
                 )}
               >
                 {/* Floating label */}
@@ -466,13 +466,13 @@ export default function BookingForm() {
                 }}
                 className={cn(
                   "w-full flex items-center justify-between min-h-[48px]",
-                  "bg-pearl/80 hover:bg-white border rounded-2xl px-4 py-3.5",
+                  "bg-pearl/80 hover:bg-white dark:bg-surface/80 dark:hover:bg-surface border rounded-2xl px-4 py-3.5",
                   "font-body text-base text-plum text-left transition-all duration-200 cursor-pointer",
                   serviceError
                     ? "border-red-400 ring-2 ring-red-400/20"
                     : isDropdownOpen
-                    ? "border-deep-rose ring-2 ring-deep-rose/25 bg-white shadow-[0_0_20px_rgba(232,138,166,0.3)]"
-                    : "border-blush/60 hover:border-deep-rose/40"
+                    ? "border-deep-rose ring-2 ring-deep-rose/25 bg-white dark:bg-surface shadow-[0_0_20px_rgba(232,138,166,0.3)]"
+                    : "border-blush/60 dark:border-rose/25 hover:border-deep-rose/40"
                 )}
               >
                 {isLoadingServices ? (
@@ -508,7 +508,7 @@ export default function BookingForm() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -6, scale: 0.98 }}
                     transition={{ duration: 0.18, ease: "easeOut" }}
-                    className="absolute z-50 inset-x-0 top-full mt-2 bg-white/95 backdrop-blur-md rounded-2xl border border-blush/60 shadow-xl shadow-deep-rose/12 p-2 space-y-1 max-h-64 overflow-y-auto"
+                    className="absolute z-50 inset-x-0 top-full mt-2 bg-white/95 dark:bg-surface-elevated/95 backdrop-blur-md rounded-2xl border border-blush/60 dark:border-rose/25 shadow-xl shadow-deep-rose/12 dark:shadow-[0_0_24px_rgba(243,166,189,0.12)] p-2 space-y-1 max-h-64 overflow-y-auto"
                   >
                     {isLoadingServices ? (
                       <div className="p-4 text-center text-xs text-plum/60 flex items-center justify-center gap-2">
@@ -549,8 +549,8 @@ export default function BookingForm() {
                               "w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl min-h-[46px]",
                               "font-body text-base text-left transition-all duration-150 cursor-pointer",
                               isSelected
-                                ? "bg-blush/35 text-deep-rose font-medium shadow-xs"
-                                : "text-plum/85 hover:bg-blush/15 hover:text-plum"
+                                ? "bg-blush/35 dark:bg-rose/20 text-deep-rose font-medium shadow-xs"
+                                : "text-plum/85 hover:bg-blush/15 dark:hover:bg-rose/10 hover:text-plum"
                             )}
                           >
                             <div className="flex flex-col text-left pr-2">
@@ -578,7 +578,7 @@ export default function BookingForm() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={shouldReduce ? {} : { opacity: 0, y: -6, scale: 0.98 }}
                     transition={{ duration: 0.25, ease: "easeOut" }}
-                    className="mt-1 p-3 sm:p-3.5 rounded-2xl bg-white/90 border border-blush/60 shadow-sm flex items-center justify-between gap-3 text-plum will-change-transform"
+                    className="mt-1 p-3 sm:p-3.5 rounded-2xl bg-white/90 dark:bg-surface/90 border border-blush/60 dark:border-rose/20 shadow-sm flex items-center justify-between gap-3 text-plum will-change-transform"
                   >
                     <div className="flex items-center gap-2.5">
                       <div className="w-8 h-8 rounded-full bg-blush/35 flex items-center justify-center text-deep-rose shrink-0">
@@ -627,8 +627,8 @@ export default function BookingForm() {
                 onFocus={(e) => handleFieldFocus("date", e)}
                 onChange={(e) => setPreferredDate(e.target.value)}
                 className={cn(
-                  "w-full bg-pearl/80 hover:bg-white focus:bg-white min-h-[48px]",
-                  "border border-blush/60 focus:border-deep-rose",
+                  "w-full bg-pearl/80 hover:bg-white focus:bg-white dark:bg-surface/80 dark:hover:bg-surface dark:focus:bg-surface min-h-[48px]",
+                  "border border-blush/60 dark:border-rose/25 focus:border-deep-rose",
                   "rounded-2xl px-4 py-3.5 font-body text-base text-plum",
                   "focus:outline-none focus:ring-2 focus:ring-deep-rose/25 focus:shadow-[0_0_20px_rgba(232,138,166,0.3)]",
                   "transition-all duration-200"
@@ -646,10 +646,10 @@ export default function BookingForm() {
             >
               <div
                 className={cn(
-                  "relative rounded-2xl bg-pearl/80 hover:bg-white border transition-all duration-300 overflow-hidden",
+                  "relative rounded-2xl bg-pearl/80 hover:bg-white dark:bg-surface/80 dark:hover:bg-surface border transition-all duration-300 overflow-hidden",
                   focusedField === "note"
-                    ? "border-deep-rose ring-2 ring-deep-rose/25 bg-white shadow-[0_0_20px_rgba(232,138,166,0.3)]"
-                    : "border-blush/60 hover:border-deep-rose/40"
+                    ? "border-deep-rose ring-2 ring-deep-rose/25 bg-white dark:bg-surface shadow-[0_0_20px_rgba(232,138,166,0.3)]"
+                    : "border-blush/60 dark:border-rose/25 hover:border-deep-rose/40"
                 )}
               >
                 <label
@@ -692,7 +692,7 @@ export default function BookingForm() {
             whileInView={shouldReduce ? {} : { opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.45 }}
-            className="flex flex-col gap-2.5 pt-1 border-t border-blush/40"
+            className="flex flex-col gap-2.5 pt-1 border-t border-blush/40 dark:border-rose/20"
           >
             <div className="flex items-center gap-1.5 font-body text-[11px] font-semibold tracking-widest uppercase text-plum/75">
               <Clock size={12} className="text-deep-rose" />
@@ -717,7 +717,7 @@ export default function BookingForm() {
                       "py-3 px-2 text-center font-body text-xs sm:text-xs md:text-sm font-medium rounded-xl border transition-all duration-200 cursor-pointer min-h-[44px] flex items-center justify-center",
                       isSelected
                         ? "bg-deep-rose text-white border-deep-rose shadow-md shadow-deep-rose/30 scale-105"
-                        : "bg-pearl/80 hover:bg-white border-blush/60 text-plum/75 hover:border-deep-rose/40"
+                        : "bg-pearl/80 hover:bg-white dark:bg-surface/80 dark:hover:bg-surface border-blush/60 dark:border-rose/25 text-plum/75 hover:border-deep-rose/40"
                     )}
                   >
                     {slot}
@@ -749,7 +749,7 @@ export default function BookingForm() {
                 animate={{ opacity: 1, y: 0, height: "auto" }}
                 exit={{ opacity: 0, y: -6, height: 0 }}
                 transition={{ duration: 0.25, ease: "easeOut" }}
-                className="rounded-2xl p-4 bg-[#FFF0F3] border border-rose/40 text-plum flex items-start gap-3 shadow-sm shadow-rose/10"
+                className="rounded-2xl p-4 bg-[#FFF0F3] dark:bg-rose/10 border border-rose/40 dark:border-rose/30 text-plum flex items-start gap-3 shadow-sm shadow-rose/10"
                 role="alert"
                 aria-live="assertive"
               >

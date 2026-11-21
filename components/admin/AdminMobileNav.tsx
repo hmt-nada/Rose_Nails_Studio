@@ -26,7 +26,7 @@ export default function AdminMobileNav() {
   return (
     <nav
       aria-label="Mobile Admin Navigation"
-      className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/85 backdrop-blur-2xl border-t border-rose/15 safe-bottom px-4 py-2 shadow-lg flex items-center justify-around"
+      className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/85 dark:bg-surface/90 backdrop-blur-2xl border-t border-rose/15 dark:border-rose/20 safe-bottom px-4 py-2 shadow-lg flex items-center justify-around"
     >
       {NAV_ITEMS.map((item) => {
         const isActive = item.exact

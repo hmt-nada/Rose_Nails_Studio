@@ -24,7 +24,7 @@ export default function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden md:flex flex-col w-64 min-h-screen bg-white/70 backdrop-blur-xl border-r border-rose/15 p-6 shrink-0 sticky top-0 h-screen justify-between z-30">
+    <aside className="hidden md:flex flex-col w-64 min-h-screen bg-white/70 dark:bg-surface/80 backdrop-blur-xl border-r border-rose/15 dark:border-rose/20 p-6 shrink-0 sticky top-0 h-screen justify-between z-30">
       <div>
         {/* Brand Emblem */}
         <div className="flex items-center gap-3 px-2 py-3 mb-8">

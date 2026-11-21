@@ -126,7 +126,7 @@ export default function ReservationStatusBadge({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -4 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="absolute left-0 sm:right-0 sm:left-auto top-full mt-1.5 z-40 w-36 rounded-2xl bg-white/95 backdrop-blur-2xl border border-rose/20 p-1.5 shadow-[0_12px_32px_rgba(184,74,110,0.15)]"
+            className="absolute left-0 sm:right-0 sm:left-auto top-full mt-1.5 z-40 w-36 rounded-2xl bg-white/95 dark:bg-surface-elevated/95 backdrop-blur-2xl border border-rose/20 p-1.5 shadow-[0_12px_32px_rgba(184,74,110,0.15)] dark:shadow-[0_0_25px_rgba(243,166,189,0.1)]"
           >
             <div className="space-y-0.5">
               {STATUS_OPTIONS.map((opt) => {

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { LogOut, User, Loader2, Sparkles, SlidersHorizontal } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useManageServicesModal } from "./ManageServicesContext";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 
 interface AdminTopBarProps {
   initialEmail?: string | null;
@@ -44,7 +45,7 @@ export default function AdminTopBar({ initialEmail }: AdminTopBarProps) {
   };
 
   return (
-    <header className="sticky top-0 z-20 w-full border-b border-rose/15 bg-white/70 backdrop-blur-xl px-4 sm:px-8 py-3.5 flex items-center justify-between">
+    <header className="sticky top-0 z-20 w-full border-b border-rose/15 dark:border-rose/20 bg-white/70 dark:bg-surface/75 backdrop-blur-xl px-4 sm:px-8 py-3.5 flex items-center justify-between">
       {/* Mobile Brand / Page Indicator */}
       <div className="flex items-center gap-2.5 md:hidden">
         <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-deep-rose to-rose flex items-center justify-center text-pearl shadow-sm">
@@ -63,8 +64,10 @@ export default function AdminTopBar({ initialEmail }: AdminTopBarProps) {
         </p>
       </div>
 
-      {/* Right controls: Manage Services Button, Admin Email & Logout */}
-      <div className="flex items-center gap-2.5 sm:gap-3">
+      {/* Right controls: Theme Toggle, Manage Services Button, Admin Email & Logout */}
+      <div className="flex items-center gap-2 sm:gap-2.5">
+        <ThemeToggle />
+
         {/* Manage Services Button */}
         <button
           type="button"

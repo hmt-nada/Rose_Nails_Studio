@@ -5,15 +5,15 @@ import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion
 import { cn } from "@/lib/utils";
 
 interface LiquidDividerProps {
-  fromColor?: string; // e.g. "fill-pearl"
-  toColor?: string;   // e.g. "bg-[#FDF0F5]"
+  fromColor?: string; // e.g. "fill-[var(--divider-wave-fill)]"
+  toColor?: string;   // e.g. "bg-[var(--divider-wave-bg)]"
   flip?: boolean;
   className?: string;
 }
 
 export default function LiquidDivider({
-  fromColor = "fill-pearl",
-  toColor = "bg-[#FDF0F5]",
+  fromColor = "fill-[var(--divider-wave-fill)]",
+  toColor = "bg-[var(--divider-wave-bg)]",
   flip = false,
   className,
 }: LiquidDividerProps) {
@@ -33,7 +33,7 @@ export default function LiquidDivider({
       ref={ref}
       aria-hidden
       className={cn(
-        "relative w-full overflow-hidden leading-none pointer-events-none select-none z-10",
+        "relative w-full overflow-hidden leading-none pointer-events-none select-none z-10 transition-colors duration-250",
         toColor,
         className
       )}
@@ -47,10 +47,11 @@ export default function LiquidDivider({
         viewBox="0 0 1440 90"
         preserveAspectRatio="none"
       >
-        {/* Soft back shadow wave */}
+        {/* Soft back shadow wave using theme token */}
         <path
           d="M0,32 C240,68 480,12 720,44 C960,76 1200,24 1440,48 L1440,0 L0,0 Z"
-          fill="rgba(249, 198, 212, 0.25)"
+          fill="var(--color-rose)"
+          fillOpacity={0.2}
         />
         {/* Main foreground liquid wave */}
         <path

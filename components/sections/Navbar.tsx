@@ -8,6 +8,7 @@ import NavLink from "@/components/ui/NavLink";
 import { GOOGLE_MAPS_URL, SITE_NAME } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { scrollToSection } from "@/lib/scroll";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 
 const NAV_LINKS = [
   { href: "#hero", label: "Home" },
@@ -120,7 +121,7 @@ export default function Navbar() {
           scrolled
             ? [
               "glass",
-              "border-b border-white/40",
+              "border-b border-white/40 dark:border-rose/15",
               "py-2.5 sm:py-3 shadow-sm shadow-deep-rose/5",
             ]
             : "py-3.5 sm:py-5 bg-transparent border-b border-transparent"
@@ -182,7 +183,7 @@ export default function Navbar() {
             })}
           </div>
 
-          {/* ── Desktop Right: Book Now + Location (Hidden below 1024px) ── */}
+          {/* ── Desktop Right: Book Now + Location + Theme Toggle (Hidden below 1024px) ── */}
           <div className="hidden lg:flex items-center gap-3">
             <BookNowButton />
 
@@ -195,7 +196,7 @@ export default function Navbar() {
                 "group flex items-center gap-1.5",
                 "glass rounded-full px-4 py-2 min-h-[44px]",
                 "font-body text-xs font-medium tracking-wide text-plum/70",
-                "border border-blush/50",
+                "border border-blush/50 dark:border-rose/25",
                 "hover:border-deep-rose/50 hover:text-deep-rose",
                 "transition-all duration-300",
                 "focus:outline-none focus-visible:ring-2 focus-visible:ring-deep-rose/60"
@@ -208,13 +209,16 @@ export default function Navbar() {
               />
               <span>Location</span>
             </a>
+
+            <ThemeToggle />
           </div>
 
-          {/* ── Mobile / Tablet Hamburger Button (Visible below 1024px) ── */}
+          {/* ── Mobile / Tablet Hamburger & Theme Toggle (Visible below 1024px) ── */}
           <div className="flex lg:hidden items-center gap-2">
+            <ThemeToggle />
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="relative w-11 h-11 rounded-full glass border border-blush/60 flex flex-col items-center justify-center gap-1 text-plum focus:outline-none focus-visible:ring-2 focus-visible:ring-deep-rose cursor-pointer z-50 min-h-[44px] min-w-[44px]"
+              className="relative w-11 h-11 rounded-full glass border border-blush/60 dark:border-rose/30 flex flex-col items-center justify-center gap-1 text-plum focus:outline-none focus-visible:ring-2 focus-visible:ring-deep-rose cursor-pointer z-50 min-h-[44px] min-w-[44px]"
               aria-label={isMenuOpen ? "Close menu" : "Open navigation menu"}
               aria-expanded={isMenuOpen}
             >
@@ -246,7 +250,7 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-40 lg:hidden bg-pearl/95 backdrop-blur-2xl flex flex-col justify-between pt-[max(5rem,calc(env(safe-area-inset-top)+4rem))] pb-[max(2rem,env(safe-area-inset-bottom))] px-6 sm:px-10 overflow-y-auto"
+            className="fixed inset-0 z-40 lg:hidden bg-pearl/95 dark:bg-pearl/98 backdrop-blur-2xl flex flex-col justify-between pt-[max(5rem,calc(env(safe-area-inset-top)+4rem))] pb-[max(2rem,env(safe-area-inset-bottom))] px-6 sm:px-10 overflow-y-auto"
           >
             {/* Ambient decorative background glow in overlay */}
             <div

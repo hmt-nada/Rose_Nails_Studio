@@ -47,7 +47,7 @@ export default function Services() {
   return (
     <section
       id="services"
-      className="relative py-16 sm:py-20 md:py-24 lg:py-28 w-full bg-[#FDF0F5] overflow-hidden select-none"
+      className="relative py-16 sm:py-20 md:py-24 lg:py-28 w-full bg-[var(--divider-wave-bg)] overflow-hidden select-none"
     >
       {/* Decorative ambient blurred blobs */}
       <div
@@ -96,10 +96,10 @@ export default function Services() {
                 className={cn(
                   "group relative flex flex-col items-center text-center justify-start h-full",
                   // Individual card styling with soft pink aesthetic and delicate rounded corners
-                  "bg-white/95 backdrop-blur-xs rounded-[30px]",
-                  "border border-white/80 hover:border-blush/70",
-                  "shadow-[0_10px_35px_rgba(184,74,110,0.08),0_2px_12px_rgba(249,198,212,0.18)]",
-                  "hover:shadow-[0_18px_45px_rgba(184,74,110,0.15)]",
+                  "bg-white/95 dark:bg-surface-elevated/90 backdrop-blur-xs rounded-[30px]",
+                  "border border-white/80 dark:border-rose/20 hover:border-blush/70 dark:hover:border-rose/40",
+                  "shadow-[0_10px_35px_rgba(184,74,110,0.08),0_2px_12px_rgba(249,198,212,0.18)] dark:shadow-[0_0_24px_rgba(243,166,189,0.08)]",
+                  "hover:shadow-[0_18px_45px_rgba(184,74,110,0.15)] dark:hover:shadow-[0_0_32px_rgba(243,166,189,0.18)]",
                   "p-8 lg:p-7 xl:p-9",
                   "transition-all duration-300 ease-out cursor-default",
                   "hover:-translate-y-2"

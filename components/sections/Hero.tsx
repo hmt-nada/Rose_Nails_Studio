@@ -231,7 +231,7 @@ function ParallaxBubbles({ scrollYProgress }: ParallaxBubblesProps) {
             scale: [1, 1.05, 1],
           }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[20%] right-[6%] w-16 h-16 rounded-full border border-white/40 bg-gradient-to-br from-white/20 via-rose/10 to-transparent backdrop-blur-[1px]"
+          className="absolute top-[20%] right-[6%] w-16 h-16 rounded-full border border-white/40 dark:border-rose/30 bg-gradient-to-br from-white/20 dark:from-rose/15 via-rose/10 to-transparent backdrop-blur-[1px] dark:shadow-[0_0_20px_rgba(243,166,189,0.2)]"
         />
       </div>
     );
@@ -250,7 +250,7 @@ function ParallaxBubbles({ scrollYProgress }: ParallaxBubblesProps) {
           scale: [1, 1.05, 1],
         }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-[12%] right-[10%] w-32 h-32 rounded-full border border-white/50 bg-gradient-to-br from-white/30 via-rose/10 to-transparent backdrop-blur-[2px] shadow-[0_8px_32px_rgba(232,138,166,0.12)]"
+        className="absolute top-[12%] right-[10%] w-32 h-32 rounded-full border border-white/50 dark:border-rose/35 bg-gradient-to-br from-white/30 dark:from-rose/20 via-rose/10 to-transparent backdrop-blur-[2px] shadow-[0_8px_32px_rgba(232,138,166,0.12)] dark:shadow-[0_0_32px_rgba(243,166,189,0.25)]"
       />
 
       {/* 2. Medium Bubble (80px, medium drift) */}
@@ -266,7 +266,7 @@ function ParallaxBubbles({ scrollYProgress }: ParallaxBubblesProps) {
           ease: "easeInOut",
           delay: 1,
         }}
-        className="absolute top-[62%] right-[5%] w-20 h-20 rounded-full border border-white/40 bg-gradient-to-br from-white/25 via-blush/15 to-transparent backdrop-blur-[1px] shadow-[0_6px_24px_rgba(184,74,110,0.08)]"
+        className="absolute top-[62%] right-[5%] w-20 h-20 rounded-full border border-white/40 dark:border-rose/30 bg-gradient-to-br from-white/25 dark:from-rose/15 via-blush/15 to-transparent backdrop-blur-[1px] shadow-[0_6px_24px_rgba(184,74,110,0.08)] dark:shadow-[0_0_24px_rgba(243,166,189,0.2)]"
       />
 
       {/* 3. Small Bubble (45px, slowest drift) */}
@@ -282,7 +282,7 @@ function ParallaxBubbles({ scrollYProgress }: ParallaxBubblesProps) {
           ease: "easeInOut",
           delay: 2,
         }}
-        className="absolute top-[32%] right-[42%] w-11 h-11 rounded-full border border-white/40 bg-white/20 backdrop-blur-[1px] shadow-[0_4px_16px_rgba(232,138,166,0.1)]"
+        className="absolute top-[32%] right-[42%] w-11 h-11 rounded-full border border-white/40 dark:border-rose/30 bg-white/20 dark:bg-rose/15 backdrop-blur-[1px] shadow-[0_4px_16px_rgba(232,138,166,0.1)] dark:shadow-[0_0_16px_rgba(243,166,189,0.2)]"
       />
     </div>
   );
@@ -639,12 +639,18 @@ function TransparentFloatingVideo({ heroRef }: TransparentFloatingVideoProps) {
         aria-hidden
       />
 
+      {/* ── Dark gradient overlay on the video for high contrast text readability ── */}
+      <div
+        aria-hidden
+        className="absolute inset-0 rounded-3xl bg-transparent dark:bg-gradient-to-t dark:from-[#1A0F15]/80 dark:via-[#1A0F15]/20 dark:to-transparent pointer-events-none z-10"
+      />
+
       {/* ── Transparent Alpha Canvas (Directly displays floating bottles & splashes) ── */}
       <canvas
         ref={canvasRef}
         width={1280}
         height={720}
-        className="w-full h-auto max-h-[55svh] max-h-[55dvh] aspect-[16/9] object-contain drop-shadow-[0_16px_36px_rgba(184,74,110,0.14)]"
+        className="w-full h-auto max-h-[55svh] max-h-[55dvh] aspect-[16/9] object-contain drop-shadow-[0_16px_36px_rgba(184,74,110,0.14)] dark:drop-shadow-[0_16px_40px_rgba(243,166,189,0.2)]"
         aria-label="Floating Rosé Nails Studio signature nail polish couture animation"
       />
     </motion.div>

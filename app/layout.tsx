@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Poppins } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -21,7 +22,10 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   viewportFit: "cover",
-  themeColor: "#FFF8FA",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#FFF8FA" },
+    { media: "(prefers-color-scheme: dark)", color: "#1A0F15" },
+  ],
 };
 
 export const metadata: Metadata = {
@@ -45,10 +49,18 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${cormorant.variable} ${poppins.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-pearl text-plum overflow-x-clip selection:bg-rose/20 selection:text-plum">
-        {children}
+      <body className="min-h-full flex flex-col bg-pearl text-plum overflow-x-clip selection:bg-rose/20 selection:text-plum transition-colors duration-250">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange={false}
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

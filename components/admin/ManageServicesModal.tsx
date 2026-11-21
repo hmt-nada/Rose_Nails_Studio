@@ -391,10 +391,10 @@ export default function ManageServicesModal() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 16 }}
             transition={{ type: "spring", duration: 0.35, bounce: 0.1 }}
-            className="relative w-full h-full sm:h-auto sm:max-h-[90vh] sm:max-w-3xl bg-white/95 sm:bg-white/90 backdrop-blur-2xl border-0 sm:border border-rose/25 sm:rounded-3xl shadow-[0_24px_70px_rgba(184,74,110,0.22)] flex flex-col z-10 overflow-hidden text-plum"
+            className="relative w-full h-full sm:h-auto sm:max-h-[90vh] sm:max-w-3xl bg-white/95 sm:bg-white/90 dark:bg-surface-elevated/95 sm:dark:bg-surface-elevated/95 backdrop-blur-2xl border-0 sm:border border-rose/25 sm:rounded-3xl shadow-[0_24px_70px_rgba(184,74,110,0.22)] dark:shadow-[0_0_35px_rgba(243,166,189,0.15)] flex flex-col z-10 overflow-hidden text-plum"
           >
             {/* Modal Header */}
-            <div className="p-5 sm:p-7 border-b border-rose/15 flex items-start justify-between gap-4 shrink-0 bg-pearl/40">
+            <div className="p-5 sm:p-7 border-b border-rose/15 flex items-start justify-between gap-4 shrink-0 bg-pearl/40 dark:bg-surface/50">
               <div>
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose/15 border border-rose/25 text-[11px] font-semibold uppercase tracking-wider text-deep-rose mb-2">
                   <Sparkles className="w-3.5 h-3.5" />
@@ -426,7 +426,7 @@ export default function ManageServicesModal() {
                   <p className="text-xs font-medium">Loading studio services...</p>
                 </div>
               ) : services.length === 0 ? (
-                <div className="py-14 text-center rounded-3xl bg-pearl/50 border border-rose/15 p-8">
+                <div className="py-14 text-center rounded-3xl bg-pearl/50 dark:bg-surface/50 border border-rose/15 p-8">
                   <p className="text-sm text-plum/70 mb-3">No services configured yet.</p>
                   <button
                     type="button"
@@ -451,7 +451,7 @@ export default function ManageServicesModal() {
                       <Reorder.Item
                         key={service.id}
                         value={service}
-                        className={`rounded-2xl border transition-all p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white/80 backdrop-blur-md shadow-xs ${
+                        className={`rounded-2xl border transition-all p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white/80 dark:bg-surface/80 backdrop-blur-md shadow-xs ${
                           rowError?.name || rowError?.price || rowError?.duration
                             ? "border-rose bg-rose/5"
                             : service.active
@@ -480,7 +480,7 @@ export default function ManageServicesModal() {
                                 handleFieldChange(service.id, "name", e.target.value)
                               }
                               placeholder="Treatment name (e.g. Russian Manicure)"
-                              className={`w-full px-3 py-2 bg-pearl/80 border rounded-xl text-xs sm:text-sm text-plum placeholder:text-plum/35 focus:outline-none focus:ring-2 focus:ring-rose/30 transition-all ${
+                              className={`w-full px-3 py-2 bg-pearl/80 dark:bg-surface-elevated/80 border rounded-xl text-xs sm:text-sm text-plum placeholder:text-plum/35 focus:outline-none focus:ring-2 focus:ring-rose/30 transition-all ${
                                 rowError?.name
                                   ? "border-deep-rose bg-rose/10"
                                   : "border-rose/20 focus:border-rose"
@@ -511,7 +511,7 @@ export default function ManageServicesModal() {
                                 )
                               }
                               placeholder="Price"
-                              className={`w-full pl-3 pr-10 py-2 bg-pearl/80 border rounded-xl text-xs sm:text-sm text-plum font-semibold text-right focus:outline-none focus:ring-2 focus:ring-rose/30 transition-all ${
+                              className={`w-full pl-3 pr-10 py-2 bg-pearl/80 dark:bg-surface-elevated/80 border rounded-xl text-xs sm:text-sm text-plum font-semibold text-right focus:outline-none focus:ring-2 focus:ring-rose/30 transition-all ${
                                 rowError?.price
                                   ? "border-deep-rose bg-rose/10"
                                   : "border-rose/20 focus:border-rose"
@@ -537,7 +537,7 @@ export default function ManageServicesModal() {
                                 )
                               }
                               placeholder="Min"
-                              className={`w-full pl-2.5 pr-8 py-2 bg-pearl/80 border rounded-xl text-xs sm:text-sm text-plum text-right focus:outline-none focus:ring-2 focus:ring-rose/30 transition-all ${
+                              className={`w-full pl-2.5 pr-8 py-2 bg-pearl/80 dark:bg-surface-elevated/80 border rounded-xl text-xs sm:text-sm text-plum text-right focus:outline-none focus:ring-2 focus:ring-rose/30 transition-all ${
                                 rowError?.duration
                                   ? "border-deep-rose bg-rose/10"
                                   : "border-rose/20 focus:border-rose"
@@ -603,7 +603,7 @@ export default function ManageServicesModal() {
             </div>
 
             {/* Modal Footer with Unsaved Changes and Save Button */}
-            <div className="p-4 sm:p-6 border-t border-rose/15 bg-pearl/60 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
+            <div className="p-4 sm:p-6 border-t border-rose/15 bg-pearl/60 dark:bg-surface/60 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
               <div className="flex items-center gap-2 text-xs text-plum/70 text-center sm:text-left">
                 <Info className="w-4 h-4 text-deep-rose shrink-0" />
                 <span>
@@ -652,14 +652,14 @@ export default function ManageServicesModal() {
                     toastMessage.type === "error"
                       ? "bg-rose/15 text-deep-rose border-rose/30"
                       : toastMessage.type === "info"
-                      ? "bg-white/95 text-plum border-rose/25"
-                      : "bg-emerald-500/15 text-emerald-800 border-emerald-500/25"
+                      ? "bg-white/95 dark:bg-surface-elevated/95 text-plum border-rose/25"
+                      : "bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border-emerald-500/25"
                   }`}
                 >
                   {toastMessage.type === "error" ? (
                     <AlertTriangle className="w-4 h-4 text-deep-rose" />
                   ) : (
-                    <Check className="w-4 h-4 text-emerald-600" />
+                    <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                   )}
                   <span>{toastMessage.text}</span>
                 </motion.div>
@@ -685,7 +685,7 @@ export default function ManageServicesModal() {
                   initial={{ opacity: 0, scale: 0.94 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.94 }}
-                  className="relative w-full max-w-md rounded-3xl bg-white/95 backdrop-blur-2xl border border-rose/25 p-6 shadow-2xl z-10 text-plum"
+                  className="relative w-full max-w-md rounded-3xl bg-white/95 dark:bg-surface-elevated/95 backdrop-blur-2xl border border-rose/25 p-6 shadow-2xl z-10 text-plum"
                 >
                   <div className="w-12 h-12 rounded-2xl bg-rose/15 text-deep-rose flex items-center justify-center mb-4">
                     <AlertTriangle className="w-6 h-6" />
@@ -709,7 +709,7 @@ export default function ManageServicesModal() {
                         </span>{" "}
                         is associated with existing client reservations. To protect booking history and preserved price snapshots, it cannot be permanently removed.
                       </p>
-                      <div className="p-3 rounded-2xl bg-rose/10 border border-rose/20 text-xs text-deep-rose font-medium mt-3">
+                      <div className="p-3 rounded-2xl bg-rose/10 dark:bg-rose/15 border border-rose/20 text-xs text-deep-rose font-medium mt-3">
                         It will be deactivated instead so it no longer appears as a choice on the public booking form.
                       </div>
 

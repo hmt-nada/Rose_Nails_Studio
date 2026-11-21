@@ -276,9 +276,9 @@ function StepRow({ step, index, shouldReduce }: StepRowProps) {
             transition: { duration: 0.28, ease: "easeOut" },
           }}
           className={cn(
-            "group relative p-5 xs:p-6 sm:p-8 rounded-[24px] sm:rounded-[32px] bg-white/95 backdrop-blur-md",
-            "border border-white/90 shadow-[0_12px_40px_rgba(184,74,110,0.08),0_4px_16px_rgba(249,198,212,0.2)]",
-            "hover:shadow-[0_20px_50px_rgba(184,74,110,0.18)] hover:border-blush/60",
+            "group relative p-5 xs:p-6 sm:p-8 rounded-[24px] sm:rounded-[32px] bg-white/95 dark:bg-surface-elevated/95 backdrop-blur-md",
+            "border border-white/90 dark:border-rose/20 shadow-[0_12px_40px_rgba(184,74,110,0.08),0_4px_16px_rgba(249,198,212,0.2)] dark:shadow-[0_0_24px_rgba(243,166,189,0.08)]",
+            "hover:shadow-[0_20px_50px_rgba(184,74,110,0.18)] dark:hover:shadow-[0_0_35px_rgba(243,166,189,0.18)] hover:border-blush/60 dark:hover:border-rose/35",
             "transition-shadow duration-300 cursor-default will-change-transform text-left",
             isEven ? "lg:text-right" : "lg:text-left"
           )}
@@ -286,7 +286,7 @@ function StepRow({ step, index, shouldReduce }: StepRowProps) {
           {/* Subtle glowing corner gradient */}
           <div
             aria-hidden
-            className="absolute top-0 right-0 w-32 h-32 rounded-full bg-blush/20 blur-2xl pointer-events-none"
+            className="absolute top-0 right-0 w-32 h-32 rounded-full bg-blush/20 dark:bg-rose/15 blur-2xl pointer-events-none"
           />
 
           {/* Badge & Number */}
@@ -296,7 +296,7 @@ function StepRow({ step, index, shouldReduce }: StepRowProps) {
               isEven ? "lg:justify-end" : "lg:justify-start"
             )}
           >
-            <span className="font-body text-[11px] font-semibold tracking-[0.25em] uppercase text-deep-rose/80 px-3 py-1 rounded-full bg-pearl border border-blush/50">
+            <span className="font-body text-[11px] font-semibold tracking-[0.25em] uppercase text-deep-rose/80 px-3 py-1 rounded-full bg-pearl dark:bg-surface border border-blush/50 dark:border-rose/25">
               {step.badge}
             </span>
           </div>
@@ -354,7 +354,7 @@ function StepRow({ step, index, shouldReduce }: StepRowProps) {
             rotate: [0, -8, 8, -6, 6, 0],
             transition: { duration: 0.5 },
           }}
-          className="group relative w-10 h-10 xs:w-11 xs:h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-full bg-white border-2 border-deep-rose shadow-lg shadow-deep-rose/20 flex items-center justify-center cursor-pointer will-change-transform"
+          className="group relative w-10 h-10 xs:w-11 xs:h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-full bg-white dark:bg-surface-elevated border-2 border-deep-rose shadow-lg shadow-deep-rose/20 dark:shadow-[0_0_20px_rgba(232,138,166,0.3)] flex items-center justify-center cursor-pointer will-change-transform"
         >
           {/* Animated counting number watermark inside node */}
           <span className="absolute -top-6 font-heading text-xs sm:text-sm font-bold tracking-wider text-deep-rose/70">

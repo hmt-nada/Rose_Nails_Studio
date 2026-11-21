@@ -14,17 +14,17 @@ export default function Home() {
       <Navbar />
       <main className="flex flex-col w-full overflow-x-clip max-w-full">
         <Hero />
-        <LiquidDivider fromColor="fill-[#FFF8FA]" toColor="bg-[#FDF0F5]" />
+        <LiquidDivider fromColor="fill-[var(--divider-wave-fill)]" toColor="bg-[var(--divider-wave-bg)]" />
         <Gallery />
-        <LiquidDivider fromColor="fill-[#FDF0F5]" toColor="bg-[#FFF8FA]" flip />
+        <LiquidDivider fromColor="fill-[var(--divider-wave-bg)]" toColor="bg-[var(--divider-wave-fill)]" flip />
         <Reviews />
-        <LiquidDivider fromColor="fill-[#FFF8FA]" toColor="bg-[#FDF0F5]" />
+        <LiquidDivider fromColor="fill-[var(--divider-wave-fill)]" toColor="bg-[var(--divider-wave-bg)]" />
         <Services />
-        <LiquidDivider fromColor="fill-[#FDF0F5]" toColor="bg-[#FFF8FA]" flip />
+        <LiquidDivider fromColor="fill-[var(--divider-wave-bg)]" toColor="bg-[var(--divider-wave-fill)]" flip />
         <HowItWorks />
-        <LiquidDivider fromColor="fill-[#FFF8FA]" toColor="bg-[#FDF0F5]" />
+        <LiquidDivider fromColor="fill-[var(--divider-wave-fill)]" toColor="bg-[var(--divider-wave-bg)]" />
         <BookingForm />
-        <LiquidDivider fromColor="fill-[#FDF0F5]" toColor="bg-[#FFF8FA]" flip />
+        <LiquidDivider fromColor="fill-[var(--divider-wave-bg)]" toColor="bg-[var(--divider-wave-fill)]" flip />
         <Footer />
       </main>
     </>

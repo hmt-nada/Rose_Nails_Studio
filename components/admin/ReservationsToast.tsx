@@ -38,12 +38,12 @@ export default function ReservationsToast({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -8, scale: 0.94 }}
               transition={{ duration: 0.25 }}
-              className={`pointer-events-auto rounded-2xl p-3.5 pr-4 flex items-center justify-between gap-3 shadow-[0_12px_36px_rgba(184,74,110,0.18)] backdrop-blur-2xl border ${
+              className={`pointer-events-auto rounded-2xl p-3.5 pr-4 flex items-center justify-between gap-3 shadow-[0_12px_36px_rgba(184,74,110,0.18)] dark:shadow-[0_0_30px_rgba(243,166,189,0.12)] backdrop-blur-2xl border ${
                 isError
-                  ? "bg-white/95 border-rose/40 text-deep-rose"
+                  ? "bg-white/95 dark:bg-surface-elevated/95 border-rose/40 text-deep-rose"
                   : isInfo
-                  ? "bg-white/95 border-rose/30 text-plum"
-                  : "bg-white/95 border-rose/25 text-plum"
+                  ? "bg-white/95 dark:bg-surface-elevated/95 border-rose/30 text-plum"
+                  : "bg-white/95 dark:bg-surface-elevated/95 border-rose/25 text-plum"
               }`}
             >
               <div className="flex items-center gap-2.5">

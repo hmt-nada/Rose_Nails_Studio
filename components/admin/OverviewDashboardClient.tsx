@@ -114,7 +114,7 @@ function GlassTooltip({
 }) {
   if (active && payload && payload.length) {
     return (
-      <div className="rounded-2xl bg-white/95 backdrop-blur-xl border border-rose/25 p-3 shadow-[0_12px_32px_rgba(184,74,110,0.14)] text-xs text-plum min-w-[140px]">
+      <div className="rounded-2xl bg-white/95 dark:bg-surface-elevated/95 backdrop-blur-xl border border-rose/25 p-3 shadow-[0_12px_32px_rgba(184,74,110,0.14)] dark:shadow-[0_0_24px_rgba(243,166,189,0.1)] text-xs text-plum min-w-[140px]">
         {label && <p className="font-semibold text-plum mb-1.5 pb-1 border-b border-rose/10">{label}</p>}
         <div className="space-y-1">
           {payload.map((entry, index) => (
@@ -163,7 +163,7 @@ export default function OverviewDashboardClient({
   return (
     <div className="space-y-8">
       {/* ── 1. Page Header with Greeting & Today's Date ── */}
-      <div className="rounded-3xl bg-white/75 backdrop-blur-xl border border-rose/15 p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-[0_4px_24px_rgba(184,74,110,0.04)]">
+      <div className="rounded-3xl bg-white/75 dark:bg-surface-elevated/75 backdrop-blur-xl border border-rose/15 dark:border-rose/20 p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-[0_4px_24px_rgba(184,74,110,0.04)] dark:shadow-[0_0_24px_rgba(243,166,189,0.04)]">
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose/10 border border-rose/20 text-xs font-semibold uppercase tracking-wider text-deep-rose mb-2.5">
             <Sparkles className="w-3.5 h-3.5" />
@@ -196,7 +196,7 @@ export default function OverviewDashboardClient({
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="rounded-3xl bg-white/75 backdrop-blur-xl border border-rose/15 p-6 shadow-sm hover:border-rose/25 transition-all"
+          className="rounded-3xl bg-white/75 dark:bg-surface-elevated/75 backdrop-blur-xl border border-rose/15 dark:border-rose/20 p-6 shadow-sm hover:border-rose/25 transition-all"
         >
           <div className="flex items-center justify-between mb-4">
             <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-deep-rose to-rose flex items-center justify-center text-pearl shadow-sm">
@@ -236,7 +236,7 @@ export default function OverviewDashboardClient({
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.08 }}
-          className="rounded-3xl bg-white/75 backdrop-blur-xl border border-rose/15 p-6 shadow-sm hover:border-rose/25 transition-all"
+          className="rounded-3xl bg-white/75 dark:bg-surface-elevated/75 backdrop-blur-xl border border-rose/15 dark:border-rose/20 p-6 shadow-sm hover:border-rose/25 transition-all"
         >
           <div className="flex items-center justify-between mb-4">
             <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-rose to-blush flex items-center justify-center text-pearl shadow-sm">
@@ -276,7 +276,7 @@ export default function OverviewDashboardClient({
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.16 }}
-          className="rounded-3xl bg-white/75 backdrop-blur-xl border border-rose/15 p-6 shadow-sm hover:border-rose/25 transition-all"
+          className="rounded-3xl bg-white/75 dark:bg-surface-elevated/75 backdrop-blur-xl border border-rose/15 dark:border-rose/20 p-6 shadow-sm hover:border-rose/25 transition-all"
         >
           <div className="flex items-center justify-between mb-4">
             <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-plum to-deep-rose flex items-center justify-center text-pearl shadow-sm">
@@ -300,7 +300,7 @@ export default function OverviewDashboardClient({
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.24 }}
-          className="rounded-3xl bg-gradient-to-br from-white/90 via-white/75 to-rose/15 border-2 border-rose/30 p-6 shadow-[0_8px_30px_rgba(184,74,110,0.08)] transition-all"
+          className="rounded-3xl bg-gradient-to-br from-white/90 via-white/75 to-rose/15 dark:from-surface-elevated/90 dark:via-surface-elevated/75 dark:to-rose/10 border-2 border-rose/30 p-6 shadow-[0_8px_30px_rgba(184,74,110,0.08)] dark:shadow-[0_0_24px_rgba(243,166,189,0.08)] transition-all"
         >
           <div className="flex items-center justify-between mb-4">
             <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-deep-rose to-plum flex items-center justify-center text-pearl shadow-sm">
@@ -328,7 +328,7 @@ export default function OverviewDashboardClient({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.5 }}
-          className="rounded-3xl bg-white/75 backdrop-blur-xl border border-rose/15 p-6 sm:p-7 shadow-sm flex flex-col justify-between"
+          className="rounded-3xl bg-white/75 dark:bg-surface-elevated/75 backdrop-blur-xl border border-rose/15 dark:border-rose/20 p-6 sm:p-7 shadow-sm flex flex-col justify-between"
         >
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-5 border-b border-rose/10 mb-4">
@@ -345,7 +345,7 @@ export default function OverviewDashboardClient({
               </div>
 
               {/* Period toggle: 6 or 12 months */}
-              <div className="inline-flex items-center p-1 rounded-2xl bg-pearl/80 border border-rose/20 text-xs font-medium self-start sm:self-auto">
+              <div className="inline-flex items-center p-1 rounded-2xl bg-pearl/80 dark:bg-surface/80 border border-rose/20 text-xs font-medium self-start sm:self-auto">
                 <button
                   type="button"
                   onClick={() => setPeriodMonths(6)}
@@ -386,19 +386,19 @@ export default function OverviewDashboardClient({
                     />
                     <XAxis
                       dataKey="label"
-                      tick={{ fill: "rgba(58, 31, 43, 0.6)", fontSize: 11 }}
-                      axisLine={{ stroke: "rgba(184, 74, 110, 0.15)" }}
+                      tick={{ fill: "currentColor", opacity: 0.65, fontSize: 11 }}
+                      axisLine={{ stroke: "rgba(184, 74, 110, 0.2)" }}
                       tickLine={false}
                     />
                     <YAxis
                       allowDecimals={false}
-                      tick={{ fill: "rgba(58, 31, 43, 0.6)", fontSize: 11 }}
-                      axisLine={{ stroke: "rgba(184, 74, 110, 0.15)" }}
+                      tick={{ fill: "currentColor", opacity: 0.65, fontSize: 11 }}
+                      axisLine={{ stroke: "rgba(184, 74, 110, 0.2)" }}
                       tickLine={false}
                     />
                     <Tooltip
                       content={<GlassTooltip />}
-                      cursor={{ fill: "rgba(232, 138, 166, 0.08)" }}
+                      cursor={{ fill: "rgba(232, 138, 166, 0.1)" }}
                     />
                     <Legend
                       verticalAlign="top"
@@ -445,7 +445,7 @@ export default function OverviewDashboardClient({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="rounded-3xl bg-white/75 backdrop-blur-xl border border-rose/15 p-6 sm:p-7 shadow-sm flex flex-col justify-between"
+          className="rounded-3xl bg-white/75 dark:bg-surface-elevated/75 backdrop-blur-xl border border-rose/15 dark:border-rose/20 p-6 sm:p-7 shadow-sm flex flex-col justify-between"
         >
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-5 border-b border-rose/10 mb-4">
@@ -495,13 +495,13 @@ export default function OverviewDashboardClient({
                     />
                     <XAxis
                       dataKey="label"
-                      tick={{ fill: "rgba(58, 31, 43, 0.6)", fontSize: 11 }}
-                      axisLine={{ stroke: "rgba(184, 74, 110, 0.15)" }}
+                      tick={{ fill: "currentColor", opacity: 0.65, fontSize: 11 }}
+                      axisLine={{ stroke: "rgba(184, 74, 110, 0.2)" }}
                       tickLine={false}
                     />
                     <YAxis
-                      tick={{ fill: "rgba(58, 31, 43, 0.6)", fontSize: 11 }}
-                      axisLine={{ stroke: "rgba(184, 74, 110, 0.15)" }}
+                      tick={{ fill: "currentColor", opacity: 0.65, fontSize: 11 }}
+                      axisLine={{ stroke: "rgba(184, 74, 110, 0.2)" }}
                       tickLine={false}
                       tickFormatter={(val) => `${Math.round(val / 1000)}k`}
                     />
@@ -551,7 +551,7 @@ export default function OverviewDashboardClient({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.5 }}
-          className="rounded-3xl bg-white/75 backdrop-blur-xl border border-rose/15 p-6 sm:p-7 shadow-sm flex flex-col justify-between"
+          className="rounded-3xl bg-white/75 dark:bg-surface-elevated/75 backdrop-blur-xl border border-rose/15 dark:border-rose/20 p-6 sm:p-7 shadow-sm flex flex-col justify-between"
         >
           <div>
             <div className="flex items-center gap-2 pb-4 border-b border-rose/10 mb-4">
@@ -655,7 +655,7 @@ export default function OverviewDashboardClient({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="lg:col-span-2 rounded-3xl bg-white/75 backdrop-blur-xl border border-rose/15 p-6 sm:p-7 shadow-sm flex flex-col justify-between"
+          className="lg:col-span-2 rounded-3xl bg-white/75 dark:bg-surface-elevated/75 backdrop-blur-xl border border-rose/15 dark:border-rose/20 p-6 sm:p-7 shadow-sm flex flex-col justify-between"
         >
           <div>
             <div className="flex items-center justify-between pb-5 border-b border-rose/10 mb-4">

@@ -41,7 +41,7 @@ export default function ReservationConfirmDialog({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.94, y: 16 }}
             transition={{ type: "spring", duration: 0.35, bounce: 0.15 }}
-            className="relative w-full max-w-md rounded-3xl bg-white/90 backdrop-blur-2xl border border-rose/25 p-6 sm:p-7 shadow-[0_24px_64px_rgba(184,74,110,0.2)] text-plum z-10"
+            className="relative w-full max-w-md rounded-3xl bg-white/90 dark:bg-surface-elevated/95 backdrop-blur-2xl border border-rose/25 p-6 sm:p-7 shadow-[0_24px_64px_rgba(184,74,110,0.2)] dark:shadow-[0_0_35px_rgba(243,166,189,0.1)] text-plum z-10"
           >
             {/* Close button */}
             <button
@@ -68,7 +68,7 @@ export default function ReservationConfirmDialog({
               <span className="font-medium text-plum">{reservationTime}</span>?
             </p>
 
-            <div className="p-3 rounded-2xl bg-rose/10 border border-rose/20 text-[11px] text-plum/70 mt-4">
+            <div className="p-3 rounded-2xl bg-rose/10 dark:bg-rose/15 border border-rose/20 text-[11px] text-plum/70 mt-4">
               The time slot will be freed up for other clients to book. You can manually restore the status later if needed.
             </div>
 
