@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
 import type { EmblaCarouselType } from "embla-carousel";
 import { motion, useReducedMotion } from "framer-motion";
@@ -180,112 +181,137 @@ export default function Gallery() {
         </div>
 
         {/* ─── Carousel Wrapper with Side Arrows ─── */}
-        <div className="relative flex items-center justify-center">
-          {/* Left Arrow Button */}
-          <button
-            onClick={scrollPrev}
-            disabled={!canScrollPrev}
-            aria-label="Previous work slide"
-            className={cn(
-              "absolute left-2 sm:left-4 md:left-8 z-30",
-              "w-12 h-12 md:w-14 md:h-14 rounded-full",
-              "glass flex items-center justify-center text-plum",
-              "border border-white/70 shadow-md shadow-deep-rose/10",
-              "hover:bg-white hover:border-deep-rose/40 hover:text-deep-rose hover:scale-110",
-              "active:scale-95 transition-all duration-300",
-              "focus:outline-none focus-visible:ring-2 focus-visible:ring-deep-rose/60",
-              "disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
-            )}
-          >
-            <ChevronLeft size={22} className="transition-transform group-hover:-translate-x-0.5" />
-          </button>
+        <div className="relative flex flex-col items-center justify-center">
+          <div className="relative w-full flex items-center justify-center">
+            {/* Left Arrow Button (Desktop / Tablet overlaid) */}
+            <button
+              onClick={scrollPrev}
+              disabled={!canScrollPrev}
+              aria-label="Previous work slide"
+              className={cn(
+                "hidden sm:flex absolute left-2 sm:left-4 md:left-6 lg:left-8 z-30",
+                "w-11 h-11 md:w-14 md:h-14 rounded-full min-h-[44px] min-w-[44px]",
+                "glass items-center justify-center text-plum",
+                "border border-white/70 shadow-md shadow-deep-rose/10",
+                "hover:bg-white hover:border-deep-rose/40 hover:text-deep-rose hover:scale-110",
+                "active:scale-95 transition-all duration-300",
+                "focus:outline-none focus-visible:ring-2 focus-visible:ring-deep-rose/60",
+                "disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+              )}
+            >
+              <ChevronLeft size={22} className="transition-transform group-hover:-translate-x-0.5" />
+            </button>
 
-          {/* Embla Viewport showing 3 cards on desktop */}
-          <div
-            ref={emblaRef}
-            className="overflow-hidden w-full max-w-[1100px] py-12"
-            tabIndex={0}
-            aria-label="Designs we love carousel, use arrow keys to navigate"
-          >
-            <div className="flex touch-pan-y">
-              {WORK_ITEMS.map((item, index) => {
-                const isCenter = index === selectedIndex;
-                return (
-                  <div
-                    key={item.id}
-                    className="min-w-0 flex-[0_0_85%] sm:flex-[0_0_50%] md:flex-[0_0_33.333%] px-3 flex justify-center items-center"
-                  >
-                    {/* Cards fly in from below with a stagger, slightly rotated and blurred, settling into place */}
-                    <motion.div
-                      initial={
-                        shouldReduce
-                          ? {}
-                          : {
-                              opacity: 0,
-                              y: 75,
-                              rotate: index % 2 === 0 ? -3.5 : 3.5,
-                              filter: "blur(6px)",
-                            }
-                      }
-                      whileInView={
-                        shouldReduce
-                          ? {}
-                          : {
-                              opacity: 1,
-                              y: 0,
-                              rotate: 0,
-                              filter: "blur(0px)",
-                            }
-                      }
-                      viewport={{ once: true, amount: 0.15 }}
-                      transition={{
-                        duration: 0.85,
-                        // Centered card lands last with spring bounce
-                        delay:
-                          index === 0
-                            ? 0.12
-                            : index === 2
-                            ? 0.22
-                            : index === 1
-                            ? 0.38
-                            : 0.45,
-                        type: "spring",
-                        stiffness: 75,
-                        damping: index === 1 ? 12 : 16,
-                      }}
-                      className="w-full flex justify-center items-center will-change-transform"
+            {/* Embla Viewport showing 1 card with peeks on phone, partial neighbors on tablet, 3 on desktop */}
+            <div
+              ref={emblaRef}
+              className="overflow-hidden w-full max-w-[1100px] py-6 sm:py-10 md:py-12"
+              tabIndex={0}
+              aria-label="Designs we love carousel, swipe or use arrow keys to navigate"
+            >
+              <div className="flex touch-pan-y">
+                {WORK_ITEMS.map((item, index) => {
+                  const isCenter = index === selectedIndex;
+                  return (
+                    <div
+                      key={item.id}
+                      className="min-w-0 flex-[0_0_80%] xs:flex-[0_0_75%] sm:flex-[0_0_48%] md:flex-[0_0_42%] lg:flex-[0_0_33.333%] px-2 sm:px-3 flex justify-center items-center"
                     >
-                      <WorkCard
-                        item={item}
-                        index={index}
-                        isActive={isCenter}
-                        onCardClick={() => emblaApi?.scrollTo(index)}
-                      />
-                    </motion.div>
-                  </div>
-                );
-              })}
+                      {/* Cards fly in from below with a stagger, slightly rotated and blurred, settling into place */}
+                      <motion.div
+                        initial={
+                          shouldReduce
+                            ? {}
+                            : {
+                                opacity: 0,
+                                y: 75,
+                                rotate: index % 2 === 0 ? -3.5 : 3.5,
+                                filter: "blur(6px)",
+                              }
+                        }
+                        whileInView={
+                          shouldReduce
+                            ? {}
+                            : {
+                                opacity: 1,
+                                y: 0,
+                                rotate: 0,
+                                filter: "blur(0px)",
+                              }
+                        }
+                        viewport={{ once: true, amount: 0.15 }}
+                        transition={{
+                          duration: 0.85,
+                          // Centered card lands last with spring bounce
+                          delay:
+                            index === 0
+                              ? 0.12
+                              : index === 2
+                              ? 0.22
+                              : index === 1
+                              ? 0.38
+                              : 0.45,
+                          type: "spring",
+                          stiffness: 75,
+                          damping: index === 1 ? 12 : 16,
+                        }}
+                        className="w-full flex justify-center items-center will-change-transform"
+                      >
+                        <WorkCard
+                          item={item}
+                          index={index}
+                          isActive={isCenter}
+                          onCardClick={() => emblaApi?.scrollTo(index)}
+                        />
+                      </motion.div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
+
+            {/* Right Arrow Button (Desktop / Tablet overlaid) */}
+            <button
+              onClick={scrollNext}
+              disabled={!canScrollNext}
+              aria-label="Next work slide"
+              className={cn(
+                "hidden sm:flex absolute right-2 sm:right-4 md:right-6 lg:right-8 z-30",
+                "w-11 h-11 md:w-14 md:h-14 rounded-full min-h-[44px] min-w-[44px]",
+                "glass items-center justify-center text-plum",
+                "border border-white/70 shadow-md shadow-deep-rose/10",
+                "hover:bg-white hover:border-deep-rose/40 hover:text-deep-rose hover:scale-110",
+                "active:scale-95 transition-all duration-300",
+                "focus:outline-none focus-visible:ring-2 focus-visible:ring-deep-rose/60",
+                "disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+              )}
+            >
+              <ChevronRight size={22} className="transition-transform group-hover:translate-x-0.5" />
+            </button>
           </div>
 
-          {/* Right Arrow Button */}
-          <button
-            onClick={scrollNext}
-            disabled={!canScrollNext}
-            aria-label="Next work slide"
-            className={cn(
-              "absolute right-2 sm:right-4 md:right-8 z-30",
-              "w-12 h-12 md:w-14 md:h-14 rounded-full",
-              "glass flex items-center justify-center text-plum",
-              "border border-white/70 shadow-md shadow-deep-rose/10",
-              "hover:bg-white hover:border-deep-rose/40 hover:text-deep-rose hover:scale-110",
-              "active:scale-95 transition-all duration-300",
-              "focus:outline-none focus-visible:ring-2 focus-visible:ring-deep-rose/60",
-              "disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
-            )}
-          >
-            <ChevronRight size={22} className="transition-transform group-hover:translate-x-0.5" />
-          </button>
+          {/* ── Mobile-Only Controls Bar (Below carousel on screens < 640px) ── */}
+          <div className="flex sm:hidden items-center justify-center gap-4 mt-2">
+            <button
+              onClick={scrollPrev}
+              disabled={!canScrollPrev}
+              aria-label="Previous slide"
+              className="w-11 h-11 min-h-[44px] min-w-[44px] rounded-full glass border border-blush/60 flex items-center justify-center text-plum active:scale-95 disabled:opacity-30"
+            >
+              <ChevronLeft size={18} />
+            </button>
+            <span className="font-heading text-xs tracking-widest uppercase text-deep-rose/85 px-3 select-none">
+              {String(selectedIndex + 1).padStart(2, "0")} / {String(WORK_ITEMS.length).padStart(2, "0")}
+            </span>
+            <button
+              onClick={scrollNext}
+              disabled={!canScrollNext}
+              aria-label="Next slide"
+              className="w-11 h-11 min-h-[44px] min-w-[44px] rounded-full glass border border-blush/60 flex items-center justify-center text-plum active:scale-95 disabled:opacity-30"
+            >
+              <ChevronRight size={18} />
+            </button>
+          </div>
         </div>
       </div>
     </section>
@@ -309,13 +335,13 @@ function WorkCard({ item, isActive, onCardClick }: WorkCardProps) {
       onClick={onCardClick}
       className={cn(
         "group relative flex flex-col items-center",
-        // Proportions: around 1:1.3 ratio
-        "w-[275px] sm:w-[290px] md:w-[305px]",
+        // Fluid width scaling from mobile (240px) to desktop (305px)
+        "w-[240px] xs:w-[260px] sm:w-[285px] md:w-[305px]",
         // Fully rounded capsule / pill shape top and bottom
         "rounded-[9999px] bg-white",
         "border border-blush/40",
         "cursor-pointer select-none",
-        "pt-5 sm:pt-6 pb-7 sm:pb-8 px-4",
+        "pt-4 sm:pt-6 pb-6 sm:pb-8 px-3.5 sm:px-4",
         "transition-all duration-500",
         // Active (center) card gets a gentle breathing glow pulse
         isActive
@@ -332,11 +358,13 @@ function WorkCard({ item, isActive, onCardClick }: WorkCardProps) {
       <div className="relative w-[84%] aspect-square rounded-full overflow-hidden p-1.5 bg-gradient-to-br from-blush/50 via-white to-rose/30 shadow-inner">
         <div className="relative w-full h-full rounded-full overflow-hidden bg-pearl">
           {!imgError ? (
-            <img
+            <Image
               src={item.image}
               alt={item.name}
+              fill
+              sizes="(max-width: 640px) 210px, (max-width: 1024px) 250px, 280px"
               onError={() => setImgError(true)}
-              className="w-full h-full object-cover rounded-full group-hover:scale-108 transition-transform duration-500 ease-out"
+              className="object-cover rounded-full group-hover:scale-108 transition-transform duration-500 ease-out"
             />
           ) : (
             // Elegant pink gradient placeholder when image is absent

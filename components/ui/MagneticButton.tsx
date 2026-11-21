@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef, useState, ReactNode, MouseEvent } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { useRef, useState, useEffect, ReactNode, MouseEvent } from "react";
+import { motion, useMotionValue, useSpring, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface MagneticButtonProps {
@@ -14,7 +14,7 @@ interface MagneticButtonProps {
 
 /**
  * A button whose content follows the cursor with a magnetic pull effect.
- * Respects prefers-reduced-motion by disabling the effect.
+ * On touch devices or when prefers-reduced-motion is active, magnetic translation is disabled.
  */
 export default function MagneticButton({
   children,
@@ -25,6 +25,8 @@ export default function MagneticButton({
 }: MagneticButtonProps) {
   const ref = useRef<HTMLButtonElement>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const shouldReduce = useReducedMotion();
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -32,8 +34,16 @@ export default function MagneticButton({
   const springX = useSpring(x, { stiffness: 300, damping: 20, mass: 0.5 });
   const springY = useSpring(y, { stiffness: 300, damping: 20, mass: 0.5 });
 
+  useEffect(() => {
+    const isTouch =
+      "ontouchstart" in window ||
+      navigator.maxTouchPoints > 0 ||
+      window.matchMedia("(pointer: coarse)").matches;
+    setIsTouchDevice(isTouch);
+  }, []);
+
   function handleMouseMove(e: MouseEvent<HTMLButtonElement>) {
-    if (!ref.current) return;
+    if (isTouchDevice || shouldReduce || !ref.current) return;
     const rect = ref.current.getBoundingClientRect();
     const cx = rect.left + rect.width / 2;
     const cy = rect.top + rect.height / 2;
@@ -47,27 +57,31 @@ export default function MagneticButton({
     setIsHovered(false);
   }
 
+  const useMagnetic = !isTouchDevice && !shouldReduce;
+
   return (
     <motion.button
       ref={ref}
       aria-label={ariaLabel}
       onClick={onClick}
       onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovered(true)}
+      onMouseEnter={() => {
+        if (!isTouchDevice) setIsHovered(true);
+      }}
       onMouseLeave={handleMouseLeave}
       onTapStart={() => {
         x.set(0);
         y.set(0);
       }}
       whileTap={{ scale: 0.96 }}
-      style={{ x: springX, y: springY }}
+      style={useMagnetic ? { x: springX, y: springY } : {}}
       className={cn(
         "relative inline-flex items-center justify-center overflow-hidden",
         "bg-deep-rose text-pearl",
-        "font-body text-sm font-medium tracking-widest uppercase",
-        "px-10 py-4 rounded-full",
+        "font-body text-xs sm:text-sm font-medium tracking-widest uppercase",
+        "px-7 sm:px-10 py-3.5 sm:py-4 rounded-full min-h-[48px] min-w-[44px]",
         "shadow-lg shadow-deep-rose/30",
-        "transition-shadow duration-300",
+        "transition-shadow duration-300 select-none",
         isHovered && "shadow-xl shadow-deep-rose/40",
         className
       )}

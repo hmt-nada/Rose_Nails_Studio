@@ -74,30 +74,30 @@ export default function HowItWorks() {
   return (
     <section
       id="how-it-works"
-      className="relative py-28 w-full bg-pearl overflow-hidden select-none"
+      className="relative py-16 sm:py-20 md:py-24 lg:py-28 w-full bg-pearl overflow-hidden select-none"
     >
       {/* ── Ambient Background Lighting ── */}
       <div
         aria-hidden
-        className="absolute top-1/4 -right-28 w-[480px] h-[480px] rounded-full bg-blush/25 blur-3xl pointer-events-none"
+        className="absolute top-1/4 -right-28 w-60 h-60 sm:w-[480px] sm:h-[480px] rounded-full bg-blush/25 blur-3xl pointer-events-none"
       />
       <div
         aria-hidden
-        className="absolute bottom-1/4 -left-28 w-[450px] h-[450px] rounded-full bg-rose/15 blur-3xl pointer-events-none"
+        className="absolute bottom-1/4 -left-28 w-56 h-56 sm:w-[450px] sm:h-[450px] rounded-full bg-rose/15 blur-3xl pointer-events-none"
       />
 
-      <div className="relative z-10 max-w-[1280px] mx-auto px-6">
+      <div className="relative z-10 max-w-[1280px] mx-auto px-4 sm:px-6">
         {/* ── Header ── */}
-        <div className="flex flex-col items-center text-center mb-16 md:mb-24">
+        <div className="flex flex-col items-center text-center mb-12 sm:mb-16 md:mb-24">
           <span className="font-body text-xs tracking-[0.3em] uppercase text-deep-rose mb-3">
             <SplitText by="word">How It Works</SplitText>
           </span>
-          <h2 className="font-heading text-5xl md:text-6xl xl:text-7xl font-light text-plum tracking-tight mb-4">
+          <h2 className="font-heading text-[clamp(2.15rem,5.5vw,4.5rem)] xl:text-7xl font-light text-plum tracking-tight mb-4">
             <SplitText by="word" stagger={0.06} delay={0.1}>
               Your Journey to Flawless Nails
             </SplitText>
           </h2>
-          <p className="font-body text-base md:text-lg font-light text-plum/65 max-w-md">
+          <p className="font-body text-sm sm:text-base md:text-lg font-light text-plum/65 max-w-md">
             <SplitText by="word" stagger={0.03} delay={0.25}>
               Three simple steps from inspiration to your signature set.
             </SplitText>
@@ -109,7 +109,7 @@ export default function HowItWorks() {
           {/* ── Vertical / Curving Connecting Line (SVG Path) ── */}
           <div
             aria-hidden
-            className="absolute left-6 md:left-1/2 -translate-x-1/2 top-10 bottom-10 w-2 md:w-4 pointer-events-none z-0"
+            className="absolute left-6 sm:left-8 lg:left-1/2 -translate-x-1/2 top-10 bottom-10 w-2 lg:w-4 pointer-events-none z-0"
           >
             <svg
               className="w-full h-full overflow-visible"
@@ -155,8 +155,8 @@ export default function HowItWorks() {
             </svg>
           </div>
 
-          {/* ── 3 Steps (Alternating sides on Desktop) ── */}
-          <div className="flex flex-col gap-14 md:gap-20 relative z-10">
+          {/* ── 3 Steps (Vertical timeline on tablet/mobile, alternating on Desktop) ── */}
+          <div className="flex flex-col gap-12 sm:gap-16 lg:gap-20 relative z-10">
             {STEPS.map((step, index) => (
               <StepRow
                 key={step.id}
@@ -185,6 +185,16 @@ function StepRow({ step, index, shouldReduce }: StepRowProps) {
   const [hasRevealed, setHasRevealed] = useState(false);
   const isEven = index % 2 === 0; // step 1 (0) on left, step 2 (1) on right, step 3 (2) on left
   const Icon = step.icon;
+  const [isDesktop, setIsDesktop] = useState(true);
+
+  useEffect(() => {
+    function handleResize() {
+      setIsDesktop(window.innerWidth >= 1024);
+    }
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     if (isInView) {
@@ -227,20 +237,20 @@ function StepRow({ step, index, shouldReduce }: StepRowProps) {
     <div
       ref={rowRef}
       className={cn(
-        "relative flex flex-col md:flex-row items-start md:items-center w-full",
+        "relative flex flex-col lg:flex-row items-start lg:items-center w-full",
         // Desktop alternation: even steps left-aligned, odd steps right-aligned
-        isEven ? "md:flex-row" : "md:flex-row-reverse"
+        isEven ? "lg:flex-row" : "lg:flex-row-reverse"
       )}
     >
-      {/* ── Step Card Side (Slides in from left or right with blur-to-sharp) ── */}
-      <div className="w-full md:w-[calc(50%-40px)] pl-16 md:pl-0">
+      {/* ── Step Card Side (Slides in from left or right on desktop, stacks vertically on tablet/mobile) ── */}
+      <div className="w-full lg:w-[calc(50%-40px)] pl-14 xs:pl-16 sm:pl-20 lg:pl-0">
         <motion.div
           initial={
             shouldReduce
               ? {}
               : {
                   opacity: 0,
-                  x: isEven ? -60 : 60,
+                  x: isDesktop ? (isEven ? -60 : 60) : 35,
                   filter: "blur(8px)",
                 }
           }
@@ -253,7 +263,7 @@ function StepRow({ step, index, shouldReduce }: StepRowProps) {
                 }
               : {
                   opacity: 0,
-                  x: isEven ? -60 : 60,
+                  x: isDesktop ? (isEven ? -60 : 60) : 35,
                   filter: "blur(8px)",
                 }
           }
@@ -266,11 +276,11 @@ function StepRow({ step, index, shouldReduce }: StepRowProps) {
             transition: { duration: 0.28, ease: "easeOut" },
           }}
           className={cn(
-            "group relative p-7 sm:p-8 rounded-[32px] bg-white/95 backdrop-blur-md",
+            "group relative p-5 xs:p-6 sm:p-8 rounded-[24px] sm:rounded-[32px] bg-white/95 backdrop-blur-md",
             "border border-white/90 shadow-[0_12px_40px_rgba(184,74,110,0.08),0_4px_16px_rgba(249,198,212,0.2)]",
             "hover:shadow-[0_20px_50px_rgba(184,74,110,0.18)] hover:border-blush/60",
-            "transition-shadow duration-300 cursor-default will-change-transform",
-            isEven ? "md:text-right" : "md:text-left"
+            "transition-shadow duration-300 cursor-default will-change-transform text-left",
+            isEven ? "lg:text-right" : "lg:text-left"
           )}
         >
           {/* Subtle glowing corner gradient */}
@@ -279,11 +289,11 @@ function StepRow({ step, index, shouldReduce }: StepRowProps) {
             className="absolute top-0 right-0 w-32 h-32 rounded-full bg-blush/20 blur-2xl pointer-events-none"
           />
 
-          {/* Badge & Number for mobile / header */}
+          {/* Badge & Number */}
           <div
             className={cn(
-              "flex items-center gap-3 mb-3",
-              isEven ? "md:justify-end" : "md:justify-start"
+              "flex items-center gap-3 mb-3 justify-start",
+              isEven ? "lg:justify-end" : "lg:justify-start"
             )}
           >
             <span className="font-body text-[11px] font-semibold tracking-[0.25em] uppercase text-deep-rose/80 px-3 py-1 rounded-full bg-pearl border border-blush/50">
@@ -292,19 +302,24 @@ function StepRow({ step, index, shouldReduce }: StepRowProps) {
           </div>
 
           {/* Step Title */}
-          <h3 className="font-heading text-2xl sm:text-3xl font-medium text-plum mb-2 tracking-wide group-hover:text-deep-rose transition-colors duration-300">
+          <h3 className="font-heading text-xl sm:text-2xl md:text-3xl font-medium text-plum mb-2 tracking-wide group-hover:text-deep-rose transition-colors duration-300">
             {step.title}
           </h3>
 
           {/* Step Description */}
-          <p className="font-body text-sm font-light text-plum/70 leading-relaxed max-w-sm ml-auto mr-auto md:ml-0 md:mr-0">
+          <p
+            className={cn(
+              "font-body text-xs sm:text-sm font-light text-plum/70 leading-relaxed max-w-sm",
+              isEven ? "lg:ml-auto lg:mr-0" : "lg:mr-auto lg:ml-0"
+            )}
+          >
             {step.description}
           </p>
         </motion.div>
       </div>
 
       {/* ── Center Node on the SVG Line (Number + Bouncing Icon) ── */}
-      <div className="absolute left-6 md:left-1/2 -translate-x-1/2 top-4 md:top-auto flex items-center justify-center z-20">
+      <div className="absolute left-6 sm:left-8 lg:left-1/2 -translate-x-1/2 top-4 sm:top-5 lg:top-auto flex items-center justify-center z-20">
         <motion.div
           initial={
             shouldReduce
@@ -339,10 +354,10 @@ function StepRow({ step, index, shouldReduce }: StepRowProps) {
             rotate: [0, -8, 8, -6, 6, 0],
             transition: { duration: 0.5 },
           }}
-          className="group relative w-12 h-12 md:w-14 md:h-14 rounded-full bg-white border-2 border-deep-rose shadow-lg shadow-deep-rose/20 flex items-center justify-center cursor-pointer will-change-transform"
+          className="group relative w-10 h-10 xs:w-11 xs:h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-full bg-white border-2 border-deep-rose shadow-lg shadow-deep-rose/20 flex items-center justify-center cursor-pointer will-change-transform"
         >
           {/* Animated counting number watermark inside node */}
-          <span className="absolute -top-6 font-heading text-sm font-bold tracking-wider text-deep-rose/70">
+          <span className="absolute -top-6 font-heading text-xs sm:text-sm font-bold tracking-wider text-deep-rose/70">
             {displayedNumber}
           </span>
 
@@ -355,7 +370,7 @@ function StepRow({ step, index, shouldReduce }: StepRowProps) {
       </div>
 
       {/* ── Opposite Spacer Side for desktop grid balance ── */}
-      <div className="hidden md:block w-[calc(50%-40px)]" aria-hidden />
+      <div className="hidden lg:block w-[calc(50%-40px)]" aria-hidden />
     </div>
   );
 }

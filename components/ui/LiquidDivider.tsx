@@ -41,7 +41,7 @@ export default function LiquidDivider({
       <motion.svg
         style={shouldReduce ? {} : { x: waveX }}
         className={cn(
-          "relative block w-[104%] -left-[2%] h-10 sm:h-14 md:h-18 lg:h-20",
+          "relative block w-[104%] -left-[2%] h-7 xs:h-9 sm:h-14 md:h-18 lg:h-20",
           flip && "-scale-x-100"
         )}
         viewBox="0 0 1440 90"

@@ -13,7 +13,7 @@ export default function Home() {
   return (
     <SmoothScrollProvider>
       <Navbar />
-      <main className="flex flex-col w-full overflow-hidden">
+      <main className="flex flex-col w-full overflow-x-clip max-w-full">
         <Hero />
         <LiquidDivider fromColor="fill-[#FFF8FA]" toColor="bg-[#FDF0F5]" />
         <Gallery />

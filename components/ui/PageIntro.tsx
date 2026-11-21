@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import { SITE_NAME } from "@/lib/constants";
@@ -88,10 +89,13 @@ export default function PageIntro({ onIntroComplete }: PageIntroProps) {
             className="relative z-10 flex flex-col items-center gap-4 text-center px-6"
           >
             {/* Logo Emblem */}
-            <div className="w-16 h-16 rounded-full bg-white/95 border border-blush/70 shadow-lg shadow-deep-rose/10 flex items-center justify-center p-3">
-              <img
+            <div className="w-16 h-16 rounded-full bg-white/95 border border-blush/70 shadow-lg shadow-deep-rose/10 flex items-center justify-center p-3 relative overflow-hidden">
+              <Image
                 src="/imag/logo/logo.png"
                 alt="Rosé Nails Studio"
+                width={56}
+                height={56}
+                priority
                 className="w-full h-full object-contain"
               />
             </div>

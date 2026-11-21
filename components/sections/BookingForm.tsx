@@ -46,6 +46,17 @@ export default function BookingForm() {
   // Input Focus States for Floating Labels & Animated Underlines
   const [focusedField, setFocusedField] = useState<string | null>(null);
 
+  // Smooth scroll active field into view when mobile on-screen keyboard appears
+  const handleFieldFocus = (
+    field: string,
+    e: React.FocusEvent<HTMLInputElement | HTMLButtonElement>
+  ) => {
+    setFocusedField(field);
+    setTimeout(() => {
+      e.target.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 320);
+  };
+
   // Dropdown & Toast State
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showToast, setShowToast] = useState(false);
@@ -139,16 +150,16 @@ export default function BookingForm() {
   return (
     <section
       id="book"
-      className="relative py-28 w-full bg-[#FDF0F5] overflow-hidden select-none"
+      className="relative py-16 sm:py-20 md:py-24 lg:py-28 w-full bg-[#FDF0F5] overflow-hidden select-none"
     >
       {/* Soft decorative background ambient blobs */}
       <div
         aria-hidden
-        className="absolute -top-32 -right-32 w-[480px] h-[480px] rounded-full bg-blush/25 blur-3xl pointer-events-none"
+        className="absolute -top-32 -right-32 w-60 h-60 sm:w-[480px] sm:h-[480px] rounded-full bg-blush/25 blur-3xl pointer-events-none"
       />
       <div
         aria-hidden
-        className="absolute -bottom-28 -left-28 w-[450px] h-[450px] rounded-full bg-rose/15 blur-3xl pointer-events-none"
+        className="absolute -bottom-28 -left-28 w-56 h-56 sm:w-[450px] sm:h-[450px] rounded-full bg-rose/15 blur-3xl pointer-events-none"
       />
 
       {/* ─── Elegant Success Toast Notification ─── */}
@@ -159,7 +170,7 @@ export default function BookingForm() {
             animate={shouldReduce ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
             exit={shouldReduce ? { opacity: 0 } : { opacity: 0, y: -20, scale: 0.95 }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed top-6 right-6 z-50 max-w-sm w-[calc(100%-3rem)] sm:w-full glass bg-white/95 backdrop-blur-md rounded-2xl p-4 border border-blush/60 shadow-xl shadow-deep-rose/15 flex items-start gap-3.5"
+            className="fixed top-[max(1.25rem,env(safe-area-inset-top))] inset-x-4 sm:inset-x-auto sm:right-6 z-50 max-w-sm w-auto glass bg-white/95 backdrop-blur-md rounded-2xl p-4 border border-blush/60 shadow-xl shadow-deep-rose/15 flex items-start gap-3.5"
             role="status"
             aria-live="polite"
           >
@@ -176,7 +187,7 @@ export default function BookingForm() {
             </div>
             <button
               onClick={() => setShowToast(false)}
-              className="text-plum/40 hover:text-plum transition-colors p-1 cursor-pointer"
+              className="text-plum/40 hover:text-plum transition-colors p-1 cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
               aria-label="Close notification"
             >
               <X size={15} />
@@ -185,18 +196,18 @@ export default function BookingForm() {
         )}
       </AnimatePresence>
 
-      <div className="relative z-10 max-w-3xl mx-auto px-6 flex flex-col items-center text-center">
+      <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 flex flex-col items-center text-center">
         {/* ─── Header: SplitText reveal ─── */}
-        <div className="flex flex-col items-center mb-12 md:mb-14">
+        <div className="flex flex-col items-center mb-10 sm:mb-12 md:mb-14">
           <span className="font-body text-xs tracking-[0.3em] uppercase text-deep-rose mb-3">
             <SplitText by="word">Make an appointment</SplitText>
           </span>
-          <h2 className="font-heading text-5xl md:text-6xl xl:text-7xl font-light text-plum tracking-tight mb-4">
+          <h2 className="font-heading text-[clamp(2.15rem,5.5vw,4.5rem)] xl:text-7xl font-light text-plum tracking-tight mb-4">
             <SplitText by="word" stagger={0.06} delay={0.1}>
               Book Your Session
             </SplitText>
           </h2>
-          <p className="font-body text-base md:text-lg font-light text-plum/65 max-w-md leading-relaxed">
+          <p className="font-body text-sm sm:text-base md:text-lg font-light text-plum/65 max-w-md leading-relaxed">
             <SplitText by="word" stagger={0.03} delay={0.25}>
               Choose your service and preferred date. We will prepare an exquisite experience for you.
             </SplitText>
@@ -232,13 +243,13 @@ export default function BookingForm() {
             ease: [0.22, 1, 0.36, 1],
           }}
           className={cn(
-            "w-full glass bg-white/95 backdrop-blur-md rounded-[32px]",
+            "w-full glass bg-white/95 backdrop-blur-md rounded-[28px] sm:rounded-[32px]",
             "border border-white/90 shadow-[0_16px_50px_rgba(184,74,110,0.1),0_4px_20px_rgba(249,198,212,0.2)]",
-            "p-8 sm:p-12 text-left space-y-7 will-change-transform"
+            "p-5 xs:p-6 sm:p-10 md:p-12 text-left space-y-6 sm:space-y-7 will-change-transform"
           )}
         >
-          {/* 2x2 Form Grid with Staggered Entrance */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* 2x2 Form Grid (single-column on phone, two-column on tablet & desktop) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
             {/* 1. First Name Field with Floating Label & Underline Animation */}
             <motion.div
               initial={shouldReduce ? {} : { opacity: 0, y: 20 }}
@@ -273,10 +284,10 @@ export default function BookingForm() {
                   type="text"
                   required
                   value={firstName}
-                  onFocus={() => setFocusedField("firstName")}
+                  onFocus={(e) => handleFieldFocus("firstName", e)}
                   onBlur={() => setFocusedField(null)}
                   onChange={(e) => setFirstName(e.target.value)}
-                  className="w-full bg-transparent px-4 pt-6 pb-2.5 font-body text-sm text-plum focus:outline-none"
+                  className="w-full bg-transparent px-4 pt-6 pb-2.5 font-body text-base text-plum focus:outline-none"
                 />
 
                 {/* Smooth Underline Expansion Animation */}
@@ -324,10 +335,10 @@ export default function BookingForm() {
                   type="tel"
                   required
                   value={phoneNumber}
-                  onFocus={() => setFocusedField("phoneNumber")}
+                  onFocus={(e) => handleFieldFocus("phoneNumber", e)}
                   onBlur={() => setFocusedField(null)}
                   onChange={(e) => setPhoneNumber(e.target.value)}
-                  className="w-full bg-transparent px-4 pt-6 pb-2.5 font-body text-sm text-plum focus:outline-none"
+                  className="w-full bg-transparent px-4 pt-6 pb-2.5 font-body text-base text-plum focus:outline-none"
                 />
 
                 {/* Smooth Underline Expansion */}
@@ -360,9 +371,9 @@ export default function BookingForm() {
                   setServiceError(false);
                 }}
                 className={cn(
-                  "w-full flex items-center justify-between",
+                  "w-full flex items-center justify-between min-h-[48px]",
                   "bg-pearl/80 hover:bg-white border rounded-2xl px-4 py-3.5",
-                  "font-body text-sm text-plum text-left transition-all duration-200 cursor-pointer",
+                  "font-body text-base text-plum text-left transition-all duration-200 cursor-pointer",
                   serviceError
                     ? "border-red-400 ring-2 ring-red-400/20"
                     : isDropdownOpen
@@ -404,8 +415,8 @@ export default function BookingForm() {
                             setServiceError(false);
                           }}
                           className={cn(
-                            "w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl",
-                            "font-body text-sm text-left transition-all duration-150 cursor-pointer",
+                            "w-full flex items-center justify-between px-3.5 py-3 rounded-xl min-h-[44px]",
+                            "font-body text-base text-left transition-all duration-150 cursor-pointer",
                             isSelected
                               ? "bg-blush/35 text-deep-rose font-medium"
                               : "text-plum/85 hover:bg-blush/15 hover:text-plum"
@@ -437,11 +448,12 @@ export default function BookingForm() {
                 required
                 min={minDate || undefined}
                 value={preferredDate}
+                onFocus={(e) => handleFieldFocus("date", e)}
                 onChange={(e) => setPreferredDate(e.target.value)}
                 className={cn(
-                  "w-full bg-pearl/80 hover:bg-white focus:bg-white",
+                  "w-full bg-pearl/80 hover:bg-white focus:bg-white min-h-[48px]",
                   "border border-blush/60 focus:border-deep-rose",
-                  "rounded-2xl px-4 py-3.5 font-body text-sm text-plum",
+                  "rounded-2xl px-4 py-3.5 font-body text-base text-plum",
                   "focus:outline-none focus:ring-2 focus:ring-deep-rose/25 focus:shadow-[0_0_20px_rgba(232,138,166,0.3)]",
                   "transition-all duration-200"
                 )}
@@ -461,7 +473,7 @@ export default function BookingForm() {
               <Clock size={12} className="text-deep-rose" />
               <span>Select Time Slot</span>
             </div>
-            <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+            <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-2.5">
               {TIME_SLOTS.map((slot, index) => {
                 const isSelected = selectedTimeSlot === slot;
                 return (
@@ -477,7 +489,7 @@ export default function BookingForm() {
                     }}
                     onClick={() => setSelectedTimeSlot(slot)}
                     className={cn(
-                      "py-2 px-1 text-center font-body text-xs rounded-xl border transition-all duration-200 cursor-pointer",
+                      "py-3 px-2 text-center font-body text-xs sm:text-xs md:text-sm font-medium rounded-xl border transition-all duration-200 cursor-pointer min-h-[44px] flex items-center justify-center",
                       isSelected
                         ? "bg-deep-rose text-white border-deep-rose shadow-md shadow-deep-rose/30 scale-105"
                         : "bg-pearl/80 hover:bg-white border-blush/60 text-plum/75 hover:border-deep-rose/40"

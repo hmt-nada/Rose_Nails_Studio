@@ -34,30 +34,41 @@ export default function SmoothScrollProvider({
   }, []);
 
   useEffect(() => {
-    // 1. Initialize Lenis Smooth Scroll
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: "vertical",
-      gestureOrientation: "vertical",
-      smoothWheel: true,
-      touchMultiplier: 1.8,
-    });
+    const isTouch =
+      typeof window !== "undefined" &&
+      ("ontouchstart" in window ||
+        navigator.maxTouchPoints > 0 ||
+        window.matchMedia("(pointer: coarse)").matches);
 
-    // Make lenis globally accessible for programmatic scroll
-    (window as unknown as { __lenis?: Lenis }).__lenis = lenis;
+    let lenis: Lenis | null = null;
+    let tickerCallback: ((time: number) => void) | null = null;
 
-    // 2. Connect Lenis to GSAP ScrollTrigger properly:
-    // lenis.on('scroll', ScrollTrigger.update)
-    lenis.on("scroll", ScrollTrigger.update);
+    // 1. On touch devices: keep native scrolling (no Lenis smoothing on touch)
+    if (!isTouch) {
+      lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: "vertical",
+        gestureOrientation: "vertical",
+        smoothWheel: true,
+        touchMultiplier: 1.8,
+      });
 
-    // drive Lenis from gsap.ticker (gsap.ticker.add) and set gsap.ticker.lagSmoothing(0)
-    const tickerCallback = (time: number) => {
-      lenis.raf(time * 1000);
-    };
+      (window as unknown as { __lenis?: Lenis }).__lenis = lenis;
 
-    gsap.ticker.add(tickerCallback);
-    gsap.ticker.lagSmoothing(0);
+      // 2. Connect Lenis to GSAP ScrollTrigger
+      lenis.on("scroll", ScrollTrigger.update);
+
+      tickerCallback = (time: number) => {
+        lenis?.raf(time * 1000);
+      };
+
+      gsap.ticker.add(tickerCallback);
+      gsap.ticker.lagSmoothing(0);
+    } else {
+      // Touch device: use native window scrolling with ScrollTrigger
+      window.addEventListener("scroll", ScrollTrigger.update, { passive: true });
+    }
 
     // 3. Call ScrollTrigger.refresh() after fonts, images, and hero video load
     if (document.fonts && document.fonts.ready) {
@@ -122,7 +133,7 @@ export default function SmoothScrollProvider({
 
     sections.forEach((sec) => safetyObserver.observe(sec));
 
-    // 5. Intercept internal anchor clicks for smooth Lenis gliding
+    // 5. Intercept internal anchor clicks for smooth gliding (uses Lenis on desktop, smooth scrollIntoView on touch)
     const handleAnchorClick = (e: MouseEvent) => {
       const target = (e.target as HTMLElement)?.closest('a[href^="#"]');
       if (!target) return;
@@ -132,11 +143,15 @@ export default function SmoothScrollProvider({
       const element = document.querySelector(href);
       if (element) {
         e.preventDefault();
-        lenis.scrollTo(href, {
-          offset: 0,
-          duration: 1.2,
-          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        });
+        if (lenis) {
+          lenis.scrollTo(href, {
+            offset: 0,
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          });
+        } else {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
       }
     };
 
@@ -145,13 +160,18 @@ export default function SmoothScrollProvider({
     return () => {
       document.removeEventListener("click", handleAnchorClick);
       window.removeEventListener("load", refreshScrollTrigger);
+      window.removeEventListener("scroll", ScrollTrigger.update);
       clearTimeout(t1);
       clearTimeout(t2);
       clearTimeout(t3);
       sectionTimers.forEach((timer) => clearTimeout(timer));
       safetyObserver.disconnect();
-      gsap.ticker.remove(tickerCallback);
-      lenis.destroy();
+      if (tickerCallback) {
+        gsap.ticker.remove(tickerCallback);
+      }
+      if (lenis) {
+        lenis.destroy();
+      }
       ScrollTrigger.getAll().forEach((st) => st.kill());
       delete (window as unknown as { __lenis?: Lenis }).__lenis;
     };

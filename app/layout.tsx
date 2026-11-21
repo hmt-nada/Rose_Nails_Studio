@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Poppins } from "next/font/google";
 import "./globals.css";
 
@@ -15,6 +15,14 @@ const poppins = Poppins({
   weight: ["300", "400", "500", "600", "700"],
   display: "swap",
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: "cover",
+  themeColor: "#FFF8FA",
+};
 
 export const metadata: Metadata = {
   title: "Rosé Nails Studio — Book Your Appointment",
@@ -39,7 +47,7 @@ export default function RootLayout({
       lang="en"
       className={`${cormorant.variable} ${poppins.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-pearl text-plum">
+      <body className="min-h-full flex flex-col bg-pearl text-plum overflow-x-clip selection:bg-rose/20 selection:text-plum">
         {children}
       </body>
     </html>

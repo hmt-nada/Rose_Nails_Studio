@@ -18,16 +18,30 @@ export default function CustomCursor() {
   const ringY = useSpring(mouseY, { stiffness: 220, damping: 22, mass: 0.6 });
 
   useEffect(() => {
-    // Only enable on desktop pointer devices
+    // Only enable on desktop pointer devices with hover capability
+    const isTouch =
+      "ontouchstart" in window ||
+      navigator.maxTouchPoints > 0 ||
+      window.matchMedia("(pointer: coarse)").matches;
+
     const media = window.matchMedia("(pointer: fine) and (hover: hover)");
-    setIsDesktop(media.matches);
+    setIsDesktop(media.matches && !isTouch && window.innerWidth >= 1024);
 
-    const handleMediaChange = (e: MediaQueryListEvent) => {
-      setIsDesktop(e.matches);
+    const handleMediaChange = () => {
+      const touchNow =
+        "ontouchstart" in window ||
+        navigator.maxTouchPoints > 0 ||
+        window.matchMedia("(pointer: coarse)").matches;
+      setIsDesktop(media.matches && !touchNow && window.innerWidth >= 1024);
     };
-    media.addEventListener("change", handleMediaChange);
 
-    return () => media.removeEventListener("change", handleMediaChange);
+    media.addEventListener("change", handleMediaChange);
+    window.addEventListener("resize", handleMediaChange);
+
+    return () => {
+      media.removeEventListener("change", handleMediaChange);
+      window.removeEventListener("resize", handleMediaChange);
+    };
   }, []);
 
   useEffect(() => {
@@ -95,10 +109,10 @@ export default function CustomCursor() {
           duration: 0.22,
           ease: "easeOut",
         }}
-        className="fixed top-0 left-0 rounded-full border pointer-events-none z-[9998] will-change-transform backdrop-blur-[0.5px]"
+        className="fixed top-0 left-0 rounded-full border pointer-events-none z-[9998] will-change-transform backdrop-blur-[0.5px] hidden lg:block"
       />
 
-      {/* ── Inner Rose Dot ── */}
+      {/* ── Inner Core Rose Dot ── */}
       <motion.div
         aria-hidden
         style={{
@@ -108,11 +122,11 @@ export default function CustomCursor() {
           translateY: "-50%",
         }}
         animate={{
-          scale: isHovered ? 0.6 : 1,
-          backgroundColor: isHovered ? "#B84A6E" : "#B84A6E",
+          scale: isHovered ? 0 : 1,
+          opacity: isHovered ? 0 : 1,
         }}
         transition={{ duration: 0.15 }}
-        className="fixed top-0 left-0 w-2 h-2 rounded-full pointer-events-none z-[9999] will-change-transform shadow-[0_0_8px_rgba(184,74,110,0.5)]"
+        className="fixed top-0 left-0 w-2 h-2 rounded-full bg-deep-rose pointer-events-none z-[9999] will-change-transform shadow-[0_0_8px_rgba(184,74,110,0.8)] hidden lg:block"
       />
     </>
   );

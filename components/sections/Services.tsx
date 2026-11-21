@@ -47,7 +47,7 @@ export default function Services() {
   return (
     <section
       id="services"
-      className="relative py-28 w-full bg-[#FDF0F5] overflow-hidden select-none"
+      className="relative py-16 sm:py-20 md:py-24 lg:py-28 w-full bg-[#FDF0F5] overflow-hidden select-none"
     >
       {/* Decorative ambient blurred blobs */}
       <div
@@ -59,18 +59,18 @@ export default function Services() {
         className="absolute -bottom-20 -right-20 w-96 h-96 rounded-full bg-blush/20 blur-3xl pointer-events-none"
       />
 
-      <div className="relative z-10 max-w-[1440px] mx-auto px-6 lg:px-12">
+      <div className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
         {/* ─── Header ─── */}
-        <div className="flex flex-col items-center text-center mb-16 md:mb-20">
+        <div className="flex flex-col items-center text-center mb-12 sm:mb-16 md:mb-20">
           <span className="font-body text-xs tracking-[0.3em] uppercase text-deep-rose mb-3">
             <SplitText by="word">Our Services</SplitText>
           </span>
-          <h2 className="font-heading text-5xl md:text-6xl xl:text-7xl font-light text-plum tracking-tight mb-4">
+          <h2 className="font-heading text-[clamp(2.15rem,5.5vw,4.5rem)] xl:text-7xl font-light text-plum tracking-tight mb-4">
             <SplitText by="word" stagger={0.06} delay={0.1}>
               Crafted for Elegance
             </SplitText>
           </h2>
-          <p className="font-body text-base md:text-lg font-light text-plum/65 max-w-md">
+          <p className="font-body text-sm sm:text-base md:text-lg font-light text-plum/65 max-w-md">
             <SplitText by="word" stagger={0.03} delay={0.25}>
               Bespoke manicures, enduring enhancements, and handcrafted artistry.
             </SplitText>
@@ -78,7 +78,7 @@ export default function Services() {
         </div>
 
         {/* ─── 4 Service Cards Aligned Horizontally with Equal Dimensions ─── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 xl:gap-8 items-stretch">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 xl:gap-8 items-stretch">
           {SERVICES.map((service, index) => {
             const Icon = service.icon;
 

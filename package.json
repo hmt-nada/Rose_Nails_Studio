@@ -28,6 +28,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.4.6",
     "potrace": "^2.1.8",
+    "puppeteer": "^25.18.1",
     "tailwindcss": "4.3.3",
     "typescript": "^5"
   }

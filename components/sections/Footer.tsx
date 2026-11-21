@@ -61,21 +61,21 @@ export default function Footer() {
       {/* ─── Ambient Glow Blobs ─── */}
       <div
         aria-hidden
-        className="absolute top-12 left-1/4 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-blush/20 blur-3xl pointer-events-none"
+        className="absolute top-12 left-1/4 -translate-x-1/2 w-64 h-64 sm:w-[600px] sm:h-[600px] rounded-full bg-blush/20 blur-3xl pointer-events-none"
       />
       <div
         aria-hidden
-        className="absolute bottom-10 right-10 w-[500px] h-[500px] rounded-full bg-rose/15 blur-3xl pointer-events-none"
+        className="absolute bottom-10 right-10 w-60 h-60 sm:w-[500px] sm:h-[500px] rounded-full bg-rose/15 blur-3xl pointer-events-none"
       />
 
       {/* ─── Pre-Footer Invitation Banner (CTA) ─── */}
-      <div className="max-w-7xl mx-auto px-6 pt-16 pb-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-12 sm:pt-16 pb-6 sm:pb-8 relative z-10">
         <motion.div
           initial={shouldReduce ? {} : { opacity: 0, y: 30 }}
           whileInView={shouldReduce ? {} : { opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="relative rounded-[32px] p-8 md:p-12 overflow-hidden bg-white/85 backdrop-blur-md border border-white/90 shadow-[0_16px_40px_rgba(184,74,110,0.08)] flex flex-col md:flex-row items-center justify-between gap-8 will-change-transform"
+          className="relative rounded-[24px] sm:rounded-[32px] p-6 sm:p-8 md:p-12 overflow-hidden bg-white/85 backdrop-blur-md border border-white/90 shadow-[0_16px_40px_rgba(184,74,110,0.08)] flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8 will-change-transform"
         >
           {/* Subtle decorative glow in CTA */}
           <div
@@ -88,26 +88,26 @@ export default function Footer() {
               <Sparkles size={13} className="text-deep-rose animate-pulse" />
               <span>Bespoke Nail Sanctuary</span>
             </div>
-            <h2 className="font-heading text-3xl md:text-4xl text-plum font-normal leading-tight">
+            <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl text-plum font-normal leading-tight">
               Ready for your signature manicure?
             </h2>
-            <p className="font-body text-sm md:text-base text-plum/70 leading-relaxed">
+            <p className="font-body text-xs sm:text-sm md:text-base text-plum/70 leading-relaxed">
               Step into an elevated world of nail couture, non-toxic formulations, and
               unhurried artistry tailored exclusively to you.
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto shrink-0">
+          <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 w-full md:w-auto shrink-0">
             <button
               onClick={() => scrollTo("#book")}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-deep-rose text-white font-body text-sm font-medium tracking-wide shadow-md shadow-deep-rose/25 hover:bg-[#A33D5E] hover:shadow-lg hover:shadow-deep-rose/30 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-deep-rose text-white font-body text-xs sm:text-sm font-medium tracking-wide shadow-md shadow-deep-rose/25 hover:bg-[#A33D5E] hover:shadow-lg hover:shadow-deep-rose/30 active:scale-[0.98] transition-all duration-300 cursor-pointer min-h-[44px]"
             >
               <Calendar size={16} />
               <span>Book Appointment</span>
             </button>
             <button
               onClick={() => scrollTo("#work")}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-white/70 hover:bg-white text-plum border border-blush/60 font-body text-sm font-medium tracking-wide hover:border-deep-rose/40 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-white/70 hover:bg-white text-plum border border-blush/60 font-body text-xs sm:text-sm font-medium tracking-wide hover:border-deep-rose/40 active:scale-[0.98] transition-all duration-300 cursor-pointer min-h-[44px]"
             >
               <span>View Gallery</span>
               <ArrowRight size={15} className="text-deep-rose" />
@@ -129,10 +129,10 @@ export default function Footer() {
         transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
         className="max-w-7xl mx-auto px-6 pt-6 pb-12 relative z-10 will-change-transform"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8">
           {/* Column 1: Brand & Identity (span 4) */}
-          <div className="lg:col-span-4 flex flex-col gap-5">
-            <div className="flex items-center gap-3">
+          <div className="sm:col-span-2 lg:col-span-4 flex flex-col items-center lg:items-start text-center lg:text-left gap-5">
+            <div className="flex flex-col sm:flex-row items-center lg:items-start text-center sm:text-left gap-3">
               <div className="w-12 h-12 rounded-full bg-white/90 border border-blush/50 shadow-sm flex items-center justify-center p-2 shrink-0">
                 <img
                   src="/imag/logo/logo.png"
@@ -156,7 +156,7 @@ export default function Footer() {
             </p>
 
             {/* Quality Badges */}
-            <div className="flex flex-wrap gap-2 pt-1">
+            <div className="flex flex-wrap justify-center lg:justify-start gap-2 pt-1">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/70 border border-blush/50 text-[11px] font-medium text-plum/80">
                 <Sparkles size={11} className="text-deep-rose" />
                 Clean &amp; Non-Toxic
@@ -173,11 +173,11 @@ export default function Footer() {
           </div>
 
           {/* Column 2: Quick Links (with Sliding Underline on hover) */}
-          <div className="lg:col-span-2 flex flex-col gap-4">
+          <div className="lg:col-span-2 flex flex-col items-center lg:items-start text-center lg:text-left gap-4">
             <span className="font-body text-xs font-semibold uppercase tracking-[0.2em] text-deep-rose">
               Navigation
             </span>
-            <ul className="flex flex-col gap-3 font-body text-sm text-plum/75">
+            <ul className="flex flex-col items-center lg:items-start gap-3 font-body text-sm text-plum/75">
               {[
                 { name: "Our Work", href: "#work" },
                 { name: "Client Reviews", href: "#reviews" },
@@ -188,7 +188,7 @@ export default function Footer() {
                 <li key={item.name}>
                   <button
                     onClick={() => scrollTo(item.href)}
-                    className="group flex items-center gap-2 hover:text-deep-rose transition-colors duration-200 cursor-pointer"
+                    className="group flex items-center gap-2 hover:text-deep-rose transition-colors duration-200 cursor-pointer min-h-[44px] py-1"
                   >
                     <span className="w-1.5 h-1.5 rounded-full bg-blush group-hover:bg-deep-rose group-hover:scale-125 transition-all duration-200" />
                     <span className="relative after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-0 group-hover:after:w-full after:bg-deep-rose after:transition-all after:duration-300">
@@ -202,7 +202,7 @@ export default function Footer() {
                   href={STUDIO_CONTACT.mapsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center gap-2 hover:text-deep-rose transition-colors duration-200"
+                  className="group flex items-center gap-2 hover:text-deep-rose transition-colors duration-200 min-h-[44px] py-1"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-blush group-hover:bg-deep-rose group-hover:scale-125 transition-all duration-200" />
                   <span className="relative after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-0 group-hover:after:w-full after:bg-deep-rose after:transition-all after:duration-300">
@@ -214,17 +214,17 @@ export default function Footer() {
           </div>
 
           {/* Column 3: Studio & Hours */}
-          <div className="lg:col-span-3 flex flex-col gap-4">
+          <div className="lg:col-span-3 flex flex-col items-center lg:items-start text-center lg:text-left gap-4">
             <span className="font-body text-xs font-semibold uppercase tracking-[0.2em] text-deep-rose">
               Atelier &amp; Hours
             </span>
-            <div className="flex flex-col gap-3.5 font-body text-sm text-plum/75">
+            <div className="flex flex-col items-center lg:items-start gap-3.5 font-body text-sm text-plum/75 w-full max-w-xs">
               {/* Address */}
               <a
                 href={STUDIO_CONTACT.mapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex items-start gap-2.5 hover:text-deep-rose transition-colors duration-200"
+                className="group flex items-start justify-center lg:justify-start gap-2.5 hover:text-deep-rose transition-colors duration-200 text-center lg:text-left"
               >
                 <MapPin size={17} className="text-deep-rose shrink-0 mt-0.5" />
                 <div className="flex flex-col">
@@ -236,10 +236,10 @@ export default function Footer() {
               </a>
 
               {/* Phone & Email */}
-              <div className="flex flex-col gap-2 pt-1 border-t border-blush/40">
+              <div className="flex flex-col items-center lg:items-start gap-2 pt-1 border-t border-blush/40 w-full">
                 <a
                   href={`tel:${STUDIO_CONTACT.phoneRaw}`}
-                  className="group flex items-center gap-2.5 hover:text-deep-rose transition-colors duration-200"
+                  className="group flex items-center gap-2.5 hover:text-deep-rose transition-colors duration-200 min-h-[44px] py-1"
                 >
                   <Phone size={15} className="text-deep-rose shrink-0" />
                   <span className="relative after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-0 group-hover:after:w-full after:bg-deep-rose after:transition-all after:duration-300">
@@ -248,7 +248,7 @@ export default function Footer() {
                 </a>
                 <a
                   href={`mailto:${STUDIO_CONTACT.email}`}
-                  className="group flex items-center gap-2.5 hover:text-deep-rose transition-colors duration-200"
+                  className="group flex items-center gap-2.5 hover:text-deep-rose transition-colors duration-200 min-h-[44px] py-1"
                 >
                   <Mail size={15} className="text-deep-rose shrink-0" />
                   <span className="break-all relative after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-0 group-hover:after:w-full after:bg-deep-rose after:transition-all after:duration-300">
@@ -258,8 +258,8 @@ export default function Footer() {
               </div>
 
               {/* Hours */}
-              <div className="flex flex-col gap-1.5 pt-2 border-t border-blush/40 text-xs">
-                <div className="flex items-center gap-1.5 font-medium text-plum">
+              <div className="flex flex-col gap-1.5 pt-2 border-t border-blush/40 text-xs w-full">
+                <div className="flex items-center justify-center lg:justify-start gap-1.5 font-medium text-plum">
                   <Clock size={13} className="text-deep-rose" />
                   <span>Opening Schedule</span>
                 </div>
@@ -280,17 +280,17 @@ export default function Footer() {
           </div>
 
           {/* Column 4: The Rosé Journal & Staggered Social Icons with Bounce */}
-          <div className="lg:col-span-3 flex flex-col gap-4">
+          <div className="sm:col-span-2 lg:col-span-3 flex flex-col items-center lg:items-start text-center lg:text-left gap-4">
             <span className="font-body text-xs font-semibold uppercase tracking-[0.2em] text-deep-rose">
               The Rosé Journal
             </span>
-            <p className="font-body text-sm text-plum/70 leading-relaxed">
+            <p className="font-body text-sm text-plum/70 leading-relaxed max-w-sm">
               Subscribe for seasonal palette launches, secret opening alerts, and bespoke
               care rituals.
             </p>
 
             {/* Newsletter form */}
-            <form onSubmit={handleSubscribe} className="flex flex-col gap-2">
+            <form onSubmit={handleSubscribe} className="flex flex-col gap-2 w-full max-w-sm">
               <div className="relative flex items-center">
                 <input
                   type="email"
@@ -298,17 +298,17 @@ export default function Footer() {
                   placeholder="Enter your email…"
                   value={emailInput}
                   onChange={(e) => setEmailInput(e.target.value)}
-                  className="w-full bg-white/90 border border-blush/70 rounded-full px-4 py-2.5 pr-24 font-body text-xs text-plum placeholder:text-plum/40 focus:outline-none focus:border-deep-rose focus:ring-2 focus:ring-deep-rose/20 transition-all"
+                  className="w-full bg-white/90 border border-blush/70 rounded-full px-4 py-2.5 pr-24 font-body text-base sm:text-xs text-plum placeholder:text-plum/40 focus:outline-none focus:border-deep-rose focus:ring-2 focus:ring-deep-rose/20 transition-all min-h-[44px]"
                 />
                 <button
                   type="submit"
-                  className="absolute right-1 px-4 py-1.5 rounded-full bg-deep-rose text-white font-body text-xs font-medium hover:bg-[#A33D5E] transition-colors cursor-pointer"
+                  className="absolute right-1 px-4 py-1.5 rounded-full bg-deep-rose text-white font-body text-xs font-medium hover:bg-[#A33D5E] transition-colors cursor-pointer min-h-[36px]"
                 >
                   Join
                 </button>
               </div>
               {isSubscribed && (
-                <div className="inline-flex items-center gap-1 text-[11px] text-deep-rose font-medium">
+                <div className="inline-flex items-center justify-center lg:justify-start gap-1 text-[11px] text-deep-rose font-medium">
                   <Check size={12} />
                   <span>Welcome to our private list ✨</span>
                 </div>
@@ -316,11 +316,11 @@ export default function Footer() {
             </form>
 
             {/* Social Media Links (Staggered pop-in + hover bounce) */}
-            <div className="flex flex-col gap-2.5 pt-3">
+            <div className="flex flex-col items-center lg:items-start gap-2.5 pt-3">
               <span className="font-body text-[11px] uppercase tracking-wider text-plum/60 font-medium">
                 Follow Our Creations
               </span>
-              <div className="flex items-center gap-2.5">
+              <div className="flex items-center justify-center lg:justify-start gap-2.5">
                 {socialLinks.map((social, i) => (
                   <motion.a
                     key={social.name}
@@ -342,7 +342,7 @@ export default function Footer() {
                       scale: 1.15,
                       transition: { duration: 0.25 },
                     }}
-                    className="w-9 h-9 rounded-full bg-white/80 border border-blush/60 shadow-sm flex items-center justify-center text-plum hover:text-white hover:bg-deep-rose hover:border-deep-rose hover:shadow-md hover:shadow-deep-rose/25 transition-colors duration-200 cursor-pointer"
+                    className="w-11 h-11 min-h-[44px] min-w-[44px] rounded-full bg-white/80 border border-blush/60 shadow-sm flex items-center justify-center text-plum hover:text-white hover:bg-deep-rose hover:border-deep-rose hover:shadow-md hover:shadow-deep-rose/25 transition-colors duration-200 cursor-pointer"
                   >
                     <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
                       <path d={social.path} />
@@ -360,7 +360,7 @@ export default function Footer() {
         initial={shouldReduce ? "visible" : "hidden"}
         whileInView="visible"
         viewport={{ once: true, amount: 0.1 }}
-        className="w-full overflow-hidden text-center select-none pointer-events-none px-4 pt-4 pb-2"
+        className="w-full overflow-hidden text-center select-none pointer-events-none px-4 pt-4 pb-2 overflow-x-clip"
         data-reveal="wordmark"
       >
         <motion.h2
@@ -375,7 +375,7 @@ export default function Footer() {
               },
             },
           }}
-          className="font-heading text-6xl sm:text-7xl md:text-8xl lg:text-[110px] xl:text-[135px] font-normal tracking-tight leading-none text-transparent bg-clip-text bg-gradient-to-r from-deep-rose/20 via-rose/30 to-blush/20 uppercase will-change-transform"
+          className="font-heading text-[clamp(1.75rem,7.5vw,8.5rem)] xl:text-[135px] font-normal tracking-tight leading-none text-transparent bg-clip-text bg-gradient-to-r from-deep-rose/20 via-rose/30 to-blush/20 uppercase will-change-transform"
         >
           {SITE_NAME}
         </motion.h2>
@@ -395,7 +395,7 @@ export default function Footer() {
             <span className="text-plum/30">•</span>
             <button
               onClick={() => scrollTo("#hero")}
-              className="inline-flex items-center gap-1.5 text-deep-rose font-medium hover:text-[#A33D5E] transition-colors cursor-pointer group"
+              className="inline-flex items-center gap-1.5 text-deep-rose font-medium hover:text-[#A33D5E] transition-colors cursor-pointer group min-h-[44px] min-w-[44px] py-2 px-3"
               aria-label="Back to top"
             >
               <span>Back to top</span>

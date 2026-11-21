@@ -62,7 +62,7 @@ export default function Hero() {
     <section
       ref={heroRef}
       id="hero"
-      className="relative flex items-center min-h-screen w-full overflow-hidden bg-pearl"
+      className="relative flex items-center min-h-[100svh] min-h-[100dvh] w-full overflow-hidden bg-pearl"
     >
       {/* ── Background blobs drifting with scroll ── */}
       <BackgroundBlobs scrollYProgress={scrollYProgress} />
@@ -70,12 +70,12 @@ export default function Hero() {
       {/* ── Ambient parallax bubbles (bigger = faster) ── */}
       {!shouldReduce && <ParallaxBubbles scrollYProgress={scrollYProgress} />}
 
-      {/* ── Main two-column grid ── */}
-      <div className="relative z-10 max-w-[1440px] mx-auto w-full px-8 xl:px-16 grid grid-cols-1 xl:grid-cols-2 gap-12 xl:gap-16 items-center pt-28 pb-16">
+      {/* ── Main two-column grid (Stacked on mobile/tablet < 1024px) ── */}
+      <div className="relative z-10 max-w-[1440px] mx-auto w-full px-4 sm:px-8 xl:px-16 grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 xl:gap-16 items-center pt-24 sm:pt-28 pb-10 sm:pb-16">
         {/* ── LEFT COLUMN (Text moves up & fades on scroll) ── */}
         <motion.div
           style={shouldReduce ? {} : { y: textY, opacity: textOpacity }}
-          className="flex flex-col items-start gap-6 will-change-transform"
+          className="flex flex-col items-start gap-4 sm:gap-6 will-change-transform max-w-xl lg:max-w-none"
         >
           {/* Tagline */}
           <motion.span
@@ -88,8 +88,8 @@ export default function Hero() {
             Nail art &amp; beauty
           </motion.span>
 
-          {/* Headline – word-by-word stagger */}
-          <h1 className="font-heading text-6xl xl:text-7xl 2xl:text-8xl font-bold leading-[1.08] text-plum">
+          {/* Headline – word-by-word stagger with fluid clamp */}
+          <h1 className="font-heading text-[clamp(2.15rem,5.8vw,4.5rem)] xl:text-7xl 2xl:text-8xl font-bold leading-[1.08] text-plum tracking-tight">
             {words.map((word, i) => {
               const isRose = ROSE_PHRASE.includes(word);
               return (
@@ -168,7 +168,7 @@ export default function Hero() {
                   y: videoY,
                 }
           }
-          className="relative flex justify-center xl:justify-end items-center w-full will-change-transform"
+          className="relative flex justify-center lg:justify-end items-center w-full will-change-transform mt-2 lg:mt-0"
         >
           {/* Transparent floating animation element (no card, no border, true alpha transparency) */}
           <TransparentFloatingVideo heroRef={heroRef} />
@@ -201,10 +201,41 @@ interface ParallaxBubblesProps {
 }
 
 function ParallaxBubbles({ scrollYProgress }: ParallaxBubblesProps) {
+  const [isMobileOrTouch, setIsMobileOrTouch] = useState(false);
+
+  useEffect(() => {
+    const isTouch =
+      "ontouchstart" in window ||
+      navigator.maxTouchPoints > 0 ||
+      window.matchMedia("(pointer: coarse)").matches ||
+      window.innerWidth < 1024;
+    setIsMobileOrTouch(isTouch);
+  }, []);
+
   // Parallax speed proportional to size: bigger = drifts faster
   const bigY = useTransform(scrollYProgress, [0, 1], ["0px", "-220px"]);
   const medY = useTransform(scrollYProgress, [0, 1], ["0px", "-130px"]);
   const smallY = useTransform(scrollYProgress, [0, 1], ["0px", "-65px"]);
+
+  // On touch/mobile: render only 1 small bubble to keep 60fps
+  if (isMobileOrTouch) {
+    return (
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none overflow-hidden z-[5]"
+      >
+        <motion.div
+          style={{ y: smallY }}
+          animate={{
+            x: [0, 8, 0],
+            scale: [1, 1.05, 1],
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[20%] right-[6%] w-16 h-16 rounded-full border border-white/40 bg-gradient-to-br from-white/20 via-rose/10 to-transparent backdrop-blur-[1px]"
+        />
+      </div>
+    );
+  }
 
   return (
     <div
@@ -592,7 +623,7 @@ function TransparentFloatingVideo({ heroRef }: TransparentFloatingVideoProps) {
         repeat: Infinity,
         ease: "easeInOut",
       }}
-      className="relative w-full max-w-[560px] xl:max-w-[640px] 2xl:max-w-[720px] aspect-[16/9] flex items-center justify-center pointer-events-none select-none"
+      className="relative w-full max-w-[340px] xs:max-w-[420px] sm:max-w-[500px] lg:max-w-[560px] xl:max-w-[640px] 2xl:max-w-[720px] max-h-[55svh] max-h-[55dvh] aspect-[16/9] flex items-center justify-center pointer-events-none select-none"
     >
       {/* ── Hidden Off-Screen Video Element ── */}
       <video
@@ -613,7 +644,7 @@ function TransparentFloatingVideo({ heroRef }: TransparentFloatingVideoProps) {
         ref={canvasRef}
         width={1280}
         height={720}
-        className="w-full h-auto aspect-[16/9] object-contain drop-shadow-[0_16px_36px_rgba(184,74,110,0.14)]"
+        className="w-full h-auto max-h-[55svh] max-h-[55dvh] aspect-[16/9] object-contain drop-shadow-[0_16px_36px_rgba(184,74,110,0.14)]"
         aria-label="Floating Rosé Nails Studio signature nail polish couture animation"
       />
     </motion.div>
