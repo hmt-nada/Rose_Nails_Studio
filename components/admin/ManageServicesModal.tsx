@@ -468,7 +468,7 @@ export default function ManageServicesModal() {
                             <GripVertical className="w-4 h-4" />
                           </div>
 
-                          <span className="text-xs font-mono font-semibold text-plum/40 w-4 text-center shrink-0">
+                          <span className="text-xs font-semibold tabular-nums text-plum/40 w-4 text-center shrink-0">
                             {index + 1}
                           </span>
 
@@ -511,13 +511,13 @@ export default function ManageServicesModal() {
                                 )
                               }
                               placeholder="Price"
-                              className={`w-full pl-3 pr-10 py-2 bg-pearl/80 dark:bg-surface-elevated/80 border rounded-xl text-xs sm:text-sm text-plum font-semibold text-right focus:outline-none focus:ring-2 focus:ring-rose/30 transition-all ${
+                              className={`w-full pl-3 pr-10 py-2 bg-pearl/80 dark:bg-surface-elevated/80 border rounded-xl text-xs sm:text-sm text-plum font-semibold text-right tabular-nums focus:outline-none focus:ring-2 focus:ring-rose/30 transition-all ${
                                 rowError?.price
                                   ? "border-deep-rose bg-rose/10"
                                   : "border-rose/20 focus:border-rose"
                               }`}
                             />
-                            <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[11px] font-bold text-deep-rose pointer-events-none">
+                            <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[11px] font-bold text-deep-rose pointer-events-none tabular-nums">
                               {CURRENCY}
                             </span>
                           </div>
@@ -537,13 +537,13 @@ export default function ManageServicesModal() {
                                 )
                               }
                               placeholder="Min"
-                              className={`w-full pl-2.5 pr-8 py-2 bg-pearl/80 dark:bg-surface-elevated/80 border rounded-xl text-xs sm:text-sm text-plum text-right focus:outline-none focus:ring-2 focus:ring-rose/30 transition-all ${
+                              className={`w-full pl-2.5 pr-8 py-2 bg-pearl/80 dark:bg-surface-elevated/80 border rounded-xl text-xs sm:text-sm text-plum text-right tabular-nums focus:outline-none focus:ring-2 focus:ring-rose/30 transition-all ${
                                 rowError?.duration
                                   ? "border-deep-rose bg-rose/10"
                                   : "border-rose/20 focus:border-rose"
                               }`}
                             />
-                            <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-plum/50 font-medium pointer-events-none">
+                            <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-plum/50 font-medium pointer-events-none tabular-nums">
                               min
                             </span>
                           </div>

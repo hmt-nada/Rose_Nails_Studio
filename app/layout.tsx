@@ -4,14 +4,14 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
 const cormorant = Cormorant_Garamond({
-  variable: "--font-cormorant",
+  variable: "--font-heading",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
   display: "swap",
 });
 
 const poppins = Poppins({
-  variable: "--font-poppins",
+  variable: "--font-body",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
   display: "swap",
@@ -52,7 +52,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${cormorant.variable} ${poppins.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-pearl text-plum overflow-x-clip selection:bg-rose/20 selection:text-plum transition-colors duration-250">
+      <body className="min-h-full flex flex-col bg-pearl text-plum font-body overflow-x-clip selection:bg-rose/20 selection:text-plum transition-colors duration-250">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

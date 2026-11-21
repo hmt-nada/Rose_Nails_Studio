@@ -85,7 +85,7 @@ function CountUpNumber({
   }, [value]);
 
   return (
-    <span>
+    <span className="tabular-nums">
       {prefix}
       {displayValue.toLocaleString("fr-FR")}
       {suffix}
@@ -114,7 +114,7 @@ function GlassTooltip({
 }) {
   if (active && payload && payload.length) {
     return (
-      <div className="rounded-2xl bg-white/95 dark:bg-surface-elevated/95 backdrop-blur-xl border border-rose/25 p-3 shadow-[0_12px_32px_rgba(184,74,110,0.14)] dark:shadow-[0_0_24px_rgba(243,166,189,0.1)] text-xs text-plum min-w-[140px]">
+      <div className="rounded-2xl bg-white/95 dark:bg-surface-elevated/95 backdrop-blur-xl border border-rose/25 p-3 shadow-[0_12px_32px_rgba(184,74,110,0.14)] dark:shadow-[0_0_24px_rgba(243,166,189,0.1)] text-xs text-plum min-w-[140px] font-body">
         {label && <p className="font-semibold text-plum mb-1.5 pb-1 border-b border-rose/10">{label}</p>}
         <div className="space-y-1">
           {payload.map((entry, index) => (
@@ -126,7 +126,7 @@ function GlassTooltip({
                 />
                 <span className="text-plum/70">{entry.name}:</span>
               </div>
-              <span className="font-bold text-plum">
+              <span className="font-bold text-plum tabular-nums">
                 {formatter ? formatter(entry.value) : entry.value.toLocaleString("fr-FR")}
               </span>
             </div>
@@ -215,14 +215,14 @@ export default function OverviewDashboardClient({
                 ) : (
                   <TrendingDown className="w-3 h-3" />
                 )}
-                <span>
+                <span className="tabular-nums">
                   {kpis.clientsChangePercent >= 0 ? "+" : ""}
                   {kpis.clientsChangePercent}%
                 </span>
               </span>
             )}
           </div>
-          <h3 className="font-heading text-3xl sm:text-4xl font-normal text-plum tracking-tight">
+          <h3 className="font-heading text-3xl sm:text-4xl font-normal text-plum tracking-tight tabular-nums">
             <CountUpNumber value={kpis.clientsThisMonth} />
           </h3>
           <p className="text-xs text-plum/80 font-medium mt-1">Clients This Month</p>
@@ -255,14 +255,14 @@ export default function OverviewDashboardClient({
                 ) : (
                   <TrendingDown className="w-3 h-3" />
                 )}
-                <span>
+                <span className="tabular-nums">
                   {kpis.revenueChangePercent >= 0 ? "+" : ""}
                   {kpis.revenueChangePercent}%
                 </span>
               </span>
             )}
           </div>
-          <h3 className="font-heading text-3xl sm:text-4xl font-normal text-plum tracking-tight">
+          <h3 className="font-heading text-3xl sm:text-4xl font-normal text-plum tracking-tight tabular-nums">
             <CountUpNumber value={kpis.revenueThisMonth} suffix=" DA" />
           </h3>
           <p className="text-xs text-plum/80 font-medium mt-1">Revenue This Month</p>
@@ -286,7 +286,7 @@ export default function OverviewDashboardClient({
               Today
             </span>
           </div>
-          <h3 className="font-heading text-3xl sm:text-4xl font-normal text-plum tracking-tight">
+          <h3 className="font-heading text-3xl sm:text-4xl font-normal text-plum tracking-tight tabular-nums">
             <CountUpNumber value={kpis.todayAppointments} />
           </h3>
           <p className="text-xs text-plum/80 font-medium mt-1">Today&apos;s Appointments</p>
@@ -310,7 +310,7 @@ export default function OverviewDashboardClient({
               Pending
             </span>
           </div>
-          <h3 className="font-heading text-3xl sm:text-4xl font-normal text-plum tracking-tight">
+          <h3 className="font-heading text-3xl sm:text-4xl font-normal text-plum tracking-tight tabular-nums">
             <CountUpNumber value={kpis.pendingRequests} />
           </h3>
           <p className="text-xs text-plum/80 font-medium mt-1">New Requests Waiting</p>
@@ -386,13 +386,13 @@ export default function OverviewDashboardClient({
                     />
                     <XAxis
                       dataKey="label"
-                      tick={{ fill: "currentColor", opacity: 0.65, fontSize: 11 }}
+                      tick={{ fill: "currentColor", opacity: 0.65, fontSize: 11, fontFamily: "var(--font-body)" }}
                       axisLine={{ stroke: "rgba(184, 74, 110, 0.2)" }}
                       tickLine={false}
                     />
                     <YAxis
                       allowDecimals={false}
-                      tick={{ fill: "currentColor", opacity: 0.65, fontSize: 11 }}
+                      tick={{ fill: "currentColor", opacity: 0.65, fontSize: 11, fontFamily: "var(--font-body)" }}
                       axisLine={{ stroke: "rgba(184, 74, 110, 0.2)" }}
                       tickLine={false}
                     />
@@ -405,7 +405,7 @@ export default function OverviewDashboardClient({
                       align="right"
                       iconType="circle"
                       iconSize={8}
-                      wrapperStyle={{ paddingBottom: 10, fontSize: 12 }}
+                      wrapperStyle={{ paddingBottom: 10, fontSize: 12, fontFamily: "var(--font-body)" }}
                     />
                     <Bar
                       dataKey="completed"
@@ -495,12 +495,12 @@ export default function OverviewDashboardClient({
                     />
                     <XAxis
                       dataKey="label"
-                      tick={{ fill: "currentColor", opacity: 0.65, fontSize: 11 }}
+                      tick={{ fill: "currentColor", opacity: 0.65, fontSize: 11, fontFamily: "var(--font-body)" }}
                       axisLine={{ stroke: "rgba(184, 74, 110, 0.2)" }}
                       tickLine={false}
                     />
                     <YAxis
-                      tick={{ fill: "currentColor", opacity: 0.65, fontSize: 11 }}
+                      tick={{ fill: "currentColor", opacity: 0.65, fontSize: 11, fontFamily: "var(--font-body)" }}
                       axisLine={{ stroke: "rgba(184, 74, 110, 0.2)" }}
                       tickLine={false}
                       tickFormatter={(val) => `${Math.round(val / 1000)}k`}
@@ -534,7 +534,7 @@ export default function OverviewDashboardClient({
 
           <div className="pt-3 border-t border-rose/10 flex items-center justify-between text-[11px] text-plum/55">
             <span>Completed services only</span>
-            <span className="font-semibold text-deep-rose">
+            <span className="font-semibold text-deep-rose tabular-nums">
               {formatPrice(
                 revenueData.reduce((acc, curr) => acc + curr.revenue, 0)
               )}
@@ -601,7 +601,7 @@ export default function OverviewDashboardClient({
 
                   {/* Centered Total Indicator */}
                   <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                    <span className="text-2xl font-heading font-medium text-plum">
+                    <span className="text-2xl font-semibold text-plum tabular-nums">
                       {stats.mostBookedServices.reduce(
                         (acc, curr) => acc + curr.count,
                         0
@@ -636,10 +636,10 @@ export default function OverviewDashboardClient({
                     </span>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
-                    <span className="font-semibold text-deep-rose">
+                    <span className="font-semibold text-deep-rose tabular-nums">
                       {service.count}
                     </span>
-                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-rose/10 text-plum/70 font-semibold">
+                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-rose/10 text-plum/70 font-semibold tabular-nums">
                       {service.percentage}%
                     </span>
                   </div>
@@ -704,7 +704,7 @@ export default function OverviewDashboardClient({
                     >
                       {/* Left: Avatar, Name & Service */}
                       <div className="flex items-center gap-3 min-w-[200px]">
-                        <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-deep-rose via-rose to-blush flex items-center justify-center text-pearl font-heading font-medium text-sm shadow-xs shrink-0">
+                        <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-deep-rose via-rose to-blush flex items-center justify-center text-pearl font-semibold text-xs shadow-xs shrink-0">
                           {initials}
                         </div>
                         <div className="min-w-0">
@@ -713,7 +713,7 @@ export default function OverviewDashboardClient({
                           </p>
                           <p className="text-xs text-plum/60 truncate">
                             {apt.service} &bull;{" "}
-                            <span className="font-semibold text-deep-rose">
+                            <span className="font-semibold text-deep-rose tabular-nums">
                               {formatPrice(apt.price)}
                             </span>
                           </p>
@@ -721,7 +721,7 @@ export default function OverviewDashboardClient({
                       </div>
 
                       {/* Middle: Schedule */}
-                      <div className="flex items-center gap-2 text-xs text-plum/75 pl-13 sm:pl-0">
+                      <div className="flex items-center gap-2 text-xs text-plum/75 pl-13 sm:pl-0 tabular-nums">
                         <Clock className="w-3.5 h-3.5 text-deep-rose shrink-0" />
                         <span className="font-medium">{apt.date}</span>
                         <span className="text-plum/40">&bull;</span>

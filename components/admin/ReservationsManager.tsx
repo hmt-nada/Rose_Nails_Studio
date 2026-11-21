@@ -337,7 +337,7 @@ export default function ReservationsManager({
                 value={dateFrom}
                 onChange={(e) => setDateFrom(e.target.value)}
                 title="Filter starting date"
-                className="bg-transparent text-plum text-xs focus:outline-none cursor-pointer"
+                className="bg-transparent text-plum text-xs focus:outline-none cursor-pointer tabular-nums"
               />
               <span className="text-plum/40">&rarr;</span>
               <input
@@ -345,7 +345,7 @@ export default function ReservationsManager({
                 value={dateTo}
                 onChange={(e) => setDateTo(e.target.value)}
                 title="Filter end date"
-                className="bg-transparent text-plum text-xs focus:outline-none cursor-pointer"
+                className="bg-transparent text-plum text-xs focus:outline-none cursor-pointer tabular-nums"
               />
               {(dateFrom || dateTo) && (
                 <button
@@ -397,7 +397,7 @@ export default function ReservationsManager({
               >
                 <span>{chip.label}</span>
                 <span
-                  className={`text-[10px] px-1.5 py-0.2 rounded-full font-semibold ${
+                  className={`text-[10px] px-1.5 py-0.2 rounded-full font-semibold tabular-nums ${
                     isSelected
                       ? "bg-pearl/20 text-pearl"
                       : "bg-rose/15 text-deep-rose"
@@ -414,8 +414,8 @@ export default function ReservationsManager({
       {/* ── Active Result Summary Bar ── */}
       <div className="flex items-center justify-between px-2 text-xs text-plum/60">
         <p>
-          Showing <span className="font-semibold text-plum">{filteredAndSorted.length}</span>{" "}
-          of <span className="font-semibold text-plum">{reservations.length}</span> reservations
+          Showing <span className="font-semibold text-plum tabular-nums">{filteredAndSorted.length}</span>{" "}
+          of <span className="font-semibold text-plum tabular-nums">{reservations.length}</span> reservations
         </p>
 
         {(search || activeChip !== "all" || dateFrom || dateTo) && (
@@ -506,15 +506,15 @@ export default function ReservationsManager({
                     {/* Left: Avatar + Client Name & Phone */}
                     <div className="flex items-center gap-3.5 min-w-[210px]">
                       {/* Initials Avatar with Pink Gradient */}
-                      <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-deep-rose via-rose to-blush flex items-center justify-center text-pearl font-heading font-medium text-base shadow-sm shrink-0">
+                      <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-deep-rose via-rose to-blush flex items-center justify-center text-pearl font-semibold text-sm shadow-sm shrink-0">
                         {initials}
                       </div>
 
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
-                          <h4 className="font-heading text-lg font-medium text-plum truncate leading-snug">
+                          <p className="font-semibold text-base text-plum truncate leading-snug">
                             {item.name}
-                          </h4>
+                          </p>
                           {isToday && (
                             <span className="shrink-0 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-deep-rose text-pearl">
                               Today
@@ -528,7 +528,7 @@ export default function ReservationsManager({
                         </div>
                         <p className="text-xs text-plum/60 flex items-center gap-1.5 mt-0.5">
                           <Phone className="w-3 h-3 text-deep-rose shrink-0" />
-                          <span className="font-mono">{item.phone}</span>
+                          <span className="tabular-nums font-medium">{item.phone}</span>
                         </p>
                       </div>
                     </div>
@@ -541,7 +541,7 @@ export default function ReservationsManager({
                       <p className="text-sm font-medium text-plum leading-snug">
                         {item.service}
                       </p>
-                      <p className="text-xs font-bold text-deep-rose mt-0.5">
+                      <p className="text-xs font-bold text-deep-rose mt-0.5 tabular-nums">
                         {formatPrice(item.price)}
                       </p>
                     </div>
@@ -551,11 +551,11 @@ export default function ReservationsManager({
                       <p className="text-xs uppercase tracking-wider text-plum/45 font-semibold">
                         Schedule
                       </p>
-                      <div className="flex items-center gap-1.5 text-xs sm:text-sm font-medium text-plum mt-0.5">
+                      <div className="flex items-center gap-1.5 text-xs sm:text-sm font-medium text-plum mt-0.5 tabular-nums">
                         <Clock className="w-3.5 h-3.5 text-deep-rose shrink-0" />
                         <span>{relativeDateText}</span>
                       </div>
-                      <p className="text-[11px] text-plum/50 font-light mt-0.5">
+                      <p className="text-[11px] text-plum/50 font-light mt-0.5 tabular-nums">
                         {item.date} &bull; {item.time}
                       </p>
                     </div>

@@ -17,8 +17,8 @@
   --color-plum:             var(--color-plum);
 
   /* ── Fonts ── */
-  --font-heading: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
-  --font-body:    var(--font-poppins), "Poppins", system-ui, sans-serif;
+  --font-heading: var(--font-heading), "Cormorant Garamond", Georgia, serif;
+  --font-body:    var(--font-body), "Poppins", system-ui, -apple-system, sans-serif;
 
   /* ── Border radius ── */
   --radius-soft: 1rem;    /* rounded-2xl equivalent */
@@ -27,6 +27,11 @@
 
 /* ─── Global base tokens ─────────────────────────────────────────── */
 :root {
+  --font-heading:            var(--font-heading), "Cormorant Garamond", Georgia, serif;
+  --font-body:               var(--font-body), "Poppins", system-ui, -apple-system, sans-serif;
+  --font-cormorant:          var(--font-heading);
+  --font-poppins:            var(--font-body);
+
   --background:              #FFF8FA;
   --foreground:              #3A1F2B;
 
@@ -108,6 +113,40 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Ensure inputs, selects, buttons, textareas, and other form elements inherit font-family */
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
+}
+
+/* Tabular numeric variant for dates, prices, and counters */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Third-party & Recharts Font Standardization */
+.recharts-wrapper,
+.recharts-surface,
+.recharts-surface text,
+.recharts-text,
+.recharts-cartesian-axis-tick,
+.recharts-cartesian-axis-tick-value,
+.recharts-legend-wrapper,
+.recharts-legend-item,
+.recharts-legend-item-text,
+.recharts-tooltip-wrapper,
+.recharts-default-tooltip {
+  font-family: var(--font-body) !important;
+}
+
+.recharts-cartesian-axis-tick text,
+.recharts-cartesian-axis-tick-value {
+  font-variant-numeric: tabular-nums;
+}
+
 /* Safe area insets helpers */
 .safe-top {
   padding-top: env(safe-area-inset-top, 0px);
@@ -136,6 +175,14 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   color: var(--foreground);
+}
+
+.font-heading {
+  font-family: var(--font-heading) !important;
+}
+
+.font-body {
+  font-family: var(--font-body) !important;
 }
 
 /* ─── Custom Luxury Scrollbar (Desktop only) ──────────────── */

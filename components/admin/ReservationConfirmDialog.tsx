@@ -64,8 +64,8 @@ export default function ReservationConfirmDialog({
             <p className="text-xs sm:text-sm text-plum/70 font-light mt-1.5 leading-relaxed">
               Are you sure you want to cancel the appointment for{" "}
               <span className="font-semibold text-plum">{clientName}</span> on{" "}
-              <span className="font-medium text-plum">{reservationDate}</span> at{" "}
-              <span className="font-medium text-plum">{reservationTime}</span>?
+              <span className="font-medium text-plum tabular-nums">{reservationDate}</span> at{" "}
+              <span className="font-medium text-plum tabular-nums">{reservationTime}</span>?
             </p>
 
             <div className="p-3 rounded-2xl bg-rose/10 dark:bg-rose/15 border border-rose/20 text-[11px] text-plum/70 mt-4">
