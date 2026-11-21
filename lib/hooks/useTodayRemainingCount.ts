@@ -43,9 +43,10 @@ export function useTodayRemainingCount(): number {
 
     fetchCount();
 
-    // Subscribe to realtime changes
+    // Subscribe to realtime changes with unique channel ID
+    const channelId = `today-count-${Math.random().toString(36).slice(2, 9)}`;
     const channel = supabase
-      .channel("today-remaining-count-badge")
+      .channel(channelId)
       .on(
         "postgres_changes",
         {

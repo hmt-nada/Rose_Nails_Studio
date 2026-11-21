@@ -136,8 +136,9 @@ export default function TodayDetailedView({
       return;
     }
 
+    const channelId = `today-page-${Math.random().toString(36).slice(2, 9)}`;
     const channel = supabase
-      .channel("today-page-realtime")
+      .channel(channelId)
       .on(
         "postgres_changes",
         {

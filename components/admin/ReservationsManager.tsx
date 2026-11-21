@@ -126,8 +126,9 @@ export default function ReservationsManager({
       return;
     }
 
+    const channelId = `admin-res-${Math.random().toString(36).slice(2, 9)}`;
     const channel = supabase
-      .channel("admin-reservations-realtime")
+      .channel(channelId)
       .on(
         "postgres_changes",
         {

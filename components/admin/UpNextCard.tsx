@@ -76,8 +76,9 @@ export default function UpNextCard({
       return;
     }
 
+    const channelId = `up-next-${Math.random().toString(36).slice(2, 9)}`;
     const channel = supabase
-      .channel("up-next-card-realtime")
+      .channel(channelId)
       .on(
         "postgres_changes",
         {
