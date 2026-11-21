@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { LayoutDashboard, Calendar } from "lucide-react";
+import { LayoutDashboard, Calendar, Sparkles } from "lucide-react";
 import BrandLogo from "@/components/ui/BrandLogo";
 
 const NAV_ITEMS = [
@@ -17,6 +17,12 @@ const NAV_ITEMS = [
     name: "Reservations",
     href: "/admin/reservations",
     icon: Calendar,
+    exact: false,
+  },
+  {
+    name: "Services",
+    href: "/admin/services",
+    icon: Sparkles,
     exact: false,
   },
 ];

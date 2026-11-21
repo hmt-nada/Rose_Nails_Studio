@@ -5,7 +5,6 @@ import ReservationsManager, {
   type Reservation,
 } from "@/components/admin/ReservationsManager";
 import { ReservationsSkeleton } from "@/components/admin/AdminSkeletons";
-import { ManageServicesTrigger } from "@/components/admin/ManageServicesContext";
 
 async function ReservationsDataLoader() {
   // Signals to Next.js that this Suspense boundary requires request-time data
@@ -34,7 +33,7 @@ async function ReservationsDataLoader() {
 export default function AdminReservationsPage() {
   return (
     <div className="space-y-6">
-      {/* ── Page Header with Manage Services Button ── */}
+      {/* ── Page Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-semibold text-plum tracking-tight">
@@ -43,10 +42,6 @@ export default function AdminReservationsPage() {
           <p className="text-sm text-plum/60 font-normal mt-1 leading-relaxed">
             Review live bookings, update appointment statuses, and connect with clients via phone, WhatsApp, or Telegram.
           </p>
-        </div>
-
-        <div className="shrink-0">
-          <ManageServicesTrigger />
         </div>
       </div>
 

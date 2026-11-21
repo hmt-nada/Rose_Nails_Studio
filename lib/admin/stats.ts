@@ -51,9 +51,24 @@ export interface UpcomingAppointment {
   status: "new" | "confirmed" | "completed" | "cancelled";
 }
 
+export interface TodayReservationItem {
+  id: string;
+  name: string;
+  phone: string;
+  service: string;
+  price: number;
+  date: string;
+  time: string;
+  note?: string | null;
+  status: "new" | "confirmed" | "completed" | "cancelled";
+  created_at?: string;
+}
+
 export interface DashboardStats {
   greeting: string;
   todayDateFormatted: string;
+  todayStr: string;
+  todayReservations: TodayReservationItem[];
   kpis: {
     clientsThisMonth: number;
     clientsChangePercent: number | null;
@@ -305,9 +320,28 @@ export async function computeDashboardStats(
     status: r.status,
   }));
 
+  // Today's all reservations (for the prominent Today panel)
+  const todayReservations: TodayReservationItem[] = reservations
+    .filter((r) => r.date === todayStr)
+    .sort((a, b) => (a.time || "").localeCompare(b.time || ""))
+    .map((r) => ({
+      id: r.id,
+      name: r.name,
+      phone: r.phone,
+      service: r.service,
+      price: r.price,
+      date: r.date,
+      time: r.time,
+      note: r.note,
+      status: r.status,
+      created_at: r.created_at,
+    }));
+
   return {
     greeting,
     todayDateFormatted,
+    todayStr,
+    todayReservations,
     kpis: {
       clientsThisMonth,
       clientsChangePercent,
