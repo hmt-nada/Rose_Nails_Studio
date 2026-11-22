@@ -12,6 +12,7 @@ import {
   Calendar,
   Check,
   ArrowRight,
+  ArrowUpRight,
 } from "lucide-react";
 import { STUDIO_CONTACT, SITE_NAME } from "@/lib/constants";
 import { scrollToSection } from "@/lib/scroll";
@@ -130,10 +131,10 @@ export default function Footer() {
         transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
         className="max-w-7xl mx-auto px-6 pt-6 pb-12 relative z-10 will-change-transform"
       >
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8">
-          {/* Column 1: Brand & Identity (span 4) */}
-          <div className="sm:col-span-2 lg:col-span-4 flex flex-col items-center lg:items-start text-center lg:text-left gap-5">
-            <div className="flex flex-col sm:flex-row items-center lg:items-start text-center sm:text-left gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1.1fr] gap-10 lg:gap-8 xl:gap-12 items-start">
+          {/* Column 1: Brand & Identity (wider on the left) */}
+          <div className="md:col-span-2 lg:col-span-1 flex flex-col items-start text-left gap-5">
+            <div className="flex items-center gap-3">
               <BrandLogo size={42} />
               <div>
                 <span className="font-heading text-2xl sm:text-3xl font-medium tracking-tight text-plum block leading-none">
@@ -145,13 +146,13 @@ export default function Footer() {
               </div>
             </div>
 
-            <p className="font-body text-sm text-plum/70 leading-relaxed max-w-sm">
+            <p className="font-body text-sm text-plum/70 leading-relaxed max-w-md">
               An intimate studio dedicated to Japanese gel precision, restorative nail
               therapy, and bespoke hand aesthetics in Beverly Hills.
             </p>
 
             {/* Quality Badges */}
-            <div className="flex flex-wrap justify-center lg:justify-start gap-2 pt-1">
+            <div className="flex flex-wrap justify-start gap-2 pt-1">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/70 dark:bg-surface/70 border border-blush/50 dark:border-rose/25 text-[11px] font-medium text-plum/80">
                 <Sparkles size={11} className="text-deep-rose" />
                 Clean &amp; Non-Toxic
@@ -167,71 +168,49 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Column 2: Quick Links (with Sliding Underline on hover) */}
-          <div className="lg:col-span-2 flex flex-col items-center lg:items-start text-center lg:text-left gap-4">
+          {/* Column 2: Atelier & Hours (in the middle) */}
+          <div className="md:col-span-1 lg:col-span-1 flex flex-col items-start text-left gap-4 w-full">
             <span className="font-body text-xs font-semibold uppercase tracking-[0.2em] text-deep-rose">
-              Navigation
+              Atelier &amp; Hours
             </span>
-            <ul className="flex flex-col items-center lg:items-start gap-3 font-body text-sm text-plum/75">
-              {[
-                { name: "Our Work", href: "#work" },
-                { name: "Client Reviews", href: "#reviews" },
-                { name: "Our Services", href: "#services" },
-                { name: "How It Works", href: "#how-it-works" },
-                { name: "Book Appointment", href: "#book" },
-              ].map((item) => (
-                <li key={item.name}>
-                  <button
-                    onClick={() => scrollTo(item.href)}
-                    className="group flex items-center gap-2 hover:text-deep-rose transition-colors duration-200 cursor-pointer min-h-[44px] py-1"
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-blush group-hover:bg-deep-rose group-hover:scale-125 transition-all duration-200" />
-                    <span className="relative after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-0 group-hover:after:w-full after:bg-deep-rose after:transition-all after:duration-300">
-                      {item.name}
-                    </span>
-                  </button>
-                </li>
-              ))}
-              <li>
+            <div className="flex flex-col items-start gap-3.5 font-body text-sm text-plum/75 w-full max-w-xs">
+              {/* Address & Directions */}
+              <div className="flex flex-col items-start gap-1">
                 <a
                   href={STUDIO_CONTACT.mapsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center gap-2 hover:text-deep-rose transition-colors duration-200 min-h-[44px] py-1"
+                  className="group flex items-start gap-2.5 hover:text-deep-rose transition-colors duration-200 text-left"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-blush group-hover:bg-deep-rose group-hover:scale-125 transition-all duration-200" />
-                  <span className="relative after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-0 group-hover:after:w-full after:bg-deep-rose after:transition-all after:duration-300">
-                    Studio Map ↗
-                  </span>
+                  <MapPin size={17} className="text-deep-rose shrink-0 mt-0.5" />
+                  <div className="flex flex-col">
+                    <span className="font-medium text-plum group-hover:text-deep-rose transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-0 group-hover:after:w-full after:bg-deep-rose after:transition-all after:duration-300">
+                      {STUDIO_CONTACT.address}
+                    </span>
+                    <span className="text-xs text-plum/60">{STUDIO_CONTACT.city}</span>
+                  </div>
                 </a>
-              </li>
-            </ul>
-          </div>
 
-          {/* Column 3: Studio & Hours */}
-          <div className="lg:col-span-3 flex flex-col items-center lg:items-start text-center lg:text-left gap-4">
-            <span className="font-body text-xs font-semibold uppercase tracking-[0.2em] text-deep-rose">
-              Atelier &amp; Hours
-            </span>
-            <div className="flex flex-col items-center lg:items-start gap-3.5 font-body text-sm text-plum/75 w-full max-w-xs">
-              {/* Address */}
-              <a
-                href={STUDIO_CONTACT.mapsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex items-start justify-center lg:justify-start gap-2.5 hover:text-deep-rose transition-colors duration-200 text-center lg:text-left"
-              >
-                <MapPin size={17} className="text-deep-rose shrink-0 mt-0.5" />
-                <div className="flex flex-col">
-                  <span className="font-medium text-plum group-hover:text-deep-rose transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-0 group-hover:after:w-full after:bg-deep-rose after:transition-all after:duration-300">
-                    {STUDIO_CONTACT.address}
+                {/* Get directions link with arrow */}
+                <a
+                  href={STUDIO_CONTACT.mapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group/dir inline-flex items-center gap-1.5 pl-7 text-xs font-medium text-deep-rose hover:text-[#A33D5E] transition-colors min-h-[32px] py-0.5"
+                  aria-label={`Get directions to ${STUDIO_CONTACT.address} on Google Maps`}
+                >
+                  <span className="relative after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-0 group-hover/dir:after:w-full after:bg-deep-rose after:transition-all after:duration-300">
+                    Get directions
                   </span>
-                  <span className="text-xs text-plum/60">{STUDIO_CONTACT.city}</span>
-                </div>
-              </a>
+                  <ArrowUpRight
+                    size={13}
+                    className="shrink-0 transition-transform duration-200 group-hover/dir:translate-x-0.5 group-hover/dir:-translate-y-0.5"
+                  />
+                </a>
+              </div>
 
               {/* Phone & Email */}
-              <div className="flex flex-col items-center lg:items-start gap-2 pt-1 border-t border-blush/40 w-full">
+              <div className="flex flex-col items-start gap-2 pt-1 border-t border-blush/40 dark:border-rose/20 w-full">
                 <a
                   href={`tel:${STUDIO_CONTACT.phoneRaw}`}
                   className="group flex items-center gap-2.5 hover:text-deep-rose transition-colors duration-200 min-h-[44px] py-1"
@@ -253,8 +232,8 @@ export default function Footer() {
               </div>
 
               {/* Hours */}
-              <div className="flex flex-col gap-1.5 pt-2 border-t border-blush/40 text-xs w-full">
-                <div className="flex items-center justify-center lg:justify-start gap-1.5 font-medium text-plum">
+              <div className="flex flex-col gap-1.5 pt-2 border-t border-blush/40 dark:border-rose/20 text-xs w-full">
+                <div className="flex items-center justify-start gap-1.5 font-medium text-plum">
                   <Clock size={13} className="text-deep-rose" />
                   <span>Opening Schedule</span>
                 </div>
@@ -274,8 +253,8 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Column 4: The Rosé Journal & Staggered Social Icons with Bounce */}
-          <div className="sm:col-span-2 lg:col-span-3 flex flex-col items-center lg:items-start text-center lg:text-left gap-4">
+          {/* Column 3: The Rosé Journal & Staggered Social Icons with Bounce (on the right) */}
+          <div className="md:col-span-1 lg:col-span-1 flex flex-col items-start text-left gap-4 w-full">
             <span className="font-body text-xs font-semibold uppercase tracking-[0.2em] text-deep-rose">
               The Rosé Journal
             </span>
@@ -303,7 +282,7 @@ export default function Footer() {
                 </button>
               </div>
               {isSubscribed && (
-                <div className="inline-flex items-center justify-center lg:justify-start gap-1 text-[11px] text-deep-rose font-medium">
+                <div className="inline-flex items-center justify-start gap-1 text-[11px] text-deep-rose font-medium">
                   <Check size={12} />
                   <span>Welcome to our private list ✨</span>
                 </div>
@@ -311,11 +290,11 @@ export default function Footer() {
             </form>
 
             {/* Social Media Links (Staggered pop-in + hover bounce) */}
-            <div className="flex flex-col items-center lg:items-start gap-2.5 pt-3">
+            <div className="flex flex-col items-start gap-2.5 pt-3">
               <span className="font-body text-[11px] uppercase tracking-wider text-plum/60 font-medium">
                 Follow Our Creations
               </span>
-              <div className="flex items-center justify-center lg:justify-start gap-2.5">
+              <div className="flex items-center justify-start gap-2.5">
                 {socialLinks.map((social, i) => (
                   <motion.a
                     key={social.name}
