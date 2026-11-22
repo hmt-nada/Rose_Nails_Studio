@@ -9,7 +9,6 @@ import {
   MotionValue,
 } from "framer-motion";
 import { HERO_QUOTES } from "@/lib/constants";
-import { cn } from "@/lib/utils";
 import MagneticButton from "@/components/ui/MagneticButton";
 import { scrollToSection } from "@/lib/scroll";
 import { useIntro } from "@/components/providers/IntroProvider";
@@ -152,7 +151,7 @@ export default function Hero() {
           </motion.div>
         </motion.div>
 
-        {/* ── RIGHT COLUMN – Arch video frame (scroll depth: scales & rotates) ── */}
+        {/* ── RIGHT COLUMN – Seamless floating transparent animation (scroll depth: scales & rotates) ── */}
         <motion.div
           variants={shouldReduce ? {} : scaleIn}
           initial="hidden"
@@ -166,14 +165,15 @@ export default function Hero() {
             shouldReduce
               ? {}
               : {
-                scale: videoScale,
-                rotate: videoRotate,
-                y: videoY,
-              }
+                  scale: videoScale,
+                  rotate: videoRotate,
+                  y: videoY,
+                }
           }
           className="relative flex justify-center lg:justify-end items-center w-full will-change-transform mt-2 lg:mt-0"
         >
-          <VideoFrame heroRef={heroRef} />
+          {/* Transparent floating animation element (no card, no border, true alpha transparency) */}
+          <TransparentFloatingVideo heroRef={heroRef} />
         </motion.div>
       </div>
 
@@ -355,127 +355,285 @@ function BackgroundBlobs({ scrollYProgress }: BackgroundBlobsProps) {
   );
 }
 
-// ─── Video Frame ─────────────────────────────────────────────────────────────
-interface VideoFrameProps {
+// ─── WebGL Shaders for Real-Time Alpha Channel Keying ───────────────────────
+const VERTEX_SHADER_SRC = `
+attribute vec2 a_position;
+attribute vec2 a_texCoord;
+varying vec2 v_texCoord;
+void main() {
+  gl_Position = vec4(a_position, 0.0, 1.0);
+  v_texCoord = a_texCoord;
+}
+`;
+
+const FRAGMENT_SHADER_SRC = `
+precision mediump float;
+uniform sampler2D u_image;
+varying vec2 v_texCoord;
+
+void main() {
+  vec4 color = texture2D(u_image, v_texCoord);
+  
+  // Calculate maximum channel difference (saturation metric)
+  float maxDiff = max(abs(color.r - color.g), max(abs(color.r - color.b), abs(color.g - color.b)));
+  
+  // The checkerboard pattern is strictly neutral gray (maxDiff <= 0.02)
+  // We smoothly feather edges between 0.024 (~6/255) and 0.047 (~12/255)
+  float alpha = smoothstep(0.024, 0.047, maxDiff);
+  
+  // Premultiplied alpha output for clean WebGL compositing over the transparent canvas
+  gl_FragColor = vec4(color.rgb * alpha, alpha);
+}
+`;
+
+// ─── Transparent Floating Video Component ───────────────────────────────────
+interface TransparentFloatingVideoProps {
   heroRef: React.RefObject<HTMLElement | null>;
 }
 
-function VideoFrame({ heroRef }: VideoFrameProps) {
+function TransparentFloatingVideo({ heroRef }: TransparentFloatingVideoProps) {
   const shouldReduce = useReducedMotion();
   const { introState } = useIntro();
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
-  const [videoError, setVideoError] = useState(false);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const wasOutOfViewRef = useRef(false);
-  const hasInitialPlayedRef = useRef(false);
+  const glRef = useRef<WebGLRenderingContext | null>(null);
+  const textureRef = useRef<WebGLTexture | null>(null);
+  const animFrameRef = useRef<number | null>(null);
+  const isEndedRef = useRef(false);
+  const isVisibleRef = useRef(true);
+  const hasInitializedRef = useRef(false);
+  const hasStartedRef = useRef(false);
 
-  // Helper to seek to the last frame without looping (for reduced motion)
-  const seekToLastFrame = useCallback(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    video.pause();
-    if (video.duration && !isNaN(video.duration) && isFinite(video.duration)) {
-      video.currentTime = Math.max(0, video.duration - 0.05);
+  // Setup WebGL Program
+  const initWebGL = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return false;
+
+    const gl =
+      canvas.getContext("webgl", {
+        alpha: true,
+        premultipliedAlpha: true,
+        antialias: true,
+      }) ||
+      (canvas.getContext(
+        "experimental-webgl"
+      ) as WebGLRenderingContext | null);
+
+    if (!gl) {
+      console.warn("[Rosé Nails Studio] WebGL not supported, falling back.");
+      return false;
     }
+
+    glRef.current = gl;
+
+    // Compile Vertex Shader
+    const vs = gl.createShader(gl.VERTEX_SHADER);
+    if (!vs) return false;
+    gl.shaderSource(vs, VERTEX_SHADER_SRC);
+    gl.compileShader(vs);
+
+    // Compile Fragment Shader
+    const fs = gl.createShader(gl.FRAGMENT_SHADER);
+    if (!fs) return false;
+    gl.shaderSource(fs, FRAGMENT_SHADER_SRC);
+    gl.compileShader(fs);
+
+    // Link Program
+    const program = gl.createProgram();
+    if (!program) return false;
+    gl.attachShader(program, vs);
+    gl.attachShader(program, fs);
+    gl.linkProgram(program);
+
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      console.warn(
+        "[Rosé Nails Studio] WebGL program link error:",
+        gl.getProgramInfoLog(program)
+      );
+      return false;
+    }
+
+    gl.useProgram(program);
+
+    // Positions Buffer (fullscreen quad)
+    const posBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),
+      gl.STATIC_DRAW
+    );
+    const posAttr = gl.getAttribLocation(program, "a_position");
+    gl.enableVertexAttribArray(posAttr);
+    gl.vertexAttribPointer(posAttr, 2, gl.FLOAT, false, 0, 0);
+
+    // TexCoord Buffer (matching video orientation)
+    const texBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, texBuffer);
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array([0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0]),
+      gl.STATIC_DRAW
+    );
+    const texAttr = gl.getAttribLocation(program, "a_texCoord");
+    gl.enableVertexAttribArray(texAttr);
+    gl.vertexAttribPointer(texAttr, 2, gl.FLOAT, false, 0, 0);
+
+    // Create Video Texture
+    const texture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    textureRef.current = texture;
+
+    // Viewport & Blending
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.clearColor(0, 0, 0, 0);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+
+    hasInitializedRef.current = true;
+    return true;
   }, []);
 
-  // Check if video is already ready on mount (e.g. cached by browser)
-  useEffect(() => {
+  // Render Single Frame to WebGL Canvas
+  const drawFrame = useCallback(() => {
+    const gl = glRef.current;
     const video = videoRef.current;
-    if (!video) return;
+    const texture = textureRef.current;
+    if (!gl || !video || !texture || video.readyState < 2) return;
 
-    if (video.readyState >= 1) {
-      setIsVideoLoaded(true);
-      if (shouldReduce) {
-        seekToLastFrame();
-      } else if (!hasInitialPlayedRef.current && (introState === "lifting" || introState === "done")) {
-        hasInitialPlayedRef.current = true;
-        video.currentTime = 0;
-        video.play().catch(() => {});
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texImage2D(
+      gl.TEXTURE_2D,
+      0,
+      gl.RGBA,
+      gl.RGBA,
+      gl.UNSIGNED_BYTE,
+      video
+    );
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+  }, []);
+
+  // Render Loop
+  const startRenderLoop = useCallback(() => {
+    if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+
+    function tick() {
+      drawFrame();
+
+      const video = videoRef.current;
+      if (video && !video.paused && !video.ended && isVisibleRef.current) {
+        animFrameRef.current = requestAnimationFrame(tick);
+      } else if (isEndedRef.current) {
+        // Draw the final frame once and stop
+        drawFrame();
       }
     }
-  }, [shouldReduce, seekToLastFrame, introState]);
 
-  // Initial play trigger ONLY when introState transitions to "lifting" or "done"
+    animFrameRef.current = requestAnimationFrame(tick);
+  }, [drawFrame]);
+
+  // Video Loaded Metadata
+  const handleLoadedMetadata = useCallback(() => {
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    if (!video || !canvas) return;
+
+    if (video.videoWidth && video.videoHeight) {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      if (glRef.current) {
+        glRef.current.viewport(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    if (shouldReduce) {
+      video.pause();
+      if (video.duration) {
+        video.currentTime = Math.max(0, video.duration - 0.05);
+      }
+      setTimeout(drawFrame, 150);
+    } else {
+      // Draw first frame immediately to canvas so first frame is ready
+      setTimeout(drawFrame, 50);
+      // Only play immediately if already in lifting/done phase
+      if (introState === "lifting" || introState === "done") {
+        hasStartedRef.current = true;
+        video.play().catch(() => {});
+        startRenderLoop();
+      }
+    }
+  }, [shouldReduce, drawFrame, startRenderLoop, introState]);
+
+  // Video Ended Handler (Freezes on last frame without looping)
+  const handleVideoEnded = useCallback(() => {
+    isEndedRef.current = true;
+    drawFrame();
+    if (animFrameRef.current) {
+      cancelAnimationFrame(animFrameRef.current);
+    }
+  }, [drawFrame]);
+
+  // Start video play-once logic when introState transitions to "lifting" (so video plays during reveal)
   useEffect(() => {
     if (shouldReduce) return;
     const video = videoRef.current;
     if (!video) return;
 
-    if ((introState === "lifting" || introState === "done") && !hasInitialPlayedRef.current) {
-      hasInitialPlayedRef.current = true;
+    if ((introState === "lifting" || introState === "done") && !hasStartedRef.current) {
+      hasStartedRef.current = true;
       video.currentTime = 0;
       video.play().catch(() => {});
+      startRenderLoop();
     }
-  }, [introState, shouldReduce]);
+  }, [introState, shouldReduce, startRenderLoop]);
 
-  // Handle metadata loaded (duration now available)
-  const handleLoadedMetadata = useCallback(() => {
-    if (shouldReduce) {
-      seekToLastFrame();
-    }
-  }, [shouldReduce, seekToLastFrame]);
-
-  // Handle video ready to play
-  const handleCanPlay = useCallback(() => {
-    setIsVideoLoaded(true);
-    if (shouldReduce) {
-      seekToLastFrame();
-    } else if (!hasInitialPlayedRef.current && (introState === "lifting" || introState === "done") && videoRef.current) {
-      hasInitialPlayedRef.current = true;
-      videoRef.current.currentTime = 0;
-      videoRef.current.play().catch(() => {});
-    }
-  }, [shouldReduce, seekToLastFrame, introState]);
-
-  // Handle video load errors
-  const handleError = useCallback((e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
-    setVideoError(true);
-    console.warn(
-      "[Rosé Nails Studio] Failed to load hero video at /videos/hero.mp4",
-      e
-    );
-  }, []);
-
-  // IntersectionObserver for Hero section viewport tracking
+  // Viewport Observer (plays on enter, pauses on exit)
   useEffect(() => {
     const heroEl = heroRef.current;
     const video = videoRef.current;
     if (!heroEl || !video) return;
 
+    initWebGL();
+
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
-            // Hero is back in viewport (at least 50% visible)
-            if (wasOutOfViewRef.current && hasInitialPlayedRef.current) {
-              wasOutOfViewRef.current = false;
-              if (!shouldReduce) {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.3) {
+            isVisibleRef.current = true;
+            if (!shouldReduce && (introState === "lifting" || introState === "done")) {
+              if (isEndedRef.current) {
+                // Replay when scrolling back into hero
+                isEndedRef.current = false;
                 video.currentTime = 0;
-                video.play().catch(() => { });
+                video.play().catch(() => {});
+                startRenderLoop();
+              } else if (video.paused && !isEndedRef.current && hasStartedRef.current) {
+                video.play().catch(() => {});
+                startRenderLoop();
               }
             }
           } else if (!entry.isIntersecting || entry.intersectionRatio === 0) {
-            // Hero has left the viewport completely
-            if (hasInitialPlayedRef.current) {
-              wasOutOfViewRef.current = true;
-              video.pause();
-              video.currentTime = 0;
-            }
+            isVisibleRef.current = false;
+            video.pause();
+            if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
           }
         }
       },
-      {
-        threshold: [0, 0.5],
-      }
+      { threshold: [0, 0.3] }
     );
 
     observer.observe(heroEl);
 
     return () => {
       observer.disconnect();
+      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
     };
-  }, [heroRef, shouldReduce]);
+  }, [heroRef, initWebGL, shouldReduce, startRenderLoop, introState]);
 
   return (
     <motion.div
@@ -483,7 +641,7 @@ function VideoFrame({ heroRef }: VideoFrameProps) {
         shouldReduce
           ? {}
           : {
-              y: [0, -14, 0],
+              y: [0, -10, 0],
             }
       }
       transition={{
@@ -491,188 +649,36 @@ function VideoFrame({ heroRef }: VideoFrameProps) {
         repeat: Infinity,
         ease: "easeInOut",
       }}
-      className={cn(
-        // Arch shape: large rounded top, rounded-3xl bottom
-        "relative w-full max-w-[420px] xl:max-w-[480px]",
-        "aspect-[3/4]",
-        "rounded-t-[200px] rounded-b-3xl",
-        "overflow-hidden",
-        // Thin glass border
-        "border border-white/60 dark:border-rose/25",
-        // Soft pink glow
-        "shadow-[0_12px_60px_rgba(184,74,110,0.28),0_4px_20px_rgba(184,74,110,0.15)] dark:shadow-[0_0_50px_rgba(243,166,189,0.25)]"
-      )}
+      className="relative w-full max-w-[340px] xs:max-w-[420px] sm:max-w-[500px] lg:max-w-[560px] xl:max-w-[640px] 2xl:max-w-[720px] max-h-[55svh] max-h-[55dvh] aspect-[16/9] flex items-center justify-center pointer-events-none select-none"
     >
-      {/* 1. Animated fallback: always rendered underneath the video */}
-      <AnimatedGradientFallback shouldReduce={shouldReduce} />
+      {/* ── Hidden Off-Screen Video Element (Kept in render tree so browser decodes first frame) ── */}
+      <video
+        ref={videoRef}
+        src="/videos/hero.mp4"
+        playsInline
+        muted
+        preload="auto"
+        onLoadedMetadata={handleLoadedMetadata}
+        onEnded={handleVideoEnded}
+        onPlay={startRenderLoop}
+        className="absolute -top-[9999px] -left-[9999px] w-1 h-1 opacity-0 pointer-events-none -z-50"
+        aria-hidden
+      />
 
-      {/* 2. Video element: fills the whole arch frame, shows only when successfully loaded.
-             No 'loop' attribute: plays once and stays frozen on the last frame. */}
-      {!videoError && (
-        <video
-          ref={videoRef}
-          src="/videos/hero.mp4"
-          muted
-          playsInline
-          preload="auto"
-          onLoadedMetadata={handleLoadedMetadata}
-          onCanPlay={handleCanPlay}
-          onError={handleError}
-          className={cn(
-            "absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out",
-            isVideoLoaded ? "opacity-100 z-10" : "opacity-0 pointer-events-none"
-          )}
-          aria-label="Rosé Nails Studio nail art showcase video"
-        />
-      )}
-
-      {/* 3. Inner glass rim highlight */}
+      {/* ── Dark gradient overlay on the video for high contrast text readability ── */}
       <div
         aria-hidden
-        className="absolute inset-0 rounded-t-[200px] rounded-b-3xl pointer-events-none z-20 ring-1 ring-inset ring-white/30 dark:ring-rose/20"
+        className="absolute inset-0 rounded-3xl bg-transparent dark:bg-gradient-to-t dark:from-[#1A0F15]/80 dark:via-[#1A0F15]/20 dark:to-transparent pointer-events-none z-10"
+      />
+
+      {/* ── Transparent Alpha Canvas (Directly displays floating bottles & splashes) ── */}
+      <canvas
+        ref={canvasRef}
+        width={1280}
+        height={720}
+        className="w-full h-auto max-h-[55svh] max-h-[55dvh] aspect-[16/9] object-contain drop-shadow-[0_16px_36px_rgba(184,74,110,0.14)] dark:drop-shadow-[0_16px_40px_rgba(243,166,189,0.2)]"
+        aria-label="Floating Rosé Nails Studio signature nail polish couture animation"
       />
     </motion.div>
-  );
-}
-
-// ─── Animated Pink Gradient Fallback with Glossy Blobs & Soft Shine ───────────
-function AnimatedGradientFallback({ shouldReduce }: { shouldReduce: boolean | null }) {
-  return (
-    <div
-      aria-hidden
-      className="absolute inset-0 w-full h-full overflow-hidden bg-gradient-to-br from-[#FCD8E3] via-[#EFA4BC] to-[#A8385C]"
-    >
-      {/* Dynamic drifting gradient layer */}
-      <motion.div
-        className="absolute -inset-10 opacity-90"
-        style={{
-          background:
-            "radial-gradient(ellipse at 25% 25%, #F9C6D4 0%, #E88AA6 45%, #B84A6E 90%)",
-        }}
-        animate={
-          shouldReduce
-            ? {}
-            : {
-                scale: [1, 1.15, 1],
-                rotate: [0, 8, 0],
-              }
-        }
-        transition={{
-          duration: 12,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-
-      {/* Glossy moving blob 1 — Soft blush highlight (top-left) */}
-      <motion.div
-        className="absolute w-64 h-64 rounded-full bg-white/45 blur-2xl pointer-events-none"
-        animate={
-          shouldReduce
-            ? {}
-            : {
-                x: [0, 45, 0],
-                y: [0, 35, 0],
-                scale: [1, 1.2, 1],
-              }
-        }
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-        style={{ top: "8%", left: "10%" }}
-      />
-
-      {/* Glossy moving blob 2 — Deep rose luminous core (center-bottom) */}
-      <motion.div
-        className="absolute w-72 h-72 rounded-full bg-[#B84A6E]/70 blur-3xl pointer-events-none"
-        animate={
-          shouldReduce
-            ? {}
-            : {
-                x: [0, -35, 0],
-                y: [0, -40, 0],
-                scale: [1, 1.18, 1],
-              }
-        }
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 1,
-        }}
-        style={{ bottom: "10%", right: "5%" }}
-      />
-
-      {/* Glossy moving blob 3 — Rose glaze highlight (mid-right) */}
-      <motion.div
-        className="absolute w-56 h-56 rounded-full bg-[#F9C6D4]/60 blur-xl pointer-events-none"
-        animate={
-          shouldReduce
-            ? {}
-            : {
-                x: [0, -25, 0],
-                y: [0, 30, 0],
-                scale: [1, 1.15, 1],
-              }
-        }
-        transition={{
-          duration: 9,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 2,
-        }}
-        style={{ top: "42%", right: "8%" }}
-      />
-
-      {/* Top curved specular gloss reflection (like glossy nail gel) */}
-      <div
-        className="absolute inset-x-0 top-0 h-48 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0.15) 50%, transparent 80%)",
-        }}
-      />
-
-      {/* Soft shine light sweep animation passing across the arch */}
-      <motion.div
-        className="absolute -inset-y-20 -inset-x-32 w-[200%] pointer-events-none opacity-40"
-        style={{
-          background:
-            "linear-gradient(115deg, transparent 35%, rgba(255,255,255,0.7) 48%, rgba(255,255,255,0.85) 50%, rgba(255,255,255,0.7) 52%, transparent 65%)",
-        }}
-        animate={
-          shouldReduce
-            ? {}
-            : {
-                x: ["-100%", "100%"],
-              }
-        }
-        transition={{
-          duration: 4.5,
-          repeat: Infinity,
-          ease: "easeInOut",
-          repeatDelay: 2,
-        }}
-      />
-
-      {/* Brand signature & sparkle emblem */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-pearl select-none pointer-events-none z-10 px-6 text-center">
-        <motion.span
-          className="text-4xl text-pearl drop-shadow-[0_2px_12px_rgba(255,255,255,0.6)]"
-          animate={shouldReduce ? {} : { scale: [1, 1.12, 1], rotate: [0, 10, 0] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-        >
-          ✦
-        </motion.span>
-        <span className="font-heading text-2xl font-light tracking-wider text-pearl drop-shadow-[0_2px_14px_rgba(58,31,43,0.35)]">
-          Rosé Nails Studio
-        </span>
-        <span className="font-body text-[11px] tracking-[0.25em] uppercase text-pearl/80 drop-shadow-[0_1px_8px_rgba(58,31,43,0.25)]">
-          Haute Manucure
-        </span>
-      </div>
-    </div>
   );
 }
