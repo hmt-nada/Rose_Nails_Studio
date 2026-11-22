@@ -65,8 +65,8 @@ export default function AdminTopBar({ initialEmail }: AdminTopBarProps) {
       <div className="flex items-center gap-2 sm:gap-2.5">
         <ThemeToggle />
 
-        {/* Admin Email Pill */}
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-rose/10 border border-rose/20 text-xs sm:text-sm font-medium text-plum/85 max-w-[150px] sm:max-w-xs truncate">
+        {/* Admin Email Pill (Hidden on narrow mobile screens to preserve tap target space) */}
+        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-rose/10 border border-rose/20 text-xs sm:text-sm font-medium text-plum/85 max-w-[150px] sm:max-w-xs truncate">
           <User className="w-3.5 h-3.5 text-deep-rose shrink-0" />
           <span className="truncate">{userEmail || "admin@rosenails.com"}</span>
         </div>
@@ -77,7 +77,7 @@ export default function AdminTopBar({ initialEmail }: AdminTopBarProps) {
           onClick={handleLogout}
           disabled={isLoggingOut}
           aria-label="Log out"
-          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium text-plum/80 hover:text-plum hover:bg-rose/10 border border-transparent hover:border-rose/25 transition-all cursor-pointer disabled:opacity-50"
+          className="min-h-[44px] min-w-[44px] flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium text-plum/80 hover:text-plum hover:bg-rose/10 border border-transparent hover:border-rose/25 transition-all cursor-pointer disabled:opacity-50"
         >
           {isLoggingOut ? (
             <Loader2 className="w-3.5 h-3.5 animate-spin text-deep-rose" />

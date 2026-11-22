@@ -8,7 +8,7 @@ import NavLink from "@/components/ui/NavLink";
 import { GOOGLE_MAPS_URL, SITE_NAME } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { scrollToSection } from "@/lib/scroll";
-import ThemeToggle from "@/components/ui/ThemeToggle";
+import ThemeToggle, { ThemeSegmentedControl } from "@/components/ui/ThemeToggle";
 import BrandLogo from "@/components/ui/BrandLogo";
 
 const NAV_LINKS = [
@@ -298,31 +298,46 @@ export default function Navbar() {
               })}
             </div>
 
-            {/* Bottom Actions: Book Now + Location */}
+            {/* Bottom Actions: Theme Selector + Book Now + Location */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.45 }}
-              className="relative z-10 flex flex-col gap-3 pt-6 border-t border-blush/50"
+              transition={{ delay: 0.35, duration: 0.45 }}
+              className="relative z-10 flex flex-col gap-4 pt-5 border-t border-blush/50 dark:border-rose/20"
             >
-              <button
-                onClick={() => handleMobileNavClick("#book")}
-                className="w-full min-h-[48px] py-3.5 px-6 rounded-full bg-deep-rose text-white font-body text-xs font-semibold tracking-widest uppercase shadow-lg shadow-deep-rose/30 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
-              >
-                <span>Book Appointment</span>
-                <span className="text-blush">✦</span>
-              </button>
+              {/* Theme Appearance Control */}
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-body text-[11px] font-semibold tracking-[0.2em] uppercase text-deep-rose">
+                    Appearance
+                  </span>
+                  <span className="text-[11px] text-plum/60 font-medium">
+                    Light, Dark, or System
+                  </span>
+                </div>
+                <ThemeSegmentedControl />
+              </div>
 
-              <a
-                href={GOOGLE_MAPS_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setIsMenuOpen(false)}
-                className="w-full min-h-[48px] py-3.5 px-6 rounded-full glass border border-blush/60 text-plum font-body text-xs font-medium tracking-wide flex items-center justify-center gap-2 hover:border-deep-rose/50 transition-colors"
-              >
-                <MapPin size={14} className="text-deep-rose" />
-                <span>Beverly Hills Studio Location</span>
-              </a>
+              <div className="flex flex-col gap-2.5 pt-1">
+                <button
+                  onClick={() => handleMobileNavClick("#book")}
+                  className="w-full min-h-[48px] py-3.5 px-6 rounded-full bg-deep-rose text-white font-body text-xs font-semibold tracking-widest uppercase shadow-lg shadow-deep-rose/30 active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <span>Book Appointment</span>
+                  <span className="text-blush">✦</span>
+                </button>
+
+                <a
+                  href={GOOGLE_MAPS_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="w-full min-h-[48px] py-3.5 px-6 rounded-full glass border border-blush/60 dark:border-rose/25 text-plum font-body text-xs font-medium tracking-wide flex items-center justify-center gap-2 hover:border-deep-rose/50 transition-colors"
+                >
+                  <MapPin size={14} className="text-deep-rose" />
+                  <span>Beverly Hills Studio Location</span>
+                </a>
+              </div>
             </motion.div>
           </motion.div>
         )}
