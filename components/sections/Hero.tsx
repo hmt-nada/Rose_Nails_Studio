@@ -11,6 +11,7 @@ import {
 import { HERO_QUOTES } from "@/lib/constants";
 import MagneticButton from "@/components/ui/MagneticButton";
 import { scrollToSection } from "@/lib/scroll";
+import { useIntro } from "@/components/providers/IntroProvider";
 
 // ─── Quote configuration ────────────────────────────────────────────────────
 const ACTIVE_QUOTE_INDEX = 0;
@@ -33,6 +34,7 @@ const scaleIn = {
 // ─── Component ───────────────────────────────────────────────────────────────
 export default function Hero() {
   const shouldReduce = useReducedMotion();
+  const { isLiftingOrDone } = useIntro();
   const heroRef = useRef<HTMLElement>(null);
 
   // Scroll parallax transforms
@@ -81,8 +83,8 @@ export default function Hero() {
           <motion.span
             variants={shouldReduce ? {} : fadeUp}
             initial="hidden"
-            animate="visible"
-            transition={{ duration: 0.5, delay: 0.3 }}
+            animate={isLiftingOrDone ? "visible" : "hidden"}
+            transition={{ duration: 0.5, delay: shouldReduce ? 0 : 0.44 }}
             className="inline-block font-body text-xs tracking-[0.3em] uppercase text-deep-rose font-medium"
           >
             Nail art &amp; beauty
@@ -97,10 +99,10 @@ export default function Hero() {
                   key={`${word}-${i}`}
                   variants={shouldReduce ? {} : fadeUp}
                   initial="hidden"
-                  animate="visible"
+                  animate={isLiftingOrDone ? "visible" : "hidden"}
                   transition={{
                     duration: 0.45,
-                    delay: shouldReduce ? 0 : 0.5 + i * 0.07,
+                    delay: shouldReduce ? 0 : 0.48 + i * 0.06,
                     ease: [0.22, 1, 0.36, 1],
                   }}
                   className="inline-block mr-[0.22em]"
@@ -124,8 +126,8 @@ export default function Hero() {
           <motion.p
             variants={shouldReduce ? {} : fadeUp}
             initial="hidden"
-            animate="visible"
-            transition={{ duration: 0.5, delay: shouldReduce ? 0 : 1.1 }}
+            animate={isLiftingOrDone ? "visible" : "hidden"}
+            transition={{ duration: 0.5, delay: shouldReduce ? 0 : 0.85 }}
             className="font-body text-base xl:text-lg font-light text-plum/65 max-w-md leading-relaxed"
           >
             Custom nail art, flawless manicures and designs made just for you.
@@ -136,8 +138,8 @@ export default function Hero() {
           <motion.div
             variants={shouldReduce ? {} : fadeUp}
             initial="hidden"
-            animate="visible"
-            transition={{ duration: 0.5, delay: shouldReduce ? 0 : 1.3 }}
+            animate={isLiftingOrDone ? "visible" : "hidden"}
+            transition={{ duration: 0.5, delay: shouldReduce ? 0 : 1.0 }}
           >
             <MagneticButton
               onClick={scrollToBook}
@@ -153,10 +155,10 @@ export default function Hero() {
         <motion.div
           variants={shouldReduce ? {} : scaleIn}
           initial="hidden"
-          animate="visible"
+          animate={isLiftingOrDone ? "visible" : "hidden"}
           transition={{
             duration: 0.7,
-            delay: shouldReduce ? 0 : 1.4,
+            delay: shouldReduce ? 0 : 0.55,
             ease: [0.22, 1, 0.36, 1],
           }}
           style={
@@ -183,8 +185,8 @@ export default function Hero() {
             : { hidden: { opacity: 0 }, visible: { opacity: 1 } }
         }
         initial="hidden"
-        animate="visible"
-        transition={{ duration: 0.8, delay: 2 }}
+        animate={isLiftingOrDone ? "visible" : "hidden"}
+        transition={{ duration: 0.8, delay: shouldReduce ? 0 : 1.2 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-plum/35 text-xs tracking-widest uppercase font-body pointer-events-none"
         aria-hidden
       >
@@ -391,6 +393,7 @@ interface TransparentFloatingVideoProps {
 
 function TransparentFloatingVideo({ heroRef }: TransparentFloatingVideoProps) {
   const shouldReduce = useReducedMotion();
+  const { introState } = useIntro();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const glRef = useRef<WebGLRenderingContext | null>(null);
@@ -399,6 +402,7 @@ function TransparentFloatingVideo({ heroRef }: TransparentFloatingVideoProps) {
   const isEndedRef = useRef(false);
   const isVisibleRef = useRef(true);
   const hasInitializedRef = useRef(false);
+  const hasStartedRef = useRef(false);
 
   // Setup WebGL Program
   const initWebGL = useCallback(() => {
@@ -554,10 +558,16 @@ function TransparentFloatingVideo({ heroRef }: TransparentFloatingVideoProps) {
       }
       setTimeout(drawFrame, 150);
     } else {
-      video.play().catch(() => {});
-      startRenderLoop();
+      // Draw first frame immediately to canvas so first frame is ready
+      setTimeout(drawFrame, 50);
+      // Only play immediately if already in lifting/done phase
+      if (introState === "lifting" || introState === "done") {
+        hasStartedRef.current = true;
+        video.play().catch(() => {});
+        startRenderLoop();
+      }
     }
-  }, [shouldReduce, drawFrame, startRenderLoop]);
+  }, [shouldReduce, drawFrame, startRenderLoop, introState]);
 
   // Video Ended Handler (Freezes on last frame without looping)
   const handleVideoEnded = useCallback(() => {
@@ -567,6 +577,20 @@ function TransparentFloatingVideo({ heroRef }: TransparentFloatingVideoProps) {
       cancelAnimationFrame(animFrameRef.current);
     }
   }, [drawFrame]);
+
+  // Start video play-once logic when introState transitions to "lifting" (so video plays during reveal)
+  useEffect(() => {
+    if (shouldReduce) return;
+    const video = videoRef.current;
+    if (!video) return;
+
+    if ((introState === "lifting" || introState === "done") && !hasStartedRef.current) {
+      hasStartedRef.current = true;
+      video.currentTime = 0;
+      video.play().catch(() => {});
+      startRenderLoop();
+    }
+  }, [introState, shouldReduce, startRenderLoop]);
 
   // Viewport Observer (plays on enter, pauses on exit)
   useEffect(() => {
@@ -581,15 +605,17 @@ function TransparentFloatingVideo({ heroRef }: TransparentFloatingVideoProps) {
         for (const entry of entries) {
           if (entry.isIntersecting && entry.intersectionRatio >= 0.3) {
             isVisibleRef.current = true;
-            if (!shouldReduce && isEndedRef.current) {
-              // Replay when scrolling back into hero
-              isEndedRef.current = false;
-              video.currentTime = 0;
-              video.play().catch(() => {});
-              startRenderLoop();
-            } else if (!shouldReduce && video.paused && !isEndedRef.current) {
-              video.play().catch(() => {});
-              startRenderLoop();
+            if (!shouldReduce && (introState === "lifting" || introState === "done")) {
+              if (isEndedRef.current) {
+                // Replay when scrolling back into hero
+                isEndedRef.current = false;
+                video.currentTime = 0;
+                video.play().catch(() => {});
+                startRenderLoop();
+              } else if (video.paused && !isEndedRef.current && hasStartedRef.current) {
+                video.play().catch(() => {});
+                startRenderLoop();
+              }
             }
           } else if (!entry.isIntersecting || entry.intersectionRatio === 0) {
             isVisibleRef.current = false;
@@ -607,7 +633,7 @@ function TransparentFloatingVideo({ heroRef }: TransparentFloatingVideoProps) {
       observer.disconnect();
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
     };
-  }, [heroRef, initWebGL, shouldReduce, startRenderLoop]);
+  }, [heroRef, initWebGL, shouldReduce, startRenderLoop, introState]);
 
   return (
     <motion.div
@@ -625,7 +651,7 @@ function TransparentFloatingVideo({ heroRef }: TransparentFloatingVideoProps) {
       }}
       className="relative w-full max-w-[340px] xs:max-w-[420px] sm:max-w-[500px] lg:max-w-[560px] xl:max-w-[640px] 2xl:max-w-[720px] max-h-[55svh] max-h-[55dvh] aspect-[16/9] flex items-center justify-center pointer-events-none select-none"
     >
-      {/* ── Hidden Off-Screen Video Element ── */}
+      {/* ── Hidden Off-Screen Video Element (Kept in render tree so browser decodes first frame) ── */}
       <video
         ref={videoRef}
         src="/videos/hero.mp4"
@@ -635,7 +661,7 @@ function TransparentFloatingVideo({ heroRef }: TransparentFloatingVideoProps) {
         onLoadedMetadata={handleLoadedMetadata}
         onEnded={handleVideoEnded}
         onPlay={startRenderLoop}
-        className="hidden"
+        className="absolute -top-[9999px] -left-[9999px] w-1 h-1 opacity-0 pointer-events-none -z-50"
         aria-hidden
       />
 

@@ -1,3 +1,4 @@
+import { IntroProvider } from "@/components/providers/IntroProvider";
 import SmoothScrollProvider from "@/components/providers/SmoothScrollProvider";
 
 export default function SiteLayout({
@@ -5,5 +6,9 @@ export default function SiteLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <SmoothScrollProvider>{children}</SmoothScrollProvider>;
+  return (
+    <IntroProvider>
+      <SmoothScrollProvider>{children}</SmoothScrollProvider>
+    </IntroProvider>
+  );
 }

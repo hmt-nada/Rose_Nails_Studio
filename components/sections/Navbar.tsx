@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { MapPin, ArrowRight } from "lucide-react";
 import NavLink from "@/components/ui/NavLink";
 import { GOOGLE_MAPS_URL, SITE_NAME } from "@/lib/constants";
@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { scrollToSection } from "@/lib/scroll";
 import ThemeToggle, { ThemeSegmentedControl } from "@/components/ui/ThemeToggle";
 import BrandLogo from "@/components/ui/BrandLogo";
+import { useIntro } from "@/components/providers/IntroProvider";
 
 const NAV_LINKS = [
   { href: "#hero", label: "Home" },
@@ -27,6 +28,8 @@ function scrollTo(hash: string) {
 }
 
 export default function Navbar() {
+  const shouldReduce = useReducedMotion();
+  const { isLiftingOrDone } = useIntro();
   const [scrolled, setScrolled] = useState(false);
   const [activeLink, setActiveLink] = useState<SectionId>("#hero");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -113,8 +116,12 @@ export default function Navbar() {
     <>
       <motion.header
         initial={{ y: -80, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        animate={isLiftingOrDone ? { y: 0, opacity: 1 } : { y: -80, opacity: 0 }}
+        transition={{
+          duration: 0.6,
+          delay: shouldReduce ? 0 : 0.44,
+          ease: [0.22, 1, 0.36, 1],
+        }}
         className={cn(
           "fixed inset-x-0 top-0 z-50",
           "transition-all duration-500 ease-in-out",

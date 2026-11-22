@@ -1,5 +1,12 @@
 // ─── Site-wide constants ───────────────────────────────────────────────────
 
+/**
+ * Page load intro screen timing configuration.
+ */
+export const INTRO_MIN_MS = 2200; // Minimum time intro stays visible (from logo show)
+export const INTRO_MAX_MS = 4000; // Maximum wait time before forcing lift
+export const LIFT_DURATION = 1.1; // Curtain lift duration in seconds
+
 /** Hero quotes — change index 0 to swap the displayed quote. */
 export const HERO_QUOTES = [
   "Life is not perfect, but your nails can be.",

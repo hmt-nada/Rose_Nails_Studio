@@ -245,3 +245,27 @@ h1, h2, h3, h4, h5, h6 {
     background: var(--color-plum);
   }
 }
+
+/* ─── Page Intro CSS-Only Safety Net & Immediate Scroll Lock ─── */
+/* Lock scroll immediately at first paint while intro overlay exists in the DOM */
+body:has(#page-intro-overlay) {
+  overflow: hidden;
+  touch-action: none;
+}
+
+/* If JavaScript fails or crashes, overlay safely hides itself after 6 seconds */
+@keyframes introSafetyFade {
+  0%, 88% {
+    opacity: 1;
+    visibility: visible;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+.intro-safety-fallback {
+  animation: introSafetyFade 6s forwards;
+}

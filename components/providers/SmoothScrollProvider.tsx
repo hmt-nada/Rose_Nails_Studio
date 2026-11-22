@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ScrollProgressBar from "@/components/ui/ScrollProgressBar";
 import CustomCursor from "@/components/ui/CustomCursor";
 import PageIntro from "@/components/ui/PageIntro";
+import { useIntro } from "@/components/providers/IntroProvider";
 
 // Register GSAP ScrollTrigger
 if (typeof window !== "undefined") {
@@ -20,18 +21,19 @@ interface SmoothScrollProviderProps {
 export default function SmoothScrollProvider({
   children,
 }: SmoothScrollProviderProps) {
-  const [introDone, setIntroDone] = useState(false);
+  const { isDone } = useIntro();
 
   const refreshScrollTrigger = useCallback(() => {
     ScrollTrigger.refresh();
   }, []);
 
-  const handleIntroComplete = useCallback(() => {
-    setIntroDone(true);
-    requestAnimationFrame(() => {
-      ScrollTrigger.refresh();
-    });
-  }, []);
+  useEffect(() => {
+    if (isDone) {
+      requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
+      });
+    }
+  }, [isDone]);
 
   useEffect(() => {
     const isTouch =
@@ -180,16 +182,16 @@ export default function SmoothScrollProvider({
   return (
     <>
       {/* ── Page Load Liquid Intro ── */}
-      <PageIntro onIntroComplete={handleIntroComplete} />
+      <PageIntro />
 
-      {/* ── Top Scroll Progress Bar ── */}
-      <ScrollProgressBar />
+      {/* ── Top Scroll Progress Bar (only after intro) ── */}
+      {isDone && <ScrollProgressBar />}
 
-      {/* ── Custom Luxury Cursor (Desktop only) ── */}
-      <CustomCursor />
+      {/* ── Custom Luxury Cursor (Desktop only, only after intro) ── */}
+      {isDone && <CustomCursor />}
 
       {/* ── Main Site Content ── */}
-      <div data-intro-ready={introDone ? "true" : "false"}>{children}</div>
+      <div data-intro-ready={isDone ? "true" : "false"}>{children}</div>
     </>
   );
 }
