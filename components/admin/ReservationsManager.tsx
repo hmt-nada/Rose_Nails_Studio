@@ -24,6 +24,7 @@ import ReservationStatusBadge, {
 import ReservationContactActions from "./ReservationContactActions";
 import ReservationConfirmDialog from "./ReservationConfirmDialog";
 import ReservationsToast, { type ToastItem } from "./ReservationsToast";
+import Dropdown, { type DropdownOption } from "@/components/ui/Dropdown";
 
 export interface Reservation {
   id: string;
@@ -44,6 +45,12 @@ interface ReservationsManagerProps {
 
 type FilterChip = "all" | "today" | "new" | "confirmed" | "completed" | "cancelled";
 type SortOption = "upcoming" | "latest" | "created";
+
+const SORT_OPTIONS: DropdownOption<SortOption>[] = [
+  { value: "upcoming", label: "Upcoming first" },
+  { value: "latest", label: "Latest date first" },
+  { value: "created", label: "Recently created" },
+];
 
 function getTodayString(): string {
   const now = new Date();
@@ -360,19 +367,15 @@ export default function ReservationsManager({
             </div>
 
             {/* Sort Dropdown */}
-            <div className="flex items-center gap-1.5 bg-pearl/60 dark:bg-surface/60 border border-rose/20 rounded-2xl px-3 py-2 text-xs text-plum">
-              <ArrowUpDown className="w-3.5 h-3.5 text-deep-rose shrink-0" />
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as SortOption)}
-                aria-label="Sort reservations"
-                className="bg-transparent text-plum text-xs font-medium focus:outline-none cursor-pointer pr-1"
-              >
-                <option value="upcoming">Upcoming first</option>
-                <option value="latest">Latest date first</option>
-                <option value="created">Recently created</option>
-              </select>
-            </div>
+            <Dropdown<SortOption>
+              value={sortBy}
+              onChange={setSortBy}
+              options={SORT_OPTIONS}
+              icon={<ArrowUpDown className="w-3.5 h-3.5" />}
+              aria-label="Sort reservations"
+              align="right"
+              size="md"
+            />
           </div>
         </div>
 
