@@ -60,17 +60,17 @@ export default function PageIntro({ onIntroComplete }: PageIntroProps) {
     return () => clearTimeout(timer);
   }, [shouldReduce]);
 
-  // ─── Readiness: fonts.ready + hero video first frame loaded (or fallback) ───
+  // ─── Readiness: fonts.ready + hero video buffered enough to play without stalling (readyState >= 3 or canplaythrough) ───
   useEffect(() => {
     let isMounted = true;
 
     // 1. Check fonts
     const fontsPromise =
       typeof document !== "undefined" && document.fonts && document.fonts.ready
-        ? document.fonts.ready.catch(() => {})
+        ? document.fonts.ready.catch(() => { })
         : Promise.resolve();
 
-    // 2. Check hero video first frame
+    // 2. Check hero video buffering (readyState >= 3: HAVE_FUTURE_DATA / canplaythrough)
     const videoPromise = new Promise<void>((resolve) => {
       if (typeof window === "undefined") {
         resolve();
@@ -85,27 +85,29 @@ export default function PageIntro({ onIntroComplete }: PageIntroProps) {
         }
       };
 
-      // Poll briefly for video element in case Hero mounts slightly after PageIntro
-      const startTime = Date.now();
-      const interval = setInterval(() => {
-        const video = document.querySelector("video");
-        if (video) {
-          if (video.readyState >= 2) {
-            clearInterval(interval);
-            done();
-            return;
-          }
-          video.addEventListener("loadeddata", done, { once: true });
-          video.addEventListener("canplay", done, { once: true });
-          video.addEventListener("error", done, { once: true });
+      const checkVideo = () => {
+        const video =
+          document.querySelector<HTMLVideoElement>('video[src="/videos/hero.mp4"]') ||
+          document.querySelector("video");
+        if (!video) return false;
+
+        if (video.readyState >= 3) {
+          done();
+          return true;
         }
 
-        // If not found or not ready within 1200ms, proceed
-        if (Date.now() - startTime > 1200) {
-          clearInterval(interval);
-          done();
-        }
-      }, 50);
+        video.addEventListener("canplaythrough", done, { once: true });
+        video.addEventListener("error", done, { once: true });
+        return true;
+      };
+
+      if (!checkVideo()) {
+        const interval = setInterval(() => {
+          if (checkVideo()) {
+            clearInterval(interval);
+          }
+        }, 50);
+      }
     });
 
     Promise.allSettled([fontsPromise, videoPromise]).then(() => {
@@ -158,20 +160,19 @@ export default function PageIntro({ onIntroComplete }: PageIntroProps) {
             ? { opacity: 0 }
             : { opacity: 1 }
           : introState === "lifting"
-          ? { y: "-100%" }
-          : { y: "0%" }
+            ? { y: "-100%" }
+            : { y: "0%" }
       }
       transition={
         shouldReduce
           ? { duration: 0.5, ease: "easeOut" }
           : {
-              duration: LIFT_DURATION,
-              ease: [0.76, 0, 0.24, 1], // Smooth cubic-bezier specified in requirements
-            }
+            duration: LIFT_DURATION,
+            ease: [0.76, 0, 0.24, 1], // Smooth cubic-bezier specified in requirements
+          }
       }
-      className={`fixed inset-0 z-[100000] bg-pearl flex flex-col items-center justify-center select-none overflow-hidden will-change-transform intro-safety-fallback ${
-        introState === "lifting" ? "pointer-events-none" : "pointer-events-auto"
-      }`}
+      className={`fixed inset-0 z-[100000] bg-pearl flex flex-col items-center justify-center select-none overflow-hidden will-change-transform intro-safety-fallback ${introState === "lifting" ? "pointer-events-none" : "pointer-events-auto"
+        }`}
     >
       {/* Subtle Ambient Glow Behind Logo */}
       <div

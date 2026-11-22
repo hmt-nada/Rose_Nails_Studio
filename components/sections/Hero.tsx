@@ -399,10 +399,19 @@ function TransparentFloatingVideo({ heroRef }: TransparentFloatingVideoProps) {
   const glRef = useRef<WebGLRenderingContext | null>(null);
   const textureRef = useRef<WebGLTexture | null>(null);
   const animFrameRef = useRef<number | null>(null);
+
+  // Playback state refs to guarantee uninterrupted playback and strict mode safety
+  const introStateRef = useRef(introState);
+  useEffect(() => {
+    introStateRef.current = introState;
+  }, [introState]);
+
+  const hasStartedInitialPlayRef = useRef(false);
+  const hasPlayedCurrentEntryRef = useRef(false);
+  const isOutOfViewRef = useRef(false);
   const isEndedRef = useRef(false);
   const isVisibleRef = useRef(true);
   const hasInitializedRef = useRef(false);
-  const hasStartedRef = useRef(false);
 
   // Setup WebGL Program
   const initWebGL = useCallback(() => {
@@ -558,16 +567,32 @@ function TransparentFloatingVideo({ heroRef }: TransparentFloatingVideoProps) {
       }
       setTimeout(drawFrame, 150);
     } else {
-      // Draw first frame immediately to canvas so first frame is ready
+      // Keep video paused on frame 0 until curtain lifts
+      video.pause();
+      video.currentTime = 0;
       setTimeout(drawFrame, 50);
+
       // Only play immediately if already in lifting/done phase
-      if (introState === "lifting" || introState === "done") {
-        hasStartedRef.current = true;
+      if (
+        (introStateRef.current === "lifting" || introStateRef.current === "done") &&
+        !hasStartedInitialPlayRef.current
+      ) {
+        hasStartedInitialPlayRef.current = true;
+        hasPlayedCurrentEntryRef.current = true;
+        isEndedRef.current = false;
+        video.currentTime = 0;
         video.play().catch(() => {});
         startRenderLoop();
       }
     }
-  }, [shouldReduce, drawFrame, startRenderLoop, introState]);
+  }, [shouldReduce, drawFrame, startRenderLoop]);
+
+  // Video Loaded Data (ensure first frame is rendered on canvas while paused)
+  const handleLoadedData = useCallback(() => {
+    if (!hasStartedInitialPlayRef.current) {
+      drawFrame();
+    }
+  }, [drawFrame]);
 
   // Video Ended Handler (Freezes on last frame without looping)
   const handleVideoEnded = useCallback(() => {
@@ -584,8 +609,13 @@ function TransparentFloatingVideo({ heroRef }: TransparentFloatingVideoProps) {
     const video = videoRef.current;
     if (!video) return;
 
-    if ((introState === "lifting" || introState === "done") && !hasStartedRef.current) {
-      hasStartedRef.current = true;
+    if (
+      (introState === "lifting" || introState === "done") &&
+      !hasStartedInitialPlayRef.current
+    ) {
+      hasStartedInitialPlayRef.current = true;
+      hasPlayedCurrentEntryRef.current = true;
+      isEndedRef.current = false;
       video.currentTime = 0;
       video.play().catch(() => {});
       startRenderLoop();
@@ -602,25 +632,35 @@ function TransparentFloatingVideo({ heroRef }: TransparentFloatingVideoProps) {
 
     const observer = new IntersectionObserver(
       (entries) => {
+        // Requirement 5: the IntersectionObserver must ignore the period while the intro is not done
+        if (introStateRef.current !== "done") {
+          return;
+        }
+
         for (const entry of entries) {
-          if (entry.isIntersecting && entry.intersectionRatio >= 0.3) {
-            isVisibleRef.current = true;
-            if (!shouldReduce && (introState === "lifting" || introState === "done")) {
-              if (isEndedRef.current) {
-                // Replay when scrolling back into hero
-                isEndedRef.current = false;
-                video.currentTime = 0;
-                video.play().catch(() => {});
-                startRenderLoop();
-              } else if (video.paused && !isEndedRef.current && hasStartedRef.current) {
-                video.play().catch(() => {});
-                startRenderLoop();
-              }
-            }
-          } else if (!entry.isIntersecting || entry.intersectionRatio === 0) {
+          if (!entry.isIntersecting || entry.intersectionRatio === 0) {
+            // Hero fully leaves the viewport: pause, reset to 0, ready to replay next time
             isVisibleRef.current = false;
+            isOutOfViewRef.current = true;
+            hasPlayedCurrentEntryRef.current = false;
             video.pause();
+            video.currentTime = 0;
             if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+          } else if (entry.isIntersecting && entry.intersectionRatio >= 0.3) {
+            isVisibleRef.current = true;
+            // Only play if coming back from out-of-view and hasn't played for this entry yet
+            if (
+              !shouldReduce &&
+              isOutOfViewRef.current &&
+              !hasPlayedCurrentEntryRef.current
+            ) {
+              isOutOfViewRef.current = false;
+              hasPlayedCurrentEntryRef.current = true;
+              isEndedRef.current = false;
+              video.currentTime = 0;
+              video.play().catch(() => {});
+              startRenderLoop();
+            }
           }
         }
       },
@@ -631,9 +671,8 @@ function TransparentFloatingVideo({ heroRef }: TransparentFloatingVideoProps) {
 
     return () => {
       observer.disconnect();
-      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
     };
-  }, [heroRef, initWebGL, shouldReduce, startRenderLoop, introState]);
+  }, [heroRef, initWebGL, shouldReduce, startRenderLoop]);
 
   return (
     <motion.div
@@ -659,8 +698,8 @@ function TransparentFloatingVideo({ heroRef }: TransparentFloatingVideoProps) {
         muted
         preload="auto"
         onLoadedMetadata={handleLoadedMetadata}
+        onLoadedData={handleLoadedData}
         onEnded={handleVideoEnded}
-        onPlay={startRenderLoop}
         className="absolute -top-[9999px] -left-[9999px] w-1 h-1 opacity-0 pointer-events-none -z-50"
         aria-hidden
       />
